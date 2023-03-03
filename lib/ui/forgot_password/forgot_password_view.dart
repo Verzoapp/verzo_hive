@@ -9,7 +9,7 @@ import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
 @FormView(fields: [
-  FormTextField(name: 'OTP'),
+  FormTextField(name: 'email'),
 ])
 class ForgotPasswordView extends StatelessWidget with $ForgotPasswordView {
   ForgotPasswordView({Key? key}) : super(key: key);
@@ -21,7 +21,6 @@ class ForgotPasswordView extends StatelessWidget with $ForgotPasswordView {
       viewModelBuilder: () => ForgotPasswordViewModel(),
       builder: (context, model, child) => Scaffold(
           body: AuthenticationLayout(
-        onBackPressed: () {},
         busy: model.isBusy,
         onMainButtonTapped: model.saveData,
         onForgotPasswordResend: () {},
@@ -35,6 +34,8 @@ class ForgotPasswordView extends StatelessWidget with $ForgotPasswordView {
                   labelText: 'Enter Email',
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
+              keyboardType: TextInputType.emailAddress,
+              controller: emailController,
             ),
             verticalSpaceTiny,
           ],

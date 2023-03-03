@@ -87,12 +87,6 @@ class DashboardView extends StatelessWidget {
                               'N500,000',
                               style: ktsHeroText,
                             ),
-                            LineChart(LineChartData(
-                                borderData: FlBorderData(show: false),
-                                gridData: FlGridData(
-                                    show: false,
-                                    drawVerticalLine: false,
-                                    horizontalInterval: 2))),
                           ],
                         ),
                       ),
@@ -174,9 +168,6 @@ class DashboardView extends StatelessWidget {
                     width: 500,
                     child: DataTable(columnSpacing: 10, columns: const [
                       DataColumn(
-                        label: Text("s/n"),
-                      ),
-                      DataColumn(
                         label: Text("File Name"),
                       ),
                       DataColumn(
@@ -189,12 +180,6 @@ class DashboardView extends StatelessWidget {
                       DataRow(
                         cells: [
                           DataCell(
-                            Icon(
-                              Icons.receipt_long,
-                              size: 16,
-                            ),
-                          ),
-                          DataCell(
                             Text('Verzo One'),
                           ),
                           DataCell(
@@ -205,12 +190,6 @@ class DashboardView extends StatelessWidget {
                       ),
                       DataRow(
                         cells: [
-                          DataCell(
-                            Icon(
-                              Icons.receipt_long,
-                              size: 16,
-                            ),
-                          ),
                           DataCell(Text('Verzo One')),
                           DataCell(
                             Text('N35,000'),
@@ -220,12 +199,6 @@ class DashboardView extends StatelessWidget {
                       ),
                       DataRow(
                         cells: [
-                          DataCell(
-                            Icon(
-                              Icons.receipt_long,
-                              size: 16,
-                            ),
-                          ),
                           DataCell(Text('Verzo One')),
                           DataCell(
                             Text('N35,000'),
@@ -235,12 +208,6 @@ class DashboardView extends StatelessWidget {
                       ),
                       DataRow(
                         cells: [
-                          DataCell(
-                            Icon(
-                              Icons.receipt_long,
-                              size: 16,
-                            ),
-                          ),
                           DataCell(Text('Verzo One')),
                           DataCell(
                             Text('N35,000'),
@@ -250,12 +217,6 @@ class DashboardView extends StatelessWidget {
                       ),
                       DataRow(
                         cells: [
-                          DataCell(
-                            Icon(
-                              Icons.receipt_long,
-                              size: 16,
-                            ),
-                          ),
                           DataCell(Text('Verzo One')),
                           DataCell(
                             Text('N35,000'),
@@ -275,7 +236,7 @@ class DashboardView extends StatelessWidget {
   }
 }
 
-
+//
 
 /////
 //BarChart(BarChartData(

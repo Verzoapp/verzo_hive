@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/foundation.dart';
@@ -128,6 +130,9 @@ class AuthenticationService {
 
     final QueryResult result = await client.value.mutate(options);
 
+    var accessToken = result.data?['signUp']['access_token'];
+    var refreshToken = result.data?['signUp']['refresh_token'];
+
     if (result.hasException) {
       return CreateAccountWithEmailResult.error(
         error: GraphQLAuthError(
@@ -135,9 +140,6 @@ class AuthenticationService {
         ),
       );
     }
-
-    var accessToken = result.data?['signUp']['access_token'];
-    var refreshToken = result.data?['signUp']['refresh_token'];
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('access_token', accessToken ?? "");

@@ -22,13 +22,16 @@ class LoginViewModel extends FormViewModel {
 
     if (result.tokens != null) {
       // navigate to success route
-      navigationService.replaceWith(Routes.homeScreenRoute);
+      navigationService.replaceWith(Routes.dashboardRoute);
     } else if (result.error != null) {
       setValidationMessage(result.error?.message);
     } else {
       // handle other errors
     }
   }
+
+  void navigateToForgotPassword() =>
+      navigationService.navigateTo(Routes.forgotPasswordRoute);
 
   void navigateToCreateAccount() =>
       navigationService.navigateTo(Routes.createAccountRoute);

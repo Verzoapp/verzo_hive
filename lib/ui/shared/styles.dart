@@ -32,7 +32,7 @@ TextStyle ktsHeaderText = GoogleFonts.dmSans(
 );
 
 TextStyle ktsParagraphText = GoogleFonts.dmSans(
-  color: kcTextColorLight,
+  color: kcTextColorLight, //1
   fontSize: kParagraphTextSize,
   fontWeight: FontWeight.normal,
 );
@@ -61,18 +61,18 @@ TextStyle ktsBodyText2 = GoogleFonts.dmSans(
 );
 
 TextStyle ktsFormText = GoogleFonts.dmSans(
-  color: kcTextColorLight,
+  color: kcTextColorLight, //2
   fontSize: kParagraphTextSize,
   fontWeight: FontWeight.normal,
 );
 
 TextStyle ktsBodyTextLight = GoogleFonts.dmSans(
-  color: kcTextColorLight,
+  color: kcTextColorLight, //3
   fontSize: kBodyTextSize,
   fontWeight: FontWeight.normal,
 );
 TextStyle ktsSmallBodyText = GoogleFonts.dmSans(
-  color: kcTextColorLight,
+  color: kcTextColorLight, //4
   fontSize: kSmallBodyTextSize,
   fontWeight: FontWeight.normal,
 );

@@ -1,42 +1,64 @@
-import 'package:verzo_one/services/authentication_service.dart';
-import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:verzo_one/ui/create_account/create_account_view.form.dart';
+import 'package:verzo_one/services/otp_verification_service.dart';
+import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
+import 'package:verzo_one/app/app.locator.dart';
+import 'package:verzo_one/app/app.router.dart';
+
 import 'package:verzo_one/ui/verification/verification_view.form.dart';
 
-import '../../app/app.locator.dart';
-import '../../app/app.router.dart';
-
 class VerificationViewModel extends FormViewModel {
-  final navigationService = locator<NavigationService>();
-  final _authenticationService = locator<AuthenticationService>();
+  final OTPVerificationService _otpVerificationService =
+      locator<OTPVerificationService>();
+  final FocusNode digit2FocusNode = FocusNode();
+  final FocusNode digit3FocusNode = FocusNode();
+  final FocusNode digit4FocusNode = FocusNode();
+  final NavigationService navigationService = locator<NavigationService>();
+
+  String otpDigit1 = '';
+  String otpDigit2 = '';
+  String otpDigit3 = '';
+  String otpDigit4 = '';
+
+  void setOTPDigit1(String value) {
+    otpDigit1 = value;
+    if (value.length == 1) {
+      digit2FocusNode.requestFocus();
+    }
+  }
+
+  void setOTPDigit2(String value) {
+    otpDigit2 = value;
+    if (value.length == 1) {
+      digit3FocusNode.requestFocus();
+    }
+  }
+
+  void setOTPDigit3(String value) {
+    otpDigit3 = value;
+    if (value.length == 1) {
+      digit4FocusNode.requestFocus();
+    }
+  }
+
+  void setOTPDigit4(String value) {
+    otpDigit4 = value;
+  }
 
   @override
-  void setFormStatus() {}
+  void setFormStatus() {
+    // TODO: implement setFormStatus
+  }
 
-  // Future<AuthenticationResult> runAuthentication() => _authenticationService
-  //     .loginWithEmail(email: emailValue ?? '', password: passwordValue ?? '');
+  Future<VerificationResult> runVerification() =>
+      _otpVerificationService.verifyOTP(
+          code: double.parse('$otp1Value$otp2Value$otp3Value$otp4Value'));
 
-  // Future saveData() async {
-  //   final result = await runBusyFuture(runAuthentication());
+  Future getVerificationResponse() async {
+    final result = await runBusyFuture(runVerification());
 
-  //   if (!result.hasError) {
-  //     // navigate to success route
-  //     navigationService.replaceWith(Routes.homeScreenRoute);
-  //   } else {
-  //     setValidationMessage(result.errorMessage?.message);
-  //   }
-  // }
-
-  Future<AuthenticationResult> runAuthentication() => _authenticationService
-      .loginWithEmail(email: emailValue ?? '', password: passwordValue ?? '');
-
-  Future saveData() async {
-    final result = await runBusyFuture(runAuthentication());
-
-    if (result.tokens != null) {
-      // navigate to success route
-      navigationService.replaceWith(Routes.homeScreenRoute);
+    if (result.verificationResponse?.isSuccessful != null) {
+      navigationService.replaceWith(Routes.businessProfileCreationRoute);
     } else if (result.error != null) {
       setValidationMessage(result.error?.message);
     } else {

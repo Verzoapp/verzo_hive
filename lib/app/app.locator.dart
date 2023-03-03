@@ -13,6 +13,9 @@ import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 
 import '../services/authentication_service.dart';
+import '../services/business_profile_creation_service.dart';
+import '../services/create_merchant_service.dart';
+import '../services/otp_verification_service.dart';
 
 final locator = StackedLocator.instance;
 
@@ -28,4 +31,7 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerSingleton(AuthenticationService());
+  locator.registerSingleton(OTPVerificationService());
+  locator.registerSingleton(MerchantService());
+  locator.registerSingleton(BusinessCreationService());
 }

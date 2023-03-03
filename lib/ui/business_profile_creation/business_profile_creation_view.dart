@@ -2,21 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
+import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_view.form.dart';
 import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_viewmodel.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
-class BusinessProfileCreationView extends StatelessWidget {
+@FormView(fields: [
+  FormTextField(name: 'businessName'),
+  FormTextField(name: 'businessEmail'),
+  FormTextField(name: 'businessMobile'),
+  FormTextField(name: 'businessCategoryId'),
+])
+class BusinessProfileCreationView extends StatelessWidget
+    with $BusinessProfileCreationView {
   final bool busy;
 
-  const BusinessProfileCreationView({Key? key, this.busy = false})
-      : super(key: key);
+  BusinessProfileCreationView({Key? key, this.busy = false}) : super(key: key);
 
+  final List<String> _selectedChoices = [];
   @override
   Widget build(BuildContext context) {
+    List<Widget> tiles = [];
+    for (var i = 0; i < chipList.length; i++) {
+      final item = chipList[i];
+      final isSelected = _selectedChoices.contains(item);
+
+      tiles.add(
+        ChoiceChip(
+          label: Text(item),
+          labelStyle: isSelected ? ktsButtonText : ktsBodyText,
+          selected: isSelected,
+          selectedColor: isSelected ? kcPrimaryColor : kcTextColor,
+          onSelected: (bool selected) {},
+        ),
+      );
+    }
     return ViewModelBuilder<BusinessProfileCreationViewModel>.reactive(
       viewModelBuilder: () => BusinessProfileCreationViewModel(),
-      onModelReady: (model) => () {},
+      onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) => Scaffold(
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
@@ -30,7 +54,7 @@ class BusinessProfileCreationView extends StatelessWidget {
                   Icons.arrow_back_ios,
                   color: kcTextColor,
                 ),
-                onPressed: () {},
+                onPressed: model.navigateBack,
               ),
               verticalSpaceSmall,
               Row(
@@ -59,13 +83,7 @@ class BusinessProfileCreationView extends StatelessWidget {
                           labelText: 'Enter business name',
                           labelStyle: ktsFormText,
                           border: defaultFormBorder),
-                    ),
-                    verticalSpaceSmall,
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Business location',
-                          labelStyle: ktsFormText,
-                          border: defaultFormBorder),
+                      controller: businessNameController,
                     ),
                     verticalSpaceSmall,
                     TextFormField(
@@ -73,33 +91,26 @@ class BusinessProfileCreationView extends StatelessWidget {
                           labelText: 'Enter email',
                           labelStyle: ktsFormText,
                           border: defaultFormBorder),
+                      controller: businessEmailController,
                     ),
                     verticalSpaceSmall,
                     TextFormField(
                       decoration: InputDecoration(
-                          labelText: 'Contact persons name',
+                          labelText: 'Enter phone number',
                           labelStyle: ktsFormText,
                           border: defaultFormBorder),
+                      controller: businessMobileController,
                     ),
+                    verticalSpaceRegular,
+                    Text(
+                        'Select a category that relates to your business', //subtitle
+                        style: ktsParagraphText),
                     verticalSpaceSmall,
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Contact persons phone number',
-                          labelStyle: ktsFormText,
-                          border: defaultFormBorder),
-                    ),
-                    verticalSpaceSmall,
-                    TextFormField(
-                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      maxLines: 4,
-                      maxLength: 200,
-                      decoration: InputDecoration(
-                          hintText: 'Write a short description about ',
-                          labelText:
-                              'Write a short description about your business',
-                          labelStyle: ktsFormText,
-                          border: defaultFormBorder),
-                    ),
+                    Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        direction: Axis.horizontal,
+                        children: tiles),
                   ],
                 ),
               ),
@@ -118,7 +129,7 @@ class BusinessProfileCreationView extends StatelessWidget {
                           valueColor: AlwaysStoppedAnimation(Colors.white),
                         )
                       : Text(
-                          'Next',
+                          'Create Business',
                           style: ktsButtonText,
                         ),
                 ),
@@ -130,3 +141,13 @@ class BusinessProfileCreationView extends StatelessWidget {
     );
   }
 }
+
+final chipList = [
+  'Agriculture',
+  'Education',
+  'Accounting',
+  'Food & Drinks',
+  'Pharmacy',
+  'Airline',
+  'New'
+];

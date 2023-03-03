@@ -11,7 +11,6 @@ import 'package:verzo_one/ui/shared/ui_helpers.dart';
   FormTextField(name: 'fullName'),
   FormTextField(name: 'email'),
   FormTextField(name: 'password'),
-  FormTextField(name: 'phoneNumber'),
 ])
 class CreateAccountView extends StatelessWidget with $CreateAccountView {
   CreateAccountView({Key? key}) : super(key: key);
@@ -25,12 +24,12 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
           body: AuthenticationLayout(
         busy: model.isBusy,
         onMainButtonTapped: () => model.saveData(),
-        onLoginTapped: () {},
+        onLoginTapped: model.navigateToLogin,
         onBackPressed: model.navigateBack,
         validationMessage: model.validationMessage,
         title: 'Create Account',
         subtitle: 'Create an account to sign up.',
-        mainButtonTitle: 'Create',
+        mainButtonTitle: 'Sign Up',
         form: Column(
           children: [
             TextFormField(
@@ -39,6 +38,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
               controller: emailController,
+              keyboardType: TextInputType.emailAddress,
             ),
             verticalSpaceSmall,
             TextFormField(
@@ -48,6 +48,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
               controller: passwordController,
+              keyboardType: TextInputType.visiblePassword,
             ),
             verticalSpaceSmall,
             TextFormField(
@@ -56,14 +57,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
               controller: fullNameController,
-            ),
-            verticalSpaceSmall,
-            TextFormField(
-              decoration: InputDecoration(
-                  labelText: 'Phone number',
-                  labelStyle: ktsFormText,
-                  border: defaultFormBorder),
-              controller: fullNameController,
+              keyboardType: TextInputType.name,
             ),
           ],
         ),

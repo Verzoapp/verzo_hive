@@ -1,4 +1,6 @@
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class AuthenticationLayout extends StatelessWidget {
   final Function()? onMainButtonTapped;
   final Function()? onCreateAccountTapped;
   final Function()? onLoginTapped;
-  final Function()? onVerifyTapped;
+  final Function()? onResendVerificationCodeTapped;
   final Function()? onForgotPassword;
   final Function()? onForgotPasswordResend;
   final Function()? onBackPressed;
@@ -29,7 +31,7 @@ class AuthenticationLayout extends StatelessWidget {
       this.onMainButtonTapped,
       this.onCreateAccountTapped,
       this.onLoginTapped,
-      this.onVerifyTapped,
+      this.onResendVerificationCodeTapped,
       this.onForgotPassword,
       this.onForgotPasswordResend,
       this.onBackPressed,
@@ -43,7 +45,6 @@ class AuthenticationLayout extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
       child: ListView(children: [
         if (onBackPressed == null) verticalSpaceTiny,
-        if (onBackPressed != null) verticalSpaceTiny,
         if (onBackPressed != null)
           IconButton(
             padding: EdgeInsets.zero,
@@ -79,11 +80,20 @@ class AuthenticationLayout extends StatelessWidget {
         verticalSpaceRegular,
         form!,
         verticalSpaceTiny,
+        if (onForgotPassword == null) verticalSpaceIntermitent,
         if (onForgotPassword != null)
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
-              onTap: onForgotPassword,
+              onTap: () async {
+                String url = "https://www.fluttercampus.com";
+                var urllaunchable = await canLaunchUrlString(
+                    url); //canLaunch is from url_launcher package
+                if (urllaunchable) {
+                  await launchUrlString(
+                      url); //launch is from url_launcher package to launch URL
+                } else {}
+              },
               child: Text('Forgot Password?', style: ktsSmallBodyText),
             ),
           ),
@@ -124,81 +134,87 @@ class AuthenticationLayout extends StatelessWidget {
             style: ktsSmallBodyText,
             textAlign: TextAlign.center,
           ),
-        verticalSpaceLarge,
+        if (onCreateAccountTapped != null) verticalSpaceLarge,
         if (onCreateAccountTapped != null)
-          GestureDetector(
-            onTap: onCreateAccountTapped,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Don\'t have an account? ',
-                  style: ktsBodyTextLight,
-                ),
-                const Text('Sign Up',
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Don\'t have an account? ',
+                style: ktsBodyTextLight,
+              ),
+              GestureDetector(
+                onTap: onCreateAccountTapped,
+                child: const Text('Sign Up',
                     style: TextStyle(
                       decoration: TextDecoration.underline,
                       color: kcPrimaryColor,
-                    ))
-              ],
-            ),
+                    )),
+              )
+            ],
           ),
+        if (onLoginTapped != null) verticalSpaceMedium,
         if (onLoginTapped != null)
-          GestureDetector(
-            onTap: onLoginTapped,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Already have an account? ',
-                  style: ktsBodyTextLight,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Already have an account? ',
+                style: ktsBodyTextLight,
+              ),
+              GestureDetector(
+                onTap: onLoginTapped,
+                child: const Text(
+                  'Login',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: kcPrimaryColor,
+                  ),
                 ),
-                const Text('Login',
+              ),
+            ],
+          ),
+        if (onResendVerificationCodeTapped != null) verticalSpaceSmall,
+        if (onResendVerificationCodeTapped != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Didn\'t recieve a code? ',
+                style: ktsBodyTextLight,
+              ),
+              GestureDetector(
+                onTap: onResendVerificationCodeTapped,
+                child: const Text('Re-send',
                     style: TextStyle(
                       decoration: TextDecoration.underline,
                       color: kcPrimaryColor,
-                    ))
-              ],
-            ),
+                    )),
+              )
+            ],
           ),
-        if (onVerifyTapped != null)
-          GestureDetector(
-            onTap: onVerifyTapped,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Didn\'t recieve a code? ',
-                  style: ktsBodyTextLight,
-                ),
-                const Text('Re-send',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: kcPrimaryColor,
-                    ))
-              ],
-            ),
-          ),
+        if (onForgotPasswordResend != null) verticalSpaceSmall,
         if (onForgotPasswordResend != null)
-          GestureDetector(
-              onTap: onForgotPasswordResend,
-              child: Align(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Didn\'t recieve an email? Change email address or ',
-                      style: ktsBodyTextLight,
-                    ),
-                    const Text('Resend email',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: kcPrimaryColor,
-                        ))
-                  ],
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Didn\'t recieve an email? Change email address or ',
+                  style: ktsBodyTextLight,
                 ),
-              )),
+                GestureDetector(
+                  onTap: onForgotPasswordResend,
+                  child: const Text('Resend email',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: kcPrimaryColor,
+                      )),
+                )
+              ],
+            ),
+          ),
       ]),
     );
   }

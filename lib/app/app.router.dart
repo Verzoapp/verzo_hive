@@ -5,20 +5,23 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/cupertino.dart' as _i16;
-import 'package:flutter/foundation.dart' as _i17;
+import 'package:flutter/cupertino.dart' as _i19;
+import 'package:flutter/foundation.dart' as _i20;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i18;
+import 'package:stacked_services/stacked_services.dart' as _i21;
+import 'package:verzo_one/ui/add_expenses/add_expenses_view.dart' as _i15;
+import 'package:verzo_one/ui/add_sales/add_sales_view.dart' as _i16;
 import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_view.dart'
     as _i10;
 import 'package:verzo_one/ui/create_account/create_account_view.dart' as _i6;
+import 'package:verzo_one/ui/create_merchant/create_merchant_view.dart' as _i13;
 import 'package:verzo_one/ui/dashboard/dashboard_view.dart' as _i12;
-import 'package:verzo_one/ui/expenses/expenses_view.dart' as _i13;
+import 'package:verzo_one/ui/expenses/expenses_view.dart' as _i14;
 import 'package:verzo_one/ui/forgot_password/forgot_password_view.dart' as _i8;
-import 'package:verzo_one/ui/invoicing/invoicing_view.dart' as _i15;
+import 'package:verzo_one/ui/invoicing/invoicing_view.dart' as _i18;
 import 'package:verzo_one/ui/login/login_view.dart' as _i7;
-import 'package:verzo_one/ui/sales/sales_view.dart' as _i14;
+import 'package:verzo_one/ui/sales/sales_view.dart' as _i17;
 import 'package:verzo_one/ui/select_tags/select_tags_view.dart' as _i11;
 import 'package:verzo_one/ui/verification/verification_view.dart' as _i9;
 import 'package:verzo_one/ui/views/first_screen.dart' as _i3;
@@ -37,19 +40,25 @@ class Routes {
 
   static const createAccountRoute = '/create-account-view';
 
-  static const loginRoute = '/';
+  static const loginRoute = '/login-view';
 
   static const forgotPasswordRoute = '/forgot-password-view';
 
   static const verificationRoute = '/verification-view';
 
-  static const businessProfileCreationRoute = '/business-profile-creation-view';
+  static const businessProfileCreationRoute = '/';
 
   static const selectTagsRoute = '/select-tags-view';
 
   static const dashboardRoute = '/dashboard-view';
 
+  static const createMerchantRoute = '/create-merchant-view';
+
   static const expensesRoute = '/expenses-view';
+
+  static const addExpenseRoute = '/add-expenses-view';
+
+  static const addSalesRoute = '/add-sales-view';
 
   static const salesRoute = '/sales-view';
 
@@ -67,7 +76,10 @@ class Routes {
     businessProfileCreationRoute,
     selectTagsRoute,
     dashboardRoute,
+    createMerchantRoute,
     expensesRoute,
+    addExpenseRoute,
+    addSalesRoute,
     salesRoute,
     invoicingRoute,
   };
@@ -120,16 +132,28 @@ class StackedRouter extends _i1.RouterBase {
       page: _i12.DashboardView,
     ),
     _i1.RouteDef(
+      Routes.createMerchantRoute,
+      page: _i13.CreateMerchantView,
+    ),
+    _i1.RouteDef(
       Routes.expensesRoute,
-      page: _i13.ExpensesView,
+      page: _i14.ExpensesView,
+    ),
+    _i1.RouteDef(
+      Routes.addExpenseRoute,
+      page: _i15.AddExpensesView,
+    ),
+    _i1.RouteDef(
+      Routes.addSalesRoute,
+      page: _i16.AddSalesView,
     ),
     _i1.RouteDef(
       Routes.salesRoute,
-      page: _i14.SalesView,
+      page: _i17.SalesView,
     ),
     _i1.RouteDef(
       Routes.invoicingRoute,
-      page: _i15.InvoicingView,
+      page: _i18.InvoicingView,
     ),
   ];
 
@@ -165,7 +189,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<CreateAccountViewArguments>(
         orElse: () => const CreateAccountViewArguments(),
       );
-      return _i16.CupertinoPageRoute<dynamic>(
+      return _i19.CupertinoPageRoute<dynamic>(
         builder: (context) => _i6.CreateAccountView(key: args.key),
         settings: data,
       );
@@ -174,7 +198,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<LoginViewArguments>(
         orElse: () => const LoginViewArguments(),
       );
-      return _i16.CupertinoPageRoute<dynamic>(
+      return _i19.CupertinoPageRoute<dynamic>(
         builder: (context) => _i7.LoginView(key: args.key),
         settings: data,
       );
@@ -183,7 +207,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ForgotPasswordViewArguments>(
         orElse: () => const ForgotPasswordViewArguments(),
       );
-      return _i16.CupertinoPageRoute<dynamic>(
+      return _i19.CupertinoPageRoute<dynamic>(
         builder: (context) => _i8.ForgotPasswordView(key: args.key),
         settings: data,
       );
@@ -192,7 +216,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<VerificationViewArguments>(
         orElse: () => const VerificationViewArguments(),
       );
-      return _i16.CupertinoPageRoute<dynamic>(
+      return _i19.CupertinoPageRoute<dynamic>(
         builder: (context) => _i9.VerificationView(key: args.key),
         settings: data,
       );
@@ -201,7 +225,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<BusinessProfileCreationViewArguments>(
         orElse: () => const BusinessProfileCreationViewArguments(),
       );
-      return _i16.CupertinoPageRoute<dynamic>(
+      return _i19.CupertinoPageRoute<dynamic>(
         builder: (context) =>
             _i10.BusinessProfileCreationView(key: args.key, busy: args.busy),
         settings: data,
@@ -211,33 +235,62 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SelectTagsViewArguments>(
         orElse: () => const SelectTagsViewArguments(),
       );
-      return _i16.CupertinoPageRoute<dynamic>(
+      return _i19.CupertinoPageRoute<dynamic>(
         builder: (context) =>
             _i11.SelectTagsView(key: args.key, busy: args.busy),
         settings: data,
       );
     },
     _i12.DashboardView: (data) {
-      return _i16.CupertinoPageRoute<dynamic>(
+      return _i19.CupertinoPageRoute<dynamic>(
         builder: (context) => const _i12.DashboardView(),
         settings: data,
       );
     },
-    _i13.ExpensesView: (data) {
-      return _i16.CupertinoPageRoute<dynamic>(
-        builder: (context) => const _i13.ExpensesView(),
+    _i13.CreateMerchantView: (data) {
+      final args = data.getArgs<CreateMerchantViewArguments>(
+        orElse: () => const CreateMerchantViewArguments(),
+      );
+      return _i19.CupertinoPageRoute<dynamic>(
+        builder: (context) =>
+            _i13.CreateMerchantView(key: args.key, busy: args.busy),
         settings: data,
       );
     },
-    _i14.SalesView: (data) {
-      return _i16.CupertinoPageRoute<dynamic>(
-        builder: (context) => const _i14.SalesView(),
+    _i14.ExpensesView: (data) {
+      return _i19.CupertinoPageRoute<dynamic>(
+        builder: (context) => const _i14.ExpensesView(),
         settings: data,
       );
     },
-    _i15.InvoicingView: (data) {
-      return _i16.CupertinoPageRoute<dynamic>(
-        builder: (context) => const _i15.InvoicingView(),
+    _i15.AddExpensesView: (data) {
+      final args = data.getArgs<AddExpensesViewArguments>(
+        orElse: () => const AddExpensesViewArguments(),
+      );
+      return _i19.CupertinoPageRoute<dynamic>(
+        builder: (context) =>
+            _i15.AddExpensesView(key: args.key, busy: args.busy),
+        settings: data,
+      );
+    },
+    _i16.AddSalesView: (data) {
+      final args = data.getArgs<AddSalesViewArguments>(
+        orElse: () => const AddSalesViewArguments(),
+      );
+      return _i19.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i16.AddSalesView(key: args.key, busy: args.busy),
+        settings: data,
+      );
+    },
+    _i17.SalesView: (data) {
+      return _i19.CupertinoPageRoute<dynamic>(
+        builder: (context) => const _i17.SalesView(),
+        settings: data,
+      );
+    },
+    _i18.InvoicingView: (data) {
+      return _i19.CupertinoPageRoute<dynamic>(
+        builder: (context) => const _i18.InvoicingView(),
         settings: data,
       );
     },
@@ -252,31 +305,31 @@ class StackedRouter extends _i1.RouterBase {
 class HomeScreenArguments {
   const HomeScreenArguments({this.key});
 
-  final _i17.Key? key;
+  final _i20.Key? key;
 }
 
 class CreateAccountViewArguments {
   const CreateAccountViewArguments({this.key});
 
-  final _i17.Key? key;
+  final _i20.Key? key;
 }
 
 class LoginViewArguments {
   const LoginViewArguments({this.key});
 
-  final _i17.Key? key;
+  final _i20.Key? key;
 }
 
 class ForgotPasswordViewArguments {
   const ForgotPasswordViewArguments({this.key});
 
-  final _i17.Key? key;
+  final _i20.Key? key;
 }
 
 class VerificationViewArguments {
   const VerificationViewArguments({this.key});
 
-  final _i17.Key? key;
+  final _i20.Key? key;
 }
 
 class BusinessProfileCreationViewArguments {
@@ -285,7 +338,7 @@ class BusinessProfileCreationViewArguments {
     this.busy = false,
   });
 
-  final _i17.Key? key;
+  final _i20.Key? key;
 
   final bool busy;
 }
@@ -296,14 +349,47 @@ class SelectTagsViewArguments {
     this.busy = false,
   });
 
-  final _i17.Key? key;
+  final _i20.Key? key;
 
   final bool busy;
 }
 
-extension NavigatorStateExtension on _i18.NavigationService {
+class CreateMerchantViewArguments {
+  const CreateMerchantViewArguments({
+    this.key,
+    this.busy = false,
+  });
+
+  final _i20.Key? key;
+
+  final bool busy;
+}
+
+class AddExpensesViewArguments {
+  const AddExpensesViewArguments({
+    this.key,
+    this.busy = false,
+  });
+
+  final _i20.Key? key;
+
+  final bool busy;
+}
+
+class AddSalesViewArguments {
+  const AddSalesViewArguments({
+    this.key,
+    this.busy = false,
+  });
+
+  final _i20.Key? key;
+
+  final bool busy;
+}
+
+extension NavigatorStateExtension on _i21.NavigationService {
   Future<dynamic> navigateToHomeScreenRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -361,7 +447,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToCreateAccountRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -377,7 +463,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToLoginRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -393,7 +479,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToForgotPasswordRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -409,7 +495,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToVerificationRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -425,7 +511,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToBusinessProfileCreationRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -442,7 +528,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToSelectTagsRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -472,6 +558,23 @@ extension NavigatorStateExtension on _i18.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToCreateMerchantRoute({
+    _i20.Key? key,
+    bool busy = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.createMerchantRoute,
+        arguments: CreateMerchantViewArguments(key: key, busy: busy),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> navigateToExpensesRoute([
     int? routerId,
     bool preventDuplicates = true,
@@ -480,6 +583,40 @@ extension NavigatorStateExtension on _i18.NavigationService {
         transition,
   ]) async {
     return navigateTo<dynamic>(Routes.expensesRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddExpenseRoute({
+    _i20.Key? key,
+    bool busy = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.addExpenseRoute,
+        arguments: AddExpensesViewArguments(key: key, busy: busy),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddSalesRoute({
+    _i20.Key? key,
+    bool busy = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.addSalesRoute,
+        arguments: AddSalesViewArguments(key: key, busy: busy),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -515,7 +652,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithHomeScreenRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -573,7 +710,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithCreateAccountRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -589,7 +726,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithLoginRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -605,7 +742,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithForgotPasswordRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -621,7 +758,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithVerificationRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -637,7 +774,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithBusinessProfileCreationRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -654,7 +791,7 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithSelectTagsRoute({
-    _i17.Key? key,
+    _i20.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -684,6 +821,23 @@ extension NavigatorStateExtension on _i18.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> replaceWithCreateMerchantRoute({
+    _i20.Key? key,
+    bool busy = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.createMerchantRoute,
+        arguments: CreateMerchantViewArguments(key: key, busy: busy),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithExpensesRoute([
     int? routerId,
     bool preventDuplicates = true,
@@ -692,6 +846,40 @@ extension NavigatorStateExtension on _i18.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.expensesRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddExpenseRoute({
+    _i20.Key? key,
+    bool busy = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.addExpenseRoute,
+        arguments: AddExpensesViewArguments(key: key, busy: busy),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddSalesRoute({
+    _i20.Key? key,
+    bool busy = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.addSalesRoute,
+        arguments: AddSalesViewArguments(key: key, busy: busy),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

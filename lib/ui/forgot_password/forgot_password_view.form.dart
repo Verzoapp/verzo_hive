@@ -9,7 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-const String OtpValueKey = 'otp';
+const String EmailValueKey = 'email';
 
 final Map<String, TextEditingController>
     _ForgotPasswordViewTextEditingControllers = {};
@@ -18,13 +18,13 @@ final Map<String, FocusNode> _ForgotPasswordViewFocusNodes = {};
 
 final Map<String, String? Function(String?)?>
     _ForgotPasswordViewTextValidations = {
-  OtpValueKey: null,
+  EmailValueKey: null,
 };
 
 mixin $ForgotPasswordView on StatelessWidget {
-  TextEditingController get OTPController =>
-      _getFormTextEditingController(OtpValueKey);
-  FocusNode get OTPFocusNode => _getFormFocusNode(OtpValueKey);
+  TextEditingController get emailController =>
+      _getFormTextEditingController(EmailValueKey);
+  FocusNode get emailFocusNode => _getFormFocusNode(EmailValueKey);
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
@@ -47,7 +47,7 @@ mixin $ForgotPasswordView on StatelessWidget {
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
   void syncFormWithViewModel(FormViewModel model) {
-    OTPController.addListener(() => _updateFormData(model));
+    emailController.addListener(() => _updateFormData(model));
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -55,7 +55,7 @@ mixin $ForgotPasswordView on StatelessWidget {
   @Deprecated('Use syncFormWithViewModel instead.'
       'This feature was deprecated after 3.1.0.')
   void listenToFormUpdated(FormViewModel model) {
-    OTPController.addListener(() => _updateFormData(model));
+    emailController.addListener(() => _updateFormData(model));
   }
 
   final bool _autoTextFieldValidation = true;
@@ -69,7 +69,7 @@ mixin $ForgotPasswordView on StatelessWidget {
     model.setData(
       model.formValueMap
         ..addAll({
-          OtpValueKey: OTPController.text,
+          EmailValueKey: emailController.text,
         }),
     );
     if (_autoTextFieldValidation || forceValidate) {
@@ -80,7 +80,7 @@ mixin $ForgotPasswordView on StatelessWidget {
   /// Updates the fieldsValidationMessages on the FormViewModel
   void _updateValidationData(FormViewModel model) =>
       model.setValidationMessages({
-        OtpValueKey: _getValidationMessage(OtpValueKey),
+        EmailValueKey: _getValidationMessage(EmailValueKey),
       });
 
   /// Returns the validation message for the given key
@@ -111,20 +111,20 @@ mixin $ForgotPasswordView on StatelessWidget {
 extension ValueProperties on FormViewModel {
   bool get isFormValid =>
       this.fieldsValidationMessages.values.every((element) => element == null);
-  String? get otpValue => this.formValueMap[OtpValueKey] as String?;
+  String? get emailValue => this.formValueMap[EmailValueKey] as String?;
 
-  bool get hasOtp =>
-      this.formValueMap.containsKey(OtpValueKey) &&
-      (otpValue?.isNotEmpty ?? false);
+  bool get hasEmail =>
+      this.formValueMap.containsKey(EmailValueKey) &&
+      (emailValue?.isNotEmpty ?? false);
 
-  bool get hasOtpValidationMessage =>
-      this.fieldsValidationMessages[OtpValueKey]?.isNotEmpty ?? false;
+  bool get hasEmailValidationMessage =>
+      this.fieldsValidationMessages[EmailValueKey]?.isNotEmpty ?? false;
 
-  String? get otpValidationMessage =>
-      this.fieldsValidationMessages[OtpValueKey];
+  String? get emailValidationMessage =>
+      this.fieldsValidationMessages[EmailValueKey];
 }
 
 extension Methods on FormViewModel {
-  setOtpValidationMessage(String? validationMessage) =>
-      this.fieldsValidationMessages[OtpValueKey] = validationMessage;
+  setEmailValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[EmailValueKey] = validationMessage;
 }

@@ -1,51 +1,37 @@
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:verzo_one/app/app.router.dart';
+import 'package:verzo_one/services/business_profile_creation_service.dart';
+import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_view.form.dart';
 
 import '../../app/app.locator.dart';
-import '../../services/authentication_service.dart';
 
-class BusinessProfileCreationViewModel extends BaseViewModel {
+class BusinessProfileCreationViewModel extends FormViewModel {
   final navigationService = locator<NavigationService>();
-  final _authenticationService = locator<AuthenticationService>();
+  final _businessCreationService = locator<BusinessCreationService>();
 
-  String _businessName = '';
-  String _businessLocation = '';
-  String _email = '';
-  String _contactName = '';
-  String _phoneNumber = '';
+  @override
+  void setFormStatus() {}
 
-  String get businessName => _businessName;
-  String get businessLocation => _businessLocation;
-  String get email => _email;
-  String get contactName => _contactName;
-  String get phoneNumber => _phoneNumber;
+  Future<BusinessCreationResult> runBusinessCreation() =>
+      _businessCreationService.createBusinessProfile(
+          businessName: businessNameValue ?? '',
+          businessEmail: businessEmailValue ?? '',
+          businessMobile: businessMobileValue ?? '',
+          businessCategoryId: businessCategoryIdValue ?? '');
 
-  void setBusinessName(String businessName) {
-    _businessName = businessName;
-    notifyListeners();
+  Future saveData() async {
+    final result = await runBusyFuture(runBusinessCreation());
+
+    if (result.business != null) {
+      // navigate to success route
+      navigationService.replaceWith(Routes.dashboardRoute);
+    } else if (result.error != null) {
+      setValidationMessage(result.error?.message);
+    } else {
+      // handle other errors
+    }
   }
 
-  void setBusinessLocation(String businessLocation) {
-    _businessLocation = businessLocation;
-    notifyListeners();
-  }
-
-  void setEmail(String email) {
-    _email = email;
-    notifyListeners();
-  }
-
-  void setContactName(String contactName) {
-    _contactName = contactName;
-    notifyListeners();
-  }
-
-  void setPhoneNumber(String phoneNumber) {
-    _phoneNumber = phoneNumber;
-    notifyListeners();
-  }
-
-  void createBusinessProfile() {
-    // Code to create business profile
-  }
+  void navigateBack() => navigationService.back();
 }

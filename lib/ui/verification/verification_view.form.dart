@@ -9,7 +9,10 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-const String OtpValueKey = 'otp';
+const String Otp1ValueKey = 'otp1';
+const String Otp2ValueKey = 'otp2';
+const String Otp3ValueKey = 'otp3';
+const String Otp4ValueKey = 'otp4';
 
 final Map<String, TextEditingController>
     _VerificationViewTextEditingControllers = {};
@@ -18,13 +21,25 @@ final Map<String, FocusNode> _VerificationViewFocusNodes = {};
 
 final Map<String, String? Function(String?)?> _VerificationViewTextValidations =
     {
-  OtpValueKey: null,
+  Otp1ValueKey: null,
+  Otp2ValueKey: null,
+  Otp3ValueKey: null,
+  Otp4ValueKey: null,
 };
 
 mixin $VerificationView on StatelessWidget {
-  TextEditingController get OTPController =>
-      _getFormTextEditingController(OtpValueKey);
-  FocusNode get OTPFocusNode => _getFormFocusNode(OtpValueKey);
+  TextEditingController get otp1Controller =>
+      _getFormTextEditingController(Otp1ValueKey);
+  TextEditingController get otp2Controller =>
+      _getFormTextEditingController(Otp2ValueKey);
+  TextEditingController get otp3Controller =>
+      _getFormTextEditingController(Otp3ValueKey);
+  TextEditingController get otp4Controller =>
+      _getFormTextEditingController(Otp4ValueKey);
+  FocusNode get otp1FocusNode => _getFormFocusNode(Otp1ValueKey);
+  FocusNode get otp2FocusNode => _getFormFocusNode(Otp2ValueKey);
+  FocusNode get otp3FocusNode => _getFormFocusNode(Otp3ValueKey);
+  FocusNode get otp4FocusNode => _getFormFocusNode(Otp4ValueKey);
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
@@ -47,7 +62,10 @@ mixin $VerificationView on StatelessWidget {
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
   void syncFormWithViewModel(FormViewModel model) {
-    OTPController.addListener(() => _updateFormData(model));
+    otp1Controller.addListener(() => _updateFormData(model));
+    otp2Controller.addListener(() => _updateFormData(model));
+    otp3Controller.addListener(() => _updateFormData(model));
+    otp4Controller.addListener(() => _updateFormData(model));
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -55,7 +73,10 @@ mixin $VerificationView on StatelessWidget {
   @Deprecated('Use syncFormWithViewModel instead.'
       'This feature was deprecated after 3.1.0.')
   void listenToFormUpdated(FormViewModel model) {
-    OTPController.addListener(() => _updateFormData(model));
+    otp1Controller.addListener(() => _updateFormData(model));
+    otp2Controller.addListener(() => _updateFormData(model));
+    otp3Controller.addListener(() => _updateFormData(model));
+    otp4Controller.addListener(() => _updateFormData(model));
   }
 
   final bool _autoTextFieldValidation = true;
@@ -69,7 +90,10 @@ mixin $VerificationView on StatelessWidget {
     model.setData(
       model.formValueMap
         ..addAll({
-          OtpValueKey: OTPController.text,
+          Otp1ValueKey: otp1Controller.text,
+          Otp2ValueKey: otp2Controller.text,
+          Otp3ValueKey: otp3Controller.text,
+          Otp4ValueKey: otp4Controller.text,
         }),
     );
     if (_autoTextFieldValidation || forceValidate) {
@@ -80,7 +104,10 @@ mixin $VerificationView on StatelessWidget {
   /// Updates the fieldsValidationMessages on the FormViewModel
   void _updateValidationData(FormViewModel model) =>
       model.setValidationMessages({
-        OtpValueKey: _getValidationMessage(OtpValueKey),
+        Otp1ValueKey: _getValidationMessage(Otp1ValueKey),
+        Otp2ValueKey: _getValidationMessage(Otp2ValueKey),
+        Otp3ValueKey: _getValidationMessage(Otp3ValueKey),
+        Otp4ValueKey: _getValidationMessage(Otp4ValueKey),
       });
 
   /// Returns the validation message for the given key
@@ -111,20 +138,50 @@ mixin $VerificationView on StatelessWidget {
 extension ValueProperties on FormViewModel {
   bool get isFormValid =>
       this.fieldsValidationMessages.values.every((element) => element == null);
-  String? get otpValue => this.formValueMap[OtpValueKey] as String?;
+  String? get otp1Value => this.formValueMap[Otp1ValueKey] as String?;
+  String? get otp2Value => this.formValueMap[Otp2ValueKey] as String?;
+  String? get otp3Value => this.formValueMap[Otp3ValueKey] as String?;
+  String? get otp4Value => this.formValueMap[Otp4ValueKey] as String?;
 
-  bool get hasOtp =>
-      this.formValueMap.containsKey(OtpValueKey) &&
-      (otpValue?.isNotEmpty ?? false);
+  bool get hasOtp1 =>
+      this.formValueMap.containsKey(Otp1ValueKey) &&
+      (otp1Value?.isNotEmpty ?? false);
+  bool get hasOtp2 =>
+      this.formValueMap.containsKey(Otp2ValueKey) &&
+      (otp2Value?.isNotEmpty ?? false);
+  bool get hasOtp3 =>
+      this.formValueMap.containsKey(Otp3ValueKey) &&
+      (otp3Value?.isNotEmpty ?? false);
+  bool get hasOtp4 =>
+      this.formValueMap.containsKey(Otp4ValueKey) &&
+      (otp4Value?.isNotEmpty ?? false);
 
-  bool get hasOtpValidationMessage =>
-      this.fieldsValidationMessages[OtpValueKey]?.isNotEmpty ?? false;
+  bool get hasOtp1ValidationMessage =>
+      this.fieldsValidationMessages[Otp1ValueKey]?.isNotEmpty ?? false;
+  bool get hasOtp2ValidationMessage =>
+      this.fieldsValidationMessages[Otp2ValueKey]?.isNotEmpty ?? false;
+  bool get hasOtp3ValidationMessage =>
+      this.fieldsValidationMessages[Otp3ValueKey]?.isNotEmpty ?? false;
+  bool get hasOtp4ValidationMessage =>
+      this.fieldsValidationMessages[Otp4ValueKey]?.isNotEmpty ?? false;
 
-  String? get otpValidationMessage =>
-      this.fieldsValidationMessages[OtpValueKey];
+  String? get otp1ValidationMessage =>
+      this.fieldsValidationMessages[Otp1ValueKey];
+  String? get otp2ValidationMessage =>
+      this.fieldsValidationMessages[Otp2ValueKey];
+  String? get otp3ValidationMessage =>
+      this.fieldsValidationMessages[Otp3ValueKey];
+  String? get otp4ValidationMessage =>
+      this.fieldsValidationMessages[Otp4ValueKey];
 }
 
 extension Methods on FormViewModel {
-  setOtpValidationMessage(String? validationMessage) =>
-      this.fieldsValidationMessages[OtpValueKey] = validationMessage;
+  setOtp1ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Otp1ValueKey] = validationMessage;
+  setOtp2ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Otp2ValueKey] = validationMessage;
+  setOtp3ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Otp3ValueKey] = validationMessage;
+  setOtp4ValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[Otp4ValueKey] = validationMessage;
 }

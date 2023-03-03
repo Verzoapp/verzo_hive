@@ -17,6 +17,8 @@ class ExpensesView extends StatelessWidget {
       viewModelBuilder: () => ExpensesViewModel(),
       onModelReady: (model) => () {},
       builder: (context, model, child) => Scaffold(
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: kcPrimaryColor,
           onPressed: () {},
@@ -69,155 +71,11 @@ class ExpensesView extends StatelessWidget {
                     'Recent Expenses',
                     style: ktsHeaderText,
                   ),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     height: 80,
                     child: Card(
-                      color: kcStrokeColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '-N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcStrokeColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '-N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcStrokeColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '-N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcStrokeColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '-N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcStrokeColor,
+                      color: kcButtonTextColor,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
                           borderRadius: defaultTagBorderRadius),
@@ -253,7 +111,151 @@ class ExpensesView extends StatelessWidget {
                     width: double.infinity,
                     height: 80,
                     child: Card(
-                      color: kcStrokeColor,
+                      color: kcButtonTextColor,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: defaultTagBorderRadius),
+                      margin: const EdgeInsets.all(6.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Steven Summers',
+                                  style: ktsBodyText,
+                                ),
+                                Text(
+                                  '02 Minutes Ago',
+                                  style: ktsBodyTextLight,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '-N200,000',
+                              style: ktsBodyText,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 80,
+                    child: Card(
+                      color: kcButtonTextColor,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: defaultTagBorderRadius),
+                      margin: const EdgeInsets.all(6.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Steven Summers',
+                                  style: ktsBodyText,
+                                ),
+                                Text(
+                                  '02 Minutes Ago',
+                                  style: ktsBodyTextLight,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '-N200,000',
+                              style: ktsBodyText,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 80,
+                    child: Card(
+                      color: kcButtonTextColor,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: defaultTagBorderRadius),
+                      margin: const EdgeInsets.all(6.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Steven Summers',
+                                  style: ktsBodyText,
+                                ),
+                                Text(
+                                  '02 Minutes Ago',
+                                  style: ktsBodyTextLight,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '-N200,000',
+                              style: ktsBodyText,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 80,
+                    child: Card(
+                      color: kcButtonTextColor,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: defaultTagBorderRadius),
+                      margin: const EdgeInsets.all(6.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Steven Summers',
+                                  style: ktsBodyText,
+                                ),
+                                Text(
+                                  '02 Minutes Ago',
+                                  style: ktsBodyTextLight,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '-N200,000',
+                              style: ktsBodyText,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 80,
+                    child: Card(
+                      color: kcButtonTextColor,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
                           borderRadius: defaultTagBorderRadius),

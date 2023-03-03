@@ -14,36 +14,19 @@ class ForgotPasswordViewModel extends FormViewModel {
   @override
   void setFormStatus() {}
 
-  // Future<AuthenticationResult> runAuthentication() => _authenticationService
-  //     .loginWithEmail(email: emailValue ?? '', password: passwordValue ?? '');
-
-  // Future saveData() async {
-  //   final result = await runBusyFuture(runAuthentication());
-
-  //   if (!result.hasError) {
-  //     // navigate to success route
-  //     navigationService.replaceWith(Routes.homeScreenRoute);
-  //   } else {
-  //     setValidationMessage(result.errorMessage?.message);
-  //   }
-  // }
-
   Future<AuthenticationResult> runAuthentication() => _authenticationService
       .loginWithEmail(email: emailValue ?? '', password: passwordValue ?? '');
 
   Future saveData() async {
     final result = await runBusyFuture(runAuthentication());
 
-    if (result.tokens != null) {
+    if (result != null) {
       // navigate to success route
-      navigationService.replaceWith(Routes.homeScreenRoute);
+      navigationService.replaceWith(Routes.loginRoute);
     } else if (result.error != null) {
       setValidationMessage(result.error?.message);
     } else {
       // handle other errors
     }
   }
-
-  void navigateToCreateAccount() =>
-      navigationService.navigateTo(Routes.createAccountRoute);
 }
