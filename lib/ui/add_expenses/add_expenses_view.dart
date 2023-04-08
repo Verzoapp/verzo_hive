@@ -1,24 +1,195 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:verzo_one/app/app.locator.dart';
 import 'package:verzo_one/enums/bottomsheet_type.dart';
+import 'package:verzo_one/services/expenses_service.dart';
+import 'package:verzo_one/ui/add_expenses/add_expenses_view.form.dart';
 import 'package:verzo_one/ui/add_expenses/add_expenses_view_model.dart';
+import 'package:verzo_one/ui/create_merchant/create_merchant_view.dart';
+import 'package:verzo_one/ui/create_merchant/create_merchant_view.form.dart';
+import 'package:verzo_one/ui/dumb_widgets/authentication_layout.dart';
 import 'package:verzo_one/ui/setup_bottom_sheet_ui.dart';
 
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
-class AddExpensesView extends StatelessWidget {
-  final bool busy;
-  const AddExpensesView({Key? key, this.busy = false}) : super(key: key);
+@FormView(fields: [
+  FormTextField(name: 'description'),
+  FormTextField(name: 'amount'),
+  FormTextField(name: 'expenseCategoryId'),
+  FormTextField(name: 'expenseDate'),
+  FormTextField(name: 'merchantId')
+])
+class AddExpensesView extends StatelessWidget with $AddExpensesView {
+  AddExpensesView({
+    Key? key,
+  }) : super(key: key);
 
+  //final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddExpensesViewModel>.reactive(
       viewModelBuilder: () => AddExpensesViewModel(),
-      onModelReady: (model) => () {},
+      onModelReady: (model) async {
+        await model.getExpenseCategoriesByBusiness();
+        await model.getMerchantsByBusiness();
+        listenToFormUpdated(model);
+      },
       builder: (context, model, child) => Scaffold(
+        body: AuthenticationLayout(
+          busy: model.isBusy,
+          onBackPressed: model.navigateBack,
+          onMainButtonTapped: () => model.saveExpenseData(),
+          title: 'Add Expense',
+          subtitle: 'Please fill the form below to create an expense',
+          mainButtonTitle: 'Add',
+          form: Column(
+            children: [
+              TextFormField(
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                maxLines: 3,
+                decoration: InputDecoration(
+                    labelText: 'Expense description',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.name,
+                controller: descriptionController,
+              ),
+              verticalSpaceSmall,
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                    labelText: ' ExpenseCategory',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                items: model.expenseCategorydropdownItems,
+                value: expenseCategoryIdController.text.isEmpty
+                    ? null
+                    : expenseCategoryIdController.text,
+                onChanged: (value) {
+                  expenseCategoryIdController.text = value.toString();
+                },
+              ),
+              verticalSpaceSmall,
+              TextFormField(
+                // inputFormatters: [
+                //   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                //   TextInputFormatter.withFunction((oldValue, newValue) {
+                //     final doubleValue = double.tryParse(newValue.text);
+                //     if (doubleValue != null) {
+                //       final newAmount =
+                //           NumberFormat.currency(locale: 'en_US', symbol: '\$')
+                //               .format(doubleValue);
+                //       amountController.value = amountController.value.copyWith(
+                //         text: newAmount,
+                //         selection:
+                //             TextSelection.collapsed(offset: newAmount.length),
+                //       );
+                //     }
+                //   }),
+                // ],
+                decoration: InputDecoration(
+                    labelText: 'Amount',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.number,
+                controller: amountController,
+              ),
+              verticalSpaceSmall,
+              TextFormField(
+                controller: expenseDateController,
+                decoration: InputDecoration(
+                    labelText: 'Date',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.datetime,
+                onTap: () async {
+                  DateTime? pickeddate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(DateTime.now().year - 5),
+                    lastDate: DateTime(DateTime.now().year + 5),
+                  );
+                  if (pickeddate != null) {
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(pickeddate);
+                    expenseDateController.text = formattedDate;
+                  }
+                },
+              ),
+              verticalSpaceSmall,
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                    labelText: ' Merchant',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                items: model.merchantdropdownItems,
+                value: merchantIdController.text.isEmpty
+                    ? null
+                    : merchantIdController.text,
+                onChanged: (value) async {
+                  if (value == 'new_category') {
+                    await showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CreateMerchantView();
+                      },
+                    ).then((value) async {
+                      await model.getMerchantsByBusiness();
+                      // reset the `_isCreatingMerchant` flag when the bottom sheet is closed
+                    });
+                  } else {
+                    merchantIdController.text = value.toString();
+                  }
+                },
+              ),
+              // DropdownButtonFormField(
+              //     decoration: InputDecoration(
+              //         labelText: 'Merchant',
+              //         hintText: 'Merchant',
+              //         labelStyle: ktsFormText,
+              //         border: defaultFormBorder),
+              // value: selectedItem,
+              // items: items.map((item) {
+              //   return DropdownMenuItem(
+              //     value: item,
+              //     child: Text(item),
+              //   );
+              // }).toList(),
+              // onChanged: (value) {}
+              //   setState(() {
+              //     selectedItem = value.toString();
+              //     if (selectedItem == items[0]) {
+              //       showModalBottomSheet(
+              //         context: context,
+              //         builder: (BuildContext context) {
+              //           return Container(
+              //               height: 400,
+              //               child: Padding(
+              //                 padding: const EdgeInsets.symmetric(
+              //                     horizontal: 20, vertical: 50),
+              //                 child: ListView(
+              //                   children: [
+              //                     Text(
+              //                       'Create Merchant',
+              //                       style: ktsHeaderText,
+              //                     ),
+              //                   ],
+              //                 ),
+              //               ));
+              //         },
+              //       );
+              //     }
+              //     ;
+              //   });
+              // },
+              //),
+            ],
+          ),
+        ),
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             fixedColor: kcPrimaryColor,
@@ -37,110 +208,6 @@ class AddExpensesView extends StatelessWidget {
               BottomNavigationBarItem(
                   icon: Icon(Icons.receipt_long), label: 'Invoicing')
             ]),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-          child: ListView(
-            children: [
-              verticalSpaceTiny,
-              IconButton(
-                onPressed: () {},
-                padding: EdgeInsets.zero,
-                alignment: Alignment.centerLeft,
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: kcTextColor,
-                ),
-              ),
-              verticalSpaceIntermitent,
-              Text(
-                'Add Expenses',
-                style: ktsHeaderText,
-              ),
-              verticalSpaceMedium,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                        labelText: 'Expense description',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    keyboardType: TextInputType.name,
-                  ),
-                  verticalSpaceSmall,
-                  DropdownButtonFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Category',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    items: <String>[
-                      'Agriculture',
-                      'Education',
-                      'Accounting',
-                      'Airline'
-                    ].map<DropdownMenuItem<String>>((String list) {
-                      return DropdownMenuItem<String>(
-                        value: list,
-                        child: Text(
-                          list,
-                          style: ktsBodyText,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {},
-                  ),
-                  verticalSpaceSmall,
-                  TextFormField(
-                    inputFormatters: [CurrencyTextInputFormatter(symbol: '₦')],
-                    decoration: InputDecoration(
-                        labelText: 'Amount',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    keyboardType: TextInputType.number,
-                  ),
-                  verticalSpaceSmall,
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Date',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    keyboardType: TextInputType.datetime,
-                    onTap: () async {
-                      DateTime? pickeddate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(DateTime.now().year - 5),
-                        lastDate: DateTime(DateTime.now().year + 5),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              verticalSpaceRegular,
-              GestureDetector(
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: defaultBorderRadius,
-                    color: kcPrimaryColor,
-                  ),
-                  child: busy
-                      ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(Colors.white),
-                        )
-                      : Text(
-                          'Add',
-                          style: ktsButtonText,
-                        ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -2,10 +2,13 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'package:verzo_one/services/authentication_service.dart';
-import 'package:verzo_one/services/business_profile_creation_service.dart';
-import 'package:verzo_one/services/create_merchant_service.dart';
+import 'package:verzo_one/services/business_profile_service.dart';
+import 'package:verzo_one/services/invoices_service.dart';
+import 'package:verzo_one/services/merchant_service.dart';
+import 'package:verzo_one/services/expenses_service.dart';
 import 'package:verzo_one/services/otp_verification_service.dart';
 import 'package:verzo_one/ui/add_expenses/add_expenses_view.dart';
+import 'package:verzo_one/ui/add_invoices/add_invoices_view.dart';
 import 'package:verzo_one/ui/add_sales/add_sales_view.dart';
 import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_view.dart';
 import 'package:verzo_one/ui/create_account/create_account_view.dart';
@@ -33,6 +36,8 @@ import 'package:verzo_one/ui/views/second_screen.dart';
     Singleton(classType: OTPVerificationService),
     Singleton(classType: MerchantService),
     Singleton(classType: BusinessCreationService),
+    Singleton(classType: ExpenseService),
+    Singleton(classType: InvoiceService),
   ],
   routes: [
     MaterialRoute(
@@ -52,36 +57,34 @@ import 'package:verzo_one/ui/views/second_screen.dart';
       name: 'secondScreenRoute',
     ),
     CupertinoRoute(page: CreateAccountView, name: 'createAccountRoute'),
-    CupertinoRoute(page: LoginView, name: 'loginRoute'),
+    CupertinoRoute(page: LoginView, name: 'loginRoute', initial: true),
     CupertinoRoute(
       page: ForgotPasswordView,
       name: 'forgotPasswordRoute',
     ),
     CupertinoRoute(page: VerificationView, name: 'verificationRoute'),
     CupertinoRoute(
-        page: BusinessProfileCreationView,
-        name: 'businessProfileCreationRoute',
-        initial: true),
+      page: BusinessProfileCreationView,
+      name: 'businessProfileCreationRoute',
+    ),
     CupertinoRoute(
       page: SelectTagsView,
       name: 'selectTagsRoute',
     ),
-    CupertinoRoute(
-      page: DashboardView,
-      name: 'dashboardRoute',
-    ),
-    CupertinoRoute(page: CreateMerchantView, name: 'createMerchantRoute'),
+    CupertinoRoute(page: DashboardView, name: 'dashboardRoute'),
     CupertinoRoute(page: ExpensesView, name: 'expensesRoute'),
+    CupertinoRoute(page: SalesView, name: 'salesRoute'),
+    CupertinoRoute(
+      page: InvoicingView,
+      name: 'invoicingRoute',
+    ),
     CupertinoRoute(page: AddExpensesView, name: 'addExpenseRoute'),
     CupertinoRoute(
       page: AddSalesView,
       name: 'addSalesRoute',
     ),
-    CupertinoRoute(page: SalesView, name: 'salesRoute'),
-    CupertinoRoute(
-      page: InvoicingView,
-      name: 'invoicingRoute',
-    )
+    CupertinoRoute(page: AddInvoicesView, name: 'addInvoiceRoute'),
+    CupertinoRoute(page: CreateMerchantView, name: 'createMerchantRoute'),
   ],
 )
 class App extends StackedApp {

@@ -3,13 +3,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:verzo_one/ui/dashboard/dashboard_view_model.dart';
+import 'package:verzo_one/ui/expenses/expenses_view.dart';
+import 'package:verzo_one/ui/invoicing/invoicing_view.dart';
+import 'package:verzo_one/ui/sales/sales_view.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
-class DashboardView extends StatelessWidget {
+class DashboardView extends StatefulWidget {
   const DashboardView({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<DashboardView> {
+  int selectedPageIndex = 0;
+  void onHomeTapped() {
+    setState(() {
+      selectedPageIndex = 0;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DashboardView()),
+    );
+  }
+
+  void onSalesTapped() {
+    setState(() {
+      selectedPageIndex = 1;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SalesView()),
+    );
+  }
+
+  void onExpensesTapped() {
+    setState(() {
+      selectedPageIndex = 2;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ExpensesView()),
+    );
+  }
+
+  void onInvoicingTapped() {
+    setState(() {
+      selectedPageIndex = 3;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const InvoicingView()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +72,16 @@ class DashboardView extends StatelessWidget {
             iconSize: 24,
             showUnselectedLabels: true,
             unselectedItemColor: kcTextColorLight,
+            currentIndex: selectedPageIndex,
+            onTap: (index) {
+              if (index == 1) {
+                onSalesTapped();
+              } else if (index == 2) {
+                onExpensesTapped();
+              } else if (index == 3) {
+                onInvoicingTapped();
+              }
+            },
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),

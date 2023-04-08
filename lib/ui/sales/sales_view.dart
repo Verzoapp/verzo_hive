@@ -2,14 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
+import 'package:verzo_one/ui/dashboard/dashboard_view.dart';
+import 'package:verzo_one/ui/expenses/expenses_view.dart';
+import 'package:verzo_one/ui/invoicing/invoicing_view.dart';
 import 'package:verzo_one/ui/sales/sales_view_model.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
-class SalesView extends StatelessWidget {
+class SalesView extends StatefulWidget {
   const SalesView({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<SalesView> createState() => _SalesViewState();
+}
+
+class _SalesViewState extends State<SalesView> {
+  int selectedPageIndex = 1;
+  void onHomeTapped() {
+    setState(() {
+      selectedPageIndex = 0;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DashboardView()),
+    );
+  }
+
+  void onSalesTapped() {
+    setState(() {
+      selectedPageIndex = 1;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SalesView()),
+    );
+  }
+
+  void onExpensesTapped() {
+    setState(() {
+      selectedPageIndex = 2;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ExpensesView()),
+    );
+  }
+
+  void onInvoicingTapped() {
+    setState(() {
+      selectedPageIndex = 3;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const InvoicingView()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +77,16 @@ class SalesView extends StatelessWidget {
           iconSize: 24,
           showUnselectedLabels: true,
           unselectedItemColor: kcTextColorLight,
-          currentIndex: 1,
+          currentIndex: selectedPageIndex,
+          onTap: (index) {
+            if (index == 0) {
+              onHomeTapped();
+            } else if (index == 2) {
+              onExpensesTapped();
+            } else if (index == 3) {
+              onInvoicingTapped();
+            }
+          },
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -70,7 +128,7 @@ class SalesView extends StatelessWidget {
                     'Recent Sales',
                     style: ktsHeaderText,
                   ),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     height: 80,
                     child: Card(

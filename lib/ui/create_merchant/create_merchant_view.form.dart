@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 const String NameValueKey = 'name';
-const String BusinessIdValueKey = 'businessId';
 
 final Map<String, TextEditingController>
     _CreateMerchantViewTextEditingControllers = {};
@@ -20,16 +19,12 @@ final Map<String, FocusNode> _CreateMerchantViewFocusNodes = {};
 final Map<String, String? Function(String?)?>
     _CreateMerchantViewTextValidations = {
   NameValueKey: null,
-  BusinessIdValueKey: null,
 };
 
 mixin $CreateMerchantView on StatelessWidget {
   TextEditingController get nameController =>
       _getFormTextEditingController(NameValueKey);
-  TextEditingController get businessIdController =>
-      _getFormTextEditingController(BusinessIdValueKey);
   FocusNode get nameFocusNode => _getFormFocusNode(NameValueKey);
-  FocusNode get businessIdFocusNode => _getFormFocusNode(BusinessIdValueKey);
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
@@ -53,7 +48,6 @@ mixin $CreateMerchantView on StatelessWidget {
   /// with the latest textController values
   void syncFormWithViewModel(FormViewModel model) {
     nameController.addListener(() => _updateFormData(model));
-    businessIdController.addListener(() => _updateFormData(model));
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -62,7 +56,6 @@ mixin $CreateMerchantView on StatelessWidget {
       'This feature was deprecated after 3.1.0.')
   void listenToFormUpdated(FormViewModel model) {
     nameController.addListener(() => _updateFormData(model));
-    businessIdController.addListener(() => _updateFormData(model));
   }
 
   final bool _autoTextFieldValidation = true;
@@ -77,7 +70,6 @@ mixin $CreateMerchantView on StatelessWidget {
       model.formValueMap
         ..addAll({
           NameValueKey: nameController.text,
-          BusinessIdValueKey: businessIdController.text,
         }),
     );
     if (_autoTextFieldValidation || forceValidate) {
@@ -89,7 +81,6 @@ mixin $CreateMerchantView on StatelessWidget {
   void _updateValidationData(FormViewModel model) =>
       model.setValidationMessages({
         NameValueKey: _getValidationMessage(NameValueKey),
-        BusinessIdValueKey: _getValidationMessage(BusinessIdValueKey),
       });
 
   /// Returns the validation message for the given key
@@ -121,30 +112,19 @@ extension ValueProperties on FormViewModel {
   bool get isFormValid =>
       this.fieldsValidationMessages.values.every((element) => element == null);
   String? get nameValue => this.formValueMap[NameValueKey] as String?;
-  String? get businessIdValue =>
-      this.formValueMap[BusinessIdValueKey] as String?;
 
   bool get hasName =>
       this.formValueMap.containsKey(NameValueKey) &&
       (nameValue?.isNotEmpty ?? false);
-  bool get hasBusinessId =>
-      this.formValueMap.containsKey(BusinessIdValueKey) &&
-      (businessIdValue?.isNotEmpty ?? false);
 
   bool get hasNameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey]?.isNotEmpty ?? false;
-  bool get hasBusinessIdValidationMessage =>
-      this.fieldsValidationMessages[BusinessIdValueKey]?.isNotEmpty ?? false;
 
   String? get nameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey];
-  String? get businessIdValidationMessage =>
-      this.fieldsValidationMessages[BusinessIdValueKey];
 }
 
 extension Methods on FormViewModel {
   setNameValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[NameValueKey] = validationMessage;
-  setBusinessIdValidationMessage(String? validationMessage) =>
-      this.fieldsValidationMessages[BusinessIdValueKey] = validationMessage;
 }

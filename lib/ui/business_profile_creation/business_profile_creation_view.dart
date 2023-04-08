@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+import 'package:verzo_one/services/business_profile_service.dart';
 import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_view.form.dart';
 import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_viewmodel.dart';
+import 'package:verzo_one/ui/dumb_widgets/authentication_layout.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
@@ -16,123 +18,64 @@ import 'package:verzo_one/ui/shared/ui_helpers.dart';
 ])
 class BusinessProfileCreationView extends StatelessWidget
     with $BusinessProfileCreationView {
-  final bool busy;
+  BusinessProfileCreationView({
+    Key? key,
+  }) : super(key: key);
 
-  BusinessProfileCreationView({Key? key, this.busy = false}) : super(key: key);
-
-  final List<String> _selectedChoices = [];
   @override
   Widget build(BuildContext context) {
-    List<Widget> tiles = [];
-    for (var i = 0; i < chipList.length; i++) {
-      final item = chipList[i];
-      final isSelected = _selectedChoices.contains(item);
-
-      tiles.add(
-        ChoiceChip(
-          label: Text(item),
-          labelStyle: isSelected ? ktsButtonText : ktsBodyText,
-          selected: isSelected,
-          selectedColor: isSelected ? kcPrimaryColor : kcTextColor,
-          onSelected: (bool selected) {},
-        ),
-      );
-    }
     return ViewModelBuilder<BusinessProfileCreationViewModel>.reactive(
       viewModelBuilder: () => BusinessProfileCreationViewModel(),
-      onModelReady: (model) => listenToFormUpdated(model),
+      onModelReady: (model) async {
+        await model.getBusinessCategories();
+        listenToFormUpdated(model);
+      },
       builder: (context, model, child) => Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-          child: ListView(
+        body: AuthenticationLayout(
+          busy: model.isBusy,
+          onBackPressed: model.navigateBack,
+          onMainButtonTapped: () => model.saveBusinessData(),
+          title: 'Business Profile',
+          subtitle: 'Please fill the form below to create a business profile',
+          mainButtonTitle: 'Create BUsiness',
+          form: Column(
             children: [
-              verticalSpaceTiny,
-              IconButton(
-                padding: EdgeInsets.zero,
-                alignment: Alignment.centerLeft,
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: kcTextColor,
-                ),
-                onPressed: model.navigateBack,
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Enter business name',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                controller: businessNameController,
               ),
               verticalSpaceSmall,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/verzo_logo.svg',
-                    width: 102,
-                    height: 21,
-                  )
-                ],
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Enter email',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                controller: businessEmailController,
               ),
-              verticalSpaceRegular,
-              Text('Business Profile', //title
-                  style: ktsHeaderText),
               verticalSpaceSmall,
-              Text(
-                  'Please fill the form below to create a business profile', //subtitle
-                  style: ktsParagraphText),
-              verticalSpaceRegular,
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Enter business name',
-                          labelStyle: ktsFormText,
-                          border: defaultFormBorder),
-                      controller: businessNameController,
-                    ),
-                    verticalSpaceSmall,
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Enter email',
-                          labelStyle: ktsFormText,
-                          border: defaultFormBorder),
-                      controller: businessEmailController,
-                    ),
-                    verticalSpaceSmall,
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Enter phone number',
-                          labelStyle: ktsFormText,
-                          border: defaultFormBorder),
-                      controller: businessMobileController,
-                    ),
-                    verticalSpaceRegular,
-                    Text(
-                        'Select a category that relates to your business', //subtitle
-                        style: ktsParagraphText),
-                    verticalSpaceSmall,
-                    Wrap(
-                        spacing: 8,
-                        runSpacing: 6,
-                        direction: Axis.horizontal,
-                        children: tiles),
-                  ],
-                ),
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Enter phone number',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                controller: businessMobileController,
               ),
-              verticalSpaceRegular,
-              GestureDetector(
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: defaultBorderRadius,
-                    color: kcPrimaryColor,
-                  ),
-                  child: busy
-                      ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(Colors.white),
-                        )
-                      : Text(
-                          'Create Business',
-                          style: ktsButtonText,
-                        ),
-                ),
+              verticalSpaceSmall,
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                    labelText: 'Business Category',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                items: model.dropdownItems,
+                value: businessCategoryIdController.text.isEmpty
+                    ? null
+                    : businessCategoryIdController.text,
+                onChanged: (value) {
+                  businessCategoryIdController.text = value.toString();
+                },
               ),
             ],
           ),
@@ -141,13 +84,3 @@ class BusinessProfileCreationView extends StatelessWidget
     );
   }
 }
-
-final chipList = [
-  'Agriculture',
-  'Education',
-  'Accounting',
-  'Food & Drinks',
-  'Pharmacy',
-  'Airline',
-  'New'
-];

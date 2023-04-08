@@ -2,14 +2,68 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:verzo_one/app/app.locator.dart';
+import 'package:verzo_one/app/app.router.dart';
+import 'package:verzo_one/ui/dashboard/dashboard_view.dart';
+import 'package:verzo_one/ui/expenses/expenses_view.dart';
 import 'package:verzo_one/ui/invoicing/invoicing_view_model.dart';
+import 'package:verzo_one/ui/sales/sales_view.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
-class InvoicingView extends StatelessWidget {
+class InvoicingView extends StatefulWidget {
   const InvoicingView({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<InvoicingView> createState() => _InvoicingViewState();
+}
+
+class _InvoicingViewState extends State<InvoicingView> {
+  final navigationService = locator<NavigationService>();
+
+  int selectedPageIndex = 3;
+  void onHomeTapped() {
+    setState(() {
+      selectedPageIndex = 0;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DashboardView()),
+    );
+  }
+
+  void onSalesTapped() {
+    setState(() {
+      selectedPageIndex = 1;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SalesView()),
+    );
+  }
+
+  void onExpensesTapped() {
+    setState(() {
+      selectedPageIndex = 2;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ExpensesView()),
+    );
+  }
+
+  void onInvoicingTapped() {
+    setState(() {
+      selectedPageIndex = 3;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const InvoicingView()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +73,9 @@ class InvoicingView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: kcPrimaryColor,
-          onPressed: () {},
+          onPressed: () {
+            navigationService.replaceWith(Routes.addInvoiceRoute);
+          },
           child: const Icon(Icons.add),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -28,7 +84,16 @@ class InvoicingView extends StatelessWidget {
           iconSize: 24,
           showUnselectedLabels: true,
           unselectedItemColor: kcTextColorLight,
-          currentIndex: 3,
+          currentIndex: selectedPageIndex,
+          onTap: (index) {
+            if (index == 0) {
+              onHomeTapped();
+            } else if (index == 1) {
+              onSalesTapped();
+            } else if (index == 2) {
+              onExpensesTapped();
+            }
+          },
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),

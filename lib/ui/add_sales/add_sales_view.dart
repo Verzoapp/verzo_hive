@@ -1,4 +1,3 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:verzo_one/ui/add_sales/add_sales_view_model.dart';
@@ -88,7 +87,7 @@ class AddSalesView extends StatelessWidget {
                   ),
                   verticalSpaceSmall,
                   TextFormField(
-                    inputFormatters: [CurrencyTextInputFormatter(symbol: '₦')],
+                    inputFormatters: [],
                     decoration: InputDecoration(
                         labelText: 'Amount',
                         labelStyle: ktsFormText,
