@@ -61,7 +61,7 @@ class _ExpensesViewState extends State<ExpensesView> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const InvoicingView()),
+      MaterialPageRoute(builder: (context) => const InvoicesView()),
     );
   }
 
@@ -69,7 +69,9 @@ class _ExpensesViewState extends State<ExpensesView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ExpensesViewModel>.reactive(
         viewModelBuilder: () => ExpensesViewModel(),
-        onModelReady: (model) => () {},
+        onModelReady: (model) async {
+          model.addNewExpense;
+        },
         builder: (context, model, child) {
           if (model.isBusy) {
             return const Scaffold(
@@ -83,7 +85,7 @@ class _ExpensesViewState extends State<ExpensesView> {
             floatingActionButton: FloatingActionButton(
               backgroundColor: kcPrimaryColor,
               onPressed: () {
-                navigationService.replaceWith(Routes.addExpenseRoute);
+                navigationService.navigateTo(Routes.addExpenseRoute);
               },
               child: const Icon(Icons.add),
             ),
@@ -137,51 +139,57 @@ class _ExpensesViewState extends State<ExpensesView> {
                     ],
                   ),
                   verticalSpaceRegular,
-                  Text(
-                    'Recent Expenses',
-                    style: ktsHeaderText,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Recent Expenses',
+                        style: ktsHeaderText,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
-                  if (model.data.isEmpty)
-                    Text('No Expense')
+                  if (model.expenses.isEmpty)
+                    const Text('No Expense')
                   else
-                    // PagedListView<int, Expenses>(
-                    //   shrinkWrap: true,
-                    //   primary: false,
-                    //   pagingController: model.data!,
-                    //   builderDelegate: PagedChildBuilderDelegate<Expenses>(
-                    //     itemBuilder: (context, expenses, index) {
-                    //       return ExpenseCard(expenses: expenses);
-                    //     },
-                    //     firstPageProgressIndicatorBuilder: (context) {
-                    //       return const CircularProgressIndicator();
-                    //     },
-                    //     newPageProgressIndicatorBuilder: (context) {
-                    //       return const CircularProgressIndicator();
-                    //     },
-                    //     noItemsFoundIndicatorBuilder: (context) {
-                    //       return const Text('No Expense');
-                    //     },
-                    //   ),
-                    // ),
                     ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      primary: true,
                       shrinkWrap: true,
-                      primary: false,
-                      controller: model.scrollController,
-                      itemCount: model.data.length + 1,
+                      itemCount: model.expenses.length + (model.isBusy ? 1 : 0),
                       itemBuilder: (context, index) {
-                        if (index < model.data.length) {
-                          return ExpenseCard(expenses: model.data[index]);
+                        if (index == model.expenses.length) {
+                          return const CircularProgressIndicator();
                         } else {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20.0),
-                            child: CircularProgressIndicator(),
-                          );
+                          return ExpenseCard(expenses: model.expenses[index]!);
                         }
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return verticalSpaceTiny;
                       },
-                    )
+                    ),
+                  // PagedListView<int, Expenses>(
+                  //   shrinkWrap: true,
+                  //   primary: false,
+                  //   pagingController: model.data!,
+                  //   builderDelegate: PagedChildBuilderDelegate<Expenses>(
+                  //     itemBuilder: (context, expenses, index) {
+                  //       return ExpenseCard(expenses: expenses);
+                  //     },
+                  //     firstPageProgressIndicatorBuilder: (context) {
+                  //       return const CircularProgressIndicator();
+                  //     },
+                  //     newPageProgressIndicatorBuilder: (context) {
+                  //       return const CircularProgressIndicator();
+                  //     },
+                  //     noItemsFoundIndicatorBuilder: (context) {
+                  //       return const Text('No Expense');
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -191,7 +199,8 @@ class _ExpensesViewState extends State<ExpensesView> {
 }
 
 class ExpenseCard extends StatelessWidget {
-  const ExpenseCard({Key? key, required this.expenses}) : super(key: key);
+  ExpenseCard({Key? key, required this.expenses}) : super(key: key);
+  final navigationService = locator<NavigationService>();
 
   final Expenses expenses;
   @override
@@ -209,10 +218,21 @@ class ExpenseCard extends StatelessWidget {
         expenses.expenseDate,
         style: ktsBodyTextLight,
       ),
-      trailing: Text(
-        NumberFormat.currency(locale: 'en', symbol: '\N')
-            .format(expenses.amount),
-        style: ktsBodyText,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            NumberFormat.currency(locale: 'en', symbol: '\N')
+                .format(expenses.amount),
+            style: ktsBodyText,
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              navigationService.navigateTo(Routes.updateExpenseRoute);
+            },
+          ),
+        ],
       ),
     );
   }

@@ -24,10 +24,6 @@ class CreateMerchantViewModel extends FormViewModel {
     final result = await runBusyFuture(runMerchantCreation());
 
     if (result.merchant != null) {
-      final prefs = await SharedPreferences.getInstance();
-      final businessIdValue = prefs.getString('id');
-      _createMerchantService.getMerchantsByBusiness(
-          businessId: businessIdValue ?? '');
       // navigate to success route
       navigationService.back();
     } else if (result.error != null) {

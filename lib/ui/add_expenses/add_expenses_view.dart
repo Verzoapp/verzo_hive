@@ -29,14 +29,14 @@ class AddExpensesView extends StatelessWidget with $AddExpensesView {
     Key? key,
   }) : super(key: key);
 
-  //final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddExpensesViewModel>.reactive(
       viewModelBuilder: () => AddExpensesViewModel(),
       onModelReady: (model) async {
-        await model.getExpenseCategoriesByBusiness();
-        await model.getMerchantsByBusiness();
+        model.getExpenseCategoryWithSets();
+        model.getMerchantsByBusiness();
+        model.addNewMerchant;
         listenToFormUpdated(model);
       },
       builder: (context, model, child) => Scaffold(
@@ -137,8 +137,9 @@ class AddExpensesView extends StatelessWidget with $AddExpensesView {
                       builder: (BuildContext context) {
                         return CreateMerchantView();
                       },
-                    ).then((value) async {
+                    ).whenComplete(() async {
                       await model.getMerchantsByBusiness();
+
                       // reset the `_isCreatingMerchant` flag when the bottom sheet is closed
                     });
                   } else {
@@ -146,68 +147,44 @@ class AddExpensesView extends StatelessWidget with $AddExpensesView {
                   }
                 },
               ),
-              // DropdownButtonFormField(
-              //     decoration: InputDecoration(
-              //         labelText: 'Merchant',
-              //         hintText: 'Merchant',
-              //         labelStyle: ktsFormText,
-              //         border: defaultFormBorder),
-              // value: selectedItem,
-              // items: items.map((item) {
-              //   return DropdownMenuItem(
-              //     value: item,
-              //     child: Text(item),
-              //   );
-              // }).toList(),
-              // onChanged: (value) {}
-              //   setState(() {
-              //     selectedItem = value.toString();
-              //     if (selectedItem == items[0]) {
-              //       showModalBottomSheet(
-              //         context: context,
-              //         builder: (BuildContext context) {
-              //           return Container(
-              //               height: 400,
-              //               child: Padding(
-              //                 padding: const EdgeInsets.symmetric(
-              //                     horizontal: 20, vertical: 50),
-              //                 child: ListView(
-              //                   children: [
-              //                     Text(
-              //                       'Create Merchant',
-              //                       style: ktsHeaderText,
-              //                     ),
-              //                   ],
-              //                 ),
-              //               ));
-              //         },
-              //       );
-              //     }
-              //     ;
-              //   });
-              // },
-              //),
+              verticalSpaceSmall,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Recurring',
+                    style: ktsFormText,
+                  ),
+                  // Spacer(),
+                  Switch(
+                    value: model.recurringValue,
+                    onChanged: (value) {
+                      model.setRecurring(value);
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            fixedColor: kcPrimaryColor,
-            iconSize: 24,
-            showUnselectedLabels: true,
-            unselectedItemColor: kcTextColorLight,
-            currentIndex: 2,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(icon: Icon(Icons.sell), label: 'Sales'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart), label: 'Expenses'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.receipt_long), label: 'Invoicing')
-            ]),
+        // bottomNavigationBar: BottomNavigationBar(
+        //     type: BottomNavigationBarType.fixed,
+        //     fixedColor: kcPrimaryColor,
+        //     iconSize: 24,
+        //     showUnselectedLabels: true,
+        //     unselectedItemColor: kcTextColorLight,
+        //     currentIndex: 2,
+        //     items: const <BottomNavigationBarItem>[
+        //       BottomNavigationBarItem(
+        //         icon: Icon(Icons.home),
+        //         label: 'Home',
+        //       ),
+        //       BottomNavigationBarItem(icon: Icon(Icons.sell), label: 'Sales'),
+        //       BottomNavigationBarItem(
+        //           icon: Icon(Icons.shopping_cart), label: 'Expenses'),
+        //       BottomNavigationBarItem(
+        //           icon: Icon(Icons.receipt_long), label: 'Invoicing')
+        //     ]),
       ),
     );
   }

@@ -7,10 +7,13 @@ import 'package:verzo_one/services/invoices_service.dart';
 import 'package:verzo_one/services/merchant_service.dart';
 import 'package:verzo_one/services/expenses_service.dart';
 import 'package:verzo_one/services/otp_verification_service.dart';
+import 'package:verzo_one/services/product&services_service.dart';
 import 'package:verzo_one/ui/add_expenses/add_expenses_view.dart';
 import 'package:verzo_one/ui/add_invoices/add_invoices_view.dart';
+import 'package:verzo_one/ui/add_item/add_item_view.dart';
 import 'package:verzo_one/ui/add_sales/add_sales_view.dart';
 import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_view.dart';
+import 'package:verzo_one/ui/choose_item/choose_item_view.dart';
 import 'package:verzo_one/ui/create_account/create_account_view.dart';
 import 'package:verzo_one/ui/create_merchant/create_merchant_view.dart';
 import 'package:verzo_one/ui/dashboard/dashboard_view.dart';
@@ -20,6 +23,7 @@ import 'package:verzo_one/ui/invoicing/invoicing_view.dart';
 import 'package:verzo_one/ui/login/login_view.dart';
 import 'package:verzo_one/ui/sales/sales_view.dart';
 import 'package:verzo_one/ui/select_tags/select_tags_view.dart';
+import 'package:verzo_one/ui/update_expenses/update_expenses_view.dart';
 import 'package:verzo_one/ui/verification/verification_view.dart';
 import 'package:verzo_one/ui/views/first_screen.dart';
 import 'package:verzo_one/ui/views/home_screen.dart';
@@ -38,6 +42,7 @@ import 'package:verzo_one/ui/views/second_screen.dart';
     Singleton(classType: BusinessCreationService),
     Singleton(classType: ExpenseService),
     Singleton(classType: InvoiceService),
+    Singleton(classType: ProductsxServicesService)
   ],
   routes: [
     MaterialRoute(
@@ -75,15 +80,18 @@ import 'package:verzo_one/ui/views/second_screen.dart';
     CupertinoRoute(page: ExpensesView, name: 'expensesRoute'),
     CupertinoRoute(page: SalesView, name: 'salesRoute'),
     CupertinoRoute(
-      page: InvoicingView,
+      page: InvoicesView,
       name: 'invoicingRoute',
     ),
+    CupertinoRoute(page: ChooseItemView, name: 'chooseItemRoute'),
+    CupertinoRoute(page: AddItemView, name: 'addItemRoute'),
     CupertinoRoute(page: AddExpensesView, name: 'addExpenseRoute'),
     CupertinoRoute(
       page: AddSalesView,
       name: 'addSalesRoute',
     ),
     CupertinoRoute(page: AddInvoicesView, name: 'addInvoiceRoute'),
+    CupertinoRoute(page: UpdateExpensesView, name: 'updateExpenseRoute'),
     CupertinoRoute(page: CreateMerchantView, name: 'createMerchantRoute'),
   ],
 )

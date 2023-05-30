@@ -11,6 +11,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'helpers/auth_helper.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   setupDialogUi();
   setupSnackbarUi();

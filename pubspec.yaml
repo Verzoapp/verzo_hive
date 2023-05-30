@@ -37,7 +37,7 @@ dependencies:
     injectable:
     stacked:
     stacked_services:
-    shared_preferences: ^2.0.15
+    shared_preferences: ^2.1.0
     graphql_flutter: ^5.1.0
     connectivity_plus_web: ^1.2.5
     flutter_svg: ^1.1.6
@@ -46,6 +46,7 @@ dependencies:
     infinite_scroll_pagination: ^3.2.0
     fl_chart: ^0.55.1
     url_launcher: ^6.1.10
+    dropdown_search: ^3.0.1
 
 dev_dependencies:
     flutter_test:

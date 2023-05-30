@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 const String CustomerIdValueKey = 'customerId';
-const String ItemValueKey = 'item';
+const String DueDateValueKey = 'dueDate';
+const String VatValueKey = 'vat';
+const String DiscountValueKey = 'discount';
 
 final Map<String, TextEditingController>
     _AddInvoicesViewTextEditingControllers = {};
@@ -20,16 +22,24 @@ final Map<String, FocusNode> _AddInvoicesViewFocusNodes = {};
 final Map<String, String? Function(String?)?> _AddInvoicesViewTextValidations =
     {
   CustomerIdValueKey: null,
-  ItemValueKey: null,
+  DueDateValueKey: null,
+  VatValueKey: null,
+  DiscountValueKey: null,
 };
 
 mixin $AddInvoicesView on StatelessWidget {
   TextEditingController get customerIdController =>
       _getFormTextEditingController(CustomerIdValueKey);
-  TextEditingController get itemController =>
-      _getFormTextEditingController(ItemValueKey);
+  TextEditingController get dueDateController =>
+      _getFormTextEditingController(DueDateValueKey);
+  TextEditingController get VATController =>
+      _getFormTextEditingController(VatValueKey, initialValue: '0.00');
+  TextEditingController get discountController =>
+      _getFormTextEditingController(DiscountValueKey, initialValue: '0.00');
   FocusNode get customerIdFocusNode => _getFormFocusNode(CustomerIdValueKey);
-  FocusNode get itemFocusNode => _getFormFocusNode(ItemValueKey);
+  FocusNode get dueDateFocusNode => _getFormFocusNode(DueDateValueKey);
+  FocusNode get VATFocusNode => _getFormFocusNode(VatValueKey);
+  FocusNode get discountFocusNode => _getFormFocusNode(DiscountValueKey);
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
@@ -53,7 +63,9 @@ mixin $AddInvoicesView on StatelessWidget {
   /// with the latest textController values
   void syncFormWithViewModel(FormViewModel model) {
     customerIdController.addListener(() => _updateFormData(model));
-    itemController.addListener(() => _updateFormData(model));
+    dueDateController.addListener(() => _updateFormData(model));
+    VATController.addListener(() => _updateFormData(model));
+    discountController.addListener(() => _updateFormData(model));
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -62,7 +74,9 @@ mixin $AddInvoicesView on StatelessWidget {
       'This feature was deprecated after 3.1.0.')
   void listenToFormUpdated(FormViewModel model) {
     customerIdController.addListener(() => _updateFormData(model));
-    itemController.addListener(() => _updateFormData(model));
+    dueDateController.addListener(() => _updateFormData(model));
+    VATController.addListener(() => _updateFormData(model));
+    discountController.addListener(() => _updateFormData(model));
   }
 
   final bool _autoTextFieldValidation = true;
@@ -77,7 +91,9 @@ mixin $AddInvoicesView on StatelessWidget {
       model.formValueMap
         ..addAll({
           CustomerIdValueKey: customerIdController.text,
-          ItemValueKey: itemController.text,
+          DueDateValueKey: dueDateController.text,
+          VatValueKey: VATController.text,
+          DiscountValueKey: discountController.text,
         }),
     );
     if (_autoTextFieldValidation || forceValidate) {
@@ -89,7 +105,9 @@ mixin $AddInvoicesView on StatelessWidget {
   void _updateValidationData(FormViewModel model) =>
       model.setValidationMessages({
         CustomerIdValueKey: _getValidationMessage(CustomerIdValueKey),
-        ItemValueKey: _getValidationMessage(ItemValueKey),
+        DueDateValueKey: _getValidationMessage(DueDateValueKey),
+        VatValueKey: _getValidationMessage(VatValueKey),
+        DiscountValueKey: _getValidationMessage(DiscountValueKey),
       });
 
   /// Returns the validation message for the given key
@@ -122,29 +140,49 @@ extension ValueProperties on FormViewModel {
       this.fieldsValidationMessages.values.every((element) => element == null);
   String? get customerIdValue =>
       this.formValueMap[CustomerIdValueKey] as String?;
-  String? get itemValue => this.formValueMap[ItemValueKey] as String?;
+  String? get dueDateValue => this.formValueMap[DueDateValueKey] as String?;
+  String? get vatValue => this.formValueMap[VatValueKey] as String?;
+  String? get discountValue => this.formValueMap[DiscountValueKey] as String?;
 
   bool get hasCustomerId =>
       this.formValueMap.containsKey(CustomerIdValueKey) &&
       (customerIdValue?.isNotEmpty ?? false);
-  bool get hasItem =>
-      this.formValueMap.containsKey(ItemValueKey) &&
-      (itemValue?.isNotEmpty ?? false);
+  bool get hasDueDate =>
+      this.formValueMap.containsKey(DueDateValueKey) &&
+      (dueDateValue?.isNotEmpty ?? false);
+  bool get hasVat =>
+      this.formValueMap.containsKey(VatValueKey) &&
+      (vatValue?.isNotEmpty ?? false);
+  bool get hasDiscount =>
+      this.formValueMap.containsKey(DiscountValueKey) &&
+      (discountValue?.isNotEmpty ?? false);
 
   bool get hasCustomerIdValidationMessage =>
       this.fieldsValidationMessages[CustomerIdValueKey]?.isNotEmpty ?? false;
-  bool get hasItemValidationMessage =>
-      this.fieldsValidationMessages[ItemValueKey]?.isNotEmpty ?? false;
+  bool get hasDueDateValidationMessage =>
+      this.fieldsValidationMessages[DueDateValueKey]?.isNotEmpty ?? false;
+  bool get hasVatValidationMessage =>
+      this.fieldsValidationMessages[VatValueKey]?.isNotEmpty ?? false;
+  bool get hasDiscountValidationMessage =>
+      this.fieldsValidationMessages[DiscountValueKey]?.isNotEmpty ?? false;
 
   String? get customerIdValidationMessage =>
       this.fieldsValidationMessages[CustomerIdValueKey];
-  String? get itemValidationMessage =>
-      this.fieldsValidationMessages[ItemValueKey];
+  String? get dueDateValidationMessage =>
+      this.fieldsValidationMessages[DueDateValueKey];
+  String? get vatValidationMessage =>
+      this.fieldsValidationMessages[VatValueKey];
+  String? get discountValidationMessage =>
+      this.fieldsValidationMessages[DiscountValueKey];
 }
 
 extension Methods on FormViewModel {
   setCustomerIdValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[CustomerIdValueKey] = validationMessage;
-  setItemValidationMessage(String? validationMessage) =>
-      this.fieldsValidationMessages[ItemValueKey] = validationMessage;
+  setDueDateValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[DueDateValueKey] = validationMessage;
+  setVatValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[VatValueKey] = validationMessage;
+  setDiscountValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[DiscountValueKey] = validationMessage;
 }

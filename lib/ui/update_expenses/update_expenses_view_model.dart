@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
@@ -8,30 +6,29 @@ import 'package:verzo_one/app/app.locator.dart';
 import 'package:verzo_one/app/app.router.dart';
 import 'package:verzo_one/services/expenses_service.dart';
 import 'package:verzo_one/services/merchant_service.dart';
-import 'package:verzo_one/ui/add_expenses/add_expenses_view.form.dart';
-import 'package:verzo_one/ui/expenses/expenses_view.dart';
+import 'package:verzo_one/ui/update_expenses/update_expenses_view.form.dart';
 
-class AddExpensesViewModel extends FormViewModel {
+class UpdateExpensesViewModel extends FormViewModel {
   final navigationService = locator<NavigationService>();
   final _expenseService = locator<ExpenseService>();
   final _merchantService = locator<MerchantService>();
+  // Expenses expense;
 
-  bool _recurringValue = false;
+  // TextEditingController descriptionController = TextEditingController();
+  // TextEditingController amountController = TextEditingController();
+  // TextEditingController expenseDateController = TextEditingController();
+  // TextEditingController merchantIdController = TextEditingController();
 
-  bool get recurringValue => _recurringValue;
-
-  void setRecurring(bool value) {
-    _recurringValue = value;
-    notifyListeners();
-  }
+  // UpdateExpensesViewModel({required this.expense}) {
+  //   descriptionController.text = expense.description;
+  //   amountController.text = expense.amount.toString();
+  //   expenseDateController.text = expense.expenseDate;
+  //   merchantIdController.text = expense.merchantId ?? '';
+  // }
 
   List<DropdownMenuItem<String>> expenseCategorydropdownItems = [];
   List<DropdownMenuItem<String>> merchantdropdownItems = [];
   List<Merchants> newMerchant = [];
-  @override
-  void setFormStatus() {
-    // TODO: implement setFormStatus
-  }
 
   Future<List<ExpenseCategory>> getExpenseCategoryWithSets() async {
     final expenseCategories =
@@ -76,21 +73,22 @@ class AddExpensesViewModel extends FormViewModel {
     notifyListeners();
   }
 
-  Future<ExpenseCreationResult> runExpenseCreation() async {
+  Future<ExpenseUpdateResult> runExpenseUpdate() async {
     final prefs = await SharedPreferences.getInstance();
-    final businessIdValue = prefs.getString('id');
-    return _expenseService.createExpenses(
-        description: descriptionValue ?? '',
-        amount: double.parse(amountValue ?? ''),
-        expenseCategoryId: expenseCategoryIdValue ?? '',
-        merchantId: merchantIdValue ?? '',
-        expenseDate: expenseDateValue ?? '',
-        businessId: businessIdValue ?? '',
-        reccuring: recurringValue);
+    final expenseIdValue = prefs.getString('id');
+    return _expenseService.updateExpenses(
+      // expenseId: expenseIdValue ?? '',
+      expenseId: expenseIdValue ?? '',
+      description: updateDescriptionValue,
+      amount: double.parse(updateAmountValue ?? ''),
+      expenseCategoryId: updateExpenseCategoryIdValue,
+      merchantId: updateMerchantIdValue,
+      expenseDate: updateExpenseDateValue ?? '',
+    );
   }
 
-  Future saveExpenseData() async {
-    final result = await runBusyFuture(runExpenseCreation());
+  Future updateExpenseData() async {
+    final result = await runBusyFuture(runExpenseUpdate());
 
     if (result.expense != null) {
       // navigate to success route
@@ -103,4 +101,9 @@ class AddExpensesViewModel extends FormViewModel {
   }
 
   void navigateBack() => navigationService.back();
+
+  @override
+  void setFormStatus() {
+    // TODO: implement setFormStatus
+  }
 }

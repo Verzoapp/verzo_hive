@@ -94,7 +94,7 @@ class BusinessCreationService {
       );
     }
 
-    //prefs.setString('id', resultbusiness_id ?? "");
+    prefs.setString('id', resultbusiness_id ?? "");
     // prefs.setString('businessName', result_businessName ?? "");
     // prefs.setString('businessEmail', result_businessEmail ?? "");
     // prefs.setString('businessMobile', result_businessMobile ?? "");

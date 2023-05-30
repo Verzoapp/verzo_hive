@@ -66,6 +66,7 @@ class VerificationViewModel extends FormViewModel {
     }
   }
 
+  void navigateBack() => navigationService.back();
   void navigateToCreateAccount() =>
       navigationService.navigateTo(Routes.createAccountRoute);
 }

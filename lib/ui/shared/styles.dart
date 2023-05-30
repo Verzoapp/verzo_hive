@@ -13,6 +13,11 @@ OutlineInputBorder defaultFormBorder = OutlineInputBorder(
     borderRadius: defaultBorderRadius,
     borderSide:
         BorderSide(width: 0.5, style: BorderStyle.solid, color: kcStrokeColor));
+
+OutlineInputBorder defaultFormBorderSmall = OutlineInputBorder(
+    borderRadius: defaultBorderRadius,
+    borderSide: BorderSide(
+        width: 0.01, style: BorderStyle.solid, color: kcStrokeColor));
 BorderRadius defaultBorderRadius = BorderRadius.circular(6);
 
 BorderRadius defaultTagBorderRadius = BorderRadius.circular(20);

@@ -9,16 +9,13 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 class InvoiceService {
   ValueNotifier<GraphQLClient> client;
 
-//Expense
+//Invoice
   final MutationOptions _createCompleteInvoiceBMutation;
-  // final QueryOptions _getExpenseByBusinessQuery;
+  final QueryOptions _getInvoiceByBusinessQuery;
 
-//Expensecategory
+//Customers
   final MutationOptions _createCustomerMutation;
   final QueryOptions _getCustomerByBusinessQuery;
-
-//product/services
-  final QueryOptions _getProductOrServiceByBusinessQuery;
 
   InvoiceService()
       : client = ValueNotifier(GraphQLClient(
@@ -35,20 +32,22 @@ class InvoiceService {
         }
       '''),
         ),
-        // _getExpenseByBusinessQuery = QueryOptions(
-        //   document: gql('''
-        // query GetExpenseByBusiness(\$input: String!) {
-        //   getExpenseByBusiness(businessId: \$input) {
-        //     expenseByBusiness{
-        //     id
-        //     description
-        //     amount
-        //     createdAt
-        //     }
-        //     }
-        //   }
-        // '''),
-        // ),
+        _getInvoiceByBusinessQuery = QueryOptions(
+          document: gql('''
+        query GetInvoiceByBusiness(\$input: String!) {
+          getInvoiceByBusiness(businessId: \$input) {
+            invoicesByBusiness{
+            id
+            totalAmount
+            createdAt
+            customer{
+              name
+            }
+            }
+            }
+          }
+        '''),
+        ),
         _createCustomerMutation = MutationOptions(
           document: gql('''
         mutation CreateCustomer(\$input: CreateCustomer!) {
@@ -70,20 +69,9 @@ class InvoiceService {
             customerByBusiness{
             id
             name
+            email
             businessId
             }
-            }
-          }
-        '''),
-        ),
-        _getProductOrServiceByBusinessQuery = QueryOptions(
-          document: gql('''
-        query GetProductOrServiceByBusiness(\$input: String!) {
-          getProductOrServiceByBusiness(businessId: \$input) {
-            id
-            title
-            type
-            businessId
             }
           }
         '''),
@@ -91,11 +79,13 @@ class InvoiceService {
 
 //Invoice
 
-  Future<InvoiceCreationResult> createInvoices({
-    required String customerId,
-    required String businessId,
-    String? item,
-  }) async {
+  Future<InvoiceCreationResult> createInvoices(
+      {required String customerId,
+      required String businessId,
+      required List<ItemDetail> item,
+      required double vat,
+      double? discount,
+      required String dueDate}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
     final businessId = prefs.getString('id');
@@ -124,7 +114,18 @@ class InvoiceService {
         'input': {
           'customerId': customerId,
           'businessId': businessId,
-          'item': item,
+          'dueDate': dueDate,
+          'discount': discount,
+          'VAT': vat,
+          'item': item
+              .map((itemDetail) => {
+                    'id': itemDetail.id,
+                    'type': itemDetail.type,
+                    'price': itemDetail.price,
+                    'quantity': itemDetail.quantity,
+                    'index': itemDetail.index,
+                  })
+              .toList(),
         },
       },
     );
@@ -157,40 +158,56 @@ class InvoiceService {
     return InvoiceCreationResult(invoice: invoice);
   }
 
-  // Future<List<Expenses>> getExpenseByBusiness(
-  //     {required String businessId,
-  //     required int limit,
-  //     required int offset}) async {
-  //   final QueryOptions options = QueryOptions(
-  //     document: _getExpenseByBusinessQuery.document,
-  //     variables: {'input': businessId},
-  //   );
+  Future<List<Invoices>> getInvoiceByBusiness({
+    required String businessId,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
 
-  //   final QueryResult expenseByBusinessResult =
-  //       await client.value.query(options);
+    if (token == null) {
+      throw GraphQLInvoiceError(
+        message: "Access token not found",
+      );
+    }
+// Use the token to create an authlink
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
 
-  //   if (expenseByBusinessResult.hasException) {
-  //     throw GraphQLInvoiceError(
-  //       message: expenseByBusinessResult.exception?.graphqlErrors.first.message
-  //           .toString(),
-  //     );
-  //   }
+    // Create a new GraphQLClient with the authlink
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
+    final QueryOptions options = QueryOptions(
+      document: _getInvoiceByBusinessQuery.document,
+      variables: {'input': businessId},
+    );
 
-  //   final List expensesData = expenseByBusinessResult
-  //           .data?['getExpenseByBusiness']['expenseByBusiness'] ??
-  //       [];
+    final QueryResult invoiceByBusinessResult = await newClient.query(options);
 
-  //   final List<Expenses> expenses = expensesData.map((data) {
-  //     return Expenses(
-  //       id: data['id'],
-  //       description: data['description'],
-  //       amount: data['amount'],
-  //       expenseDate: data['expenseDate'],
-  //     );
-  //   }).toList();
+    if (invoiceByBusinessResult.hasException) {
+      throw GraphQLInvoiceError(
+        message: invoiceByBusinessResult.exception?.graphqlErrors.first.message
+            .toString(),
+      );
+    }
 
-  //   return expenses;
-  // }
+    final List invoicesData = invoiceByBusinessResult
+            .data?['getInvoiceByBusiness']['invoicesByBusiness'] ??
+        [];
+
+    final List<Invoices> invoices = invoicesData.map((data) {
+      return Invoices(
+        id: data['id'],
+        customerName: data['customer']['name'],
+        totalAmount: data['totalAmount'],
+        createdAt: data['createdAt'],
+      );
+    }).toList();
+
+    return invoices;
+  }
 
 //CreateCustomer
   Future<CustomerCreationResult> createCustomer(
@@ -273,13 +290,30 @@ class InvoiceService {
 
   Future<List<Customers>> getCustomerByBusiness(
       {required String businessId}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw GraphQLInvoiceError(
+        message: "Access token not found",
+      );
+    }
+// Use the token to create an authlink
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
+
+    // Create a new GraphQLClient with the authlink
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
     final QueryOptions options = QueryOptions(
       document: _getCustomerByBusinessQuery.document,
       variables: {'input': businessId},
     );
 
-    final QueryResult customerByBusinessResult =
-        await client.value.query(options);
+    final QueryResult customerByBusinessResult = await newClient.query(options);
 
     if (customerByBusinessResult.hasException) {
       throw GraphQLInvoiceError(
@@ -294,66 +328,27 @@ class InvoiceService {
 
     final List<Customers> customers = customersData.map((data) {
       return Customers(
-          id: data['id'], name: data['name'], businessId: data['businessId']);
+          id: data['id'],
+          name: data['name'],
+          email: data['email'],
+          businessId: data['businessId']);
     }).toList();
 
     return customers;
   }
-
-  Future<List<ProductOrService>> getProductOrServiceByBusiness(
-      {required String businessId}) async {
-    final QueryOptions options = QueryOptions(
-      document: _getProductOrServiceByBusinessQuery.document,
-      variables: {'input': businessId},
-    );
-
-    final QueryResult productorserviceByBusinessResult =
-        await client.value.query(options);
-
-    if (productorserviceByBusinessResult.hasException) {
-      throw GraphQLInvoiceError(
-        message: productorserviceByBusinessResult
-            .exception?.graphqlErrors.first.message
-            .toString(),
-      );
-    }
-
-    final List productsorservicesData = productorserviceByBusinessResult
-            .data?['getProductOrServiceByBusiness'] ??
-        [];
-
-    final List<ProductOrService> productsorservices =
-        productsorservicesData.map((data) {
-      return ProductOrService(
-          id: data['id'],
-          title: data['title'],
-          type: data['type'],
-          businessId: data['businessId']);
-    }).toList();
-
-    return productsorservices;
-  }
-}
-
-class ProductOrService {
-  final String id;
-  final String title;
-  final String type;
-  final String businessId;
-
-  ProductOrService(
-      {required this.id,
-      required this.title,
-      required this.type,
-      required this.businessId});
 }
 
 class Customers {
   final String id;
   final String name;
+  final String email;
   final String businessId;
 
-  Customers({required this.id, required this.name, required this.businessId});
+  Customers(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.businessId});
 }
 
 class CustomerCreationResult {
@@ -409,15 +404,31 @@ class GraphQLInvoiceError {
   GraphQLInvoiceError({required this.message});
 }
 
-// class Expenses {
-//   final String id;
-//   final String description;
-//   final num amount;
-//   final String? expenseDate;
+class Invoices {
+  final String id;
+  final String customerName;
+  final num totalAmount;
+  final String createdAt;
 
-//   Expenses(
-//       {required this.id,
-//       required this.description,
-//       required this.amount,
-//       this.expenseDate});
-// }
+  Invoices(
+      {required this.id,
+      required this.customerName,
+      required this.totalAmount,
+      required this.createdAt});
+}
+
+class ItemDetail {
+  final String id;
+  final String type;
+  final num price;
+  final num? quantity;
+  final num index;
+
+  ItemDetail({
+    required this.id,
+    required this.type,
+    required this.price,
+    this.quantity,
+    required this.index,
+  });
+}

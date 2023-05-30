@@ -18,6 +18,7 @@ import '../services/expenses_service.dart';
 import '../services/invoices_service.dart';
 import '../services/merchant_service.dart';
 import '../services/otp_verification_service.dart';
+import '../services/product&services_service.dart';
 
 final locator = StackedLocator.instance;
 
@@ -38,4 +39,5 @@ Future<void> setupLocator(
   locator.registerSingleton(BusinessCreationService());
   locator.registerSingleton(ExpenseService());
   locator.registerSingleton(InvoiceService());
+  locator.registerSingleton(ProductsxServicesService());
 }

@@ -104,13 +104,31 @@ class MerchantService {
 
   Future<List<Merchants>> getMerchantsByBusiness(
       {required String businessId}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw GraphQLMerchantError(
+        message: "Access token not found",
+      );
+    }
+// Use the token to create an authlink
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
+
+    // Create a new GraphQLClient with the authlink
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
     final QueryOptions options = QueryOptions(
       document: _getMerchantsByBusinessQuery.document,
       variables: {'input': businessId},
     );
 
     final QueryResult merchantsByBusinessResult =
-        await client.value.query(options);
+        await newClient.query(options);
 
     if (merchantsByBusinessResult.hasException) {
       throw GraphQLMerchantError(
@@ -133,11 +151,11 @@ class MerchantService {
 }
 
 class Merchants {
-  final String? id;
+  final String id;
   final String name;
   final String businessId;
 
-  Merchants({this.id, required this.name, required this.businessId});
+  Merchants({required this.id, required this.name, required this.businessId});
 }
 
 class MerchantCreationResult {
@@ -151,12 +169,12 @@ class MerchantCreationResult {
 }
 
 class MerchantCreationSuccessResult {
-  final String? id;
+  final String id;
   final String name;
   final String businessId;
 
   MerchantCreationSuccessResult(
-      {this.id, required this.name, required this.businessId});
+      {required this.id, required this.name, required this.businessId});
 }
 
 class GraphQLMerchantError {
