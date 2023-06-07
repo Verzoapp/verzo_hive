@@ -46,7 +46,7 @@ class _DashboardViewState extends State<DashboardView> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ExpensesView()),
+      MaterialPageRoute(builder: (context) => ExpensesView()),
     );
   }
 

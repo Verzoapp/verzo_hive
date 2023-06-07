@@ -24,9 +24,8 @@ class _ChooseItemViewState extends State<ChooseItemView> {
     return ViewModelBuilder<ChooseItemViewModel>.reactive(
       viewModelBuilder: () => ChooseItemViewModel(),
       onModelReady: (model) async {
-        model.getProductOrServiceByBusiness();
-        model.newItem;
-        // listenToFormUpdated(model);
+        // model.getProductOrServiceByBusiness;
+        model.addNewItem;
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(

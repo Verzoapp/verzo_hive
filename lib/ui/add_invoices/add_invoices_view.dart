@@ -239,26 +239,6 @@ class AddInvoicesView extends StatelessWidget with $AddInvoicesView {
                                   ],
                                 ),
                               )),
-                        // if (model.selectedItems.isNotEmpty)
-                        //   ...model.selectedItems
-                        //       .asMap()
-                        //       .entries
-                        //       .map((entry) => ListTile(
-                        //             title: Text(
-                        //                 '${entry.key + 1}. ${entry.value.title}'),
-                        //             subtitle: Text(
-                        //               NumberFormat.currency(
-                        //                       locale: 'en', symbol: '\N')
-                        //                   .format(entry.value.price),
-                        //               style: ktsBodyText,
-                        //             ),
-                        //             trailing: IconButton(
-                        //               icon: const Icon(Icons.delete),
-                        //               onPressed: () {
-                        //                 model.removeSelectedItem(entry.value);
-                        //               },
-                        //             ),
-                        //           )),
                       ]),
                 ),
               ),

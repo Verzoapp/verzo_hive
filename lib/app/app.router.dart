@@ -9,7 +9,8 @@ import 'package:flutter/cupertino.dart' as _i23;
 import 'package:flutter/foundation.dart' as _i24;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i25;
+import 'package:stacked_services/stacked_services.dart' as _i26;
+import 'package:verzo_one/services/expenses_service.dart' as _i25;
 import 'package:verzo_one/ui/add_expenses/add_expenses_view.dart' as _i18;
 import 'package:verzo_one/ui/add_invoices/add_invoices_view.dart' as _i20;
 import 'package:verzo_one/ui/add_item/add_item_view.dart' as _i17;
@@ -339,11 +340,10 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i21.UpdateExpensesView: (data) {
-      final args = data.getArgs<UpdateExpensesViewArguments>(
-        orElse: () => const UpdateExpensesViewArguments(),
-      );
+      final args = data.getArgs<UpdateExpensesViewArguments>(nullOk: false);
       return _i23.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i21.UpdateExpensesView(key: args.key),
+        builder: (context) => _i21.UpdateExpensesView(
+            key: args.key, selectedExpense: args.selectedExpense),
         settings: data,
       );
     },
@@ -441,9 +441,14 @@ class AddInvoicesViewArguments {
 }
 
 class UpdateExpensesViewArguments {
-  const UpdateExpensesViewArguments({this.key});
+  const UpdateExpensesViewArguments({
+    this.key,
+    required this.selectedExpense,
+  });
 
   final _i24.Key? key;
+
+  final _i25.Expenses selectedExpense;
 }
 
 class CreateMerchantViewArguments {
@@ -452,7 +457,7 @@ class CreateMerchantViewArguments {
   final _i24.Key? key;
 }
 
-extension NavigatorStateExtension on _i25.NavigationService {
+extension NavigatorStateExtension on _i26.NavigationService {
   Future<dynamic> navigateToHomeScreenRoute({
     _i24.Key? key,
     int? routerId,
@@ -745,6 +750,7 @@ extension NavigatorStateExtension on _i25.NavigationService {
 
   Future<dynamic> navigateToUpdateExpenseRoute({
     _i24.Key? key,
+    required _i25.Expenses selectedExpense,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -752,7 +758,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.updateExpenseRoute,
-        arguments: UpdateExpensesViewArguments(key: key),
+        arguments: UpdateExpensesViewArguments(
+            key: key, selectedExpense: selectedExpense),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1067,6 +1074,7 @@ extension NavigatorStateExtension on _i25.NavigationService {
 
   Future<dynamic> replaceWithUpdateExpenseRoute({
     _i24.Key? key,
+    required _i25.Expenses selectedExpense,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1074,7 +1082,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.updateExpenseRoute,
-        arguments: UpdateExpensesViewArguments(key: key),
+        arguments: UpdateExpensesViewArguments(
+            key: key, selectedExpense: selectedExpense),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

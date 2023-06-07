@@ -28,82 +28,81 @@ class CreateCustomerView extends StatelessWidget with $CreateCustomerView {
       onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) => Padding(
         padding: MediaQuery.of(context).viewInsets,
-        child: SizedBox.fromSize(
-          size: Size.fromHeight(MediaQuery.of(context).size.height * 1),
-          child: Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-              child: Column(
-                children: [
-                  Text(
-                    "Create a Customer",
-                    style: ktsHeaderText,
-                  ),
-                  verticalSpaceSmall,
-                  Text(
-                    "Pls fill the form to create a customer",
-                    style: ktsParagraphText,
-                  ),
-                  verticalSpaceSmall,
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Customer name',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    keyboardType: TextInputType.name,
-                    controller: customerNameController,
-                  ),
-                  verticalSpaceSmall,
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Customer mobile',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    keyboardType: TextInputType.number,
-                    controller: mobileController,
-                  ),
-                  verticalSpaceSmall,
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Customer email',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    keyboardType: TextInputType.emailAddress,
-                    controller: emailController,
-                  ),
-                  verticalSpaceSmall,
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Customer address',
-                        labelStyle: ktsFormText,
-                        border: defaultFormBorder),
-                    keyboardType: TextInputType.name,
-                    controller: addressController,
-                  ),
-                  verticalSpaceIntermitent,
-                  GestureDetector(
-                    onTap: model.saveCustomerData,
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: defaultBorderRadius,
-                        color: kcPrimaryColor,
-                      ),
-                      child: model.isBusy
-                          ? const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
-                            )
-                          : Text(
-                              "Create",
-                              style: ktsButtonText,
-                            ),
-                    ),
-                  ),
-                ],
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+          child: Column(
+            children: [
+              Text(
+                "Create a Customer",
+                style: ktsHeaderText,
               ),
-            ),
+              verticalSpaceSmall,
+              Text(
+                "Pls fill the form to create a customer",
+                style: ktsParagraphText,
+              ),
+              verticalSpaceSmall,
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Customer name',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.name,
+                controller: customerNameController,
+              ),
+              verticalSpaceSmall,
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Customer mobile',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.number,
+                controller: mobileController,
+              ),
+              verticalSpaceSmall,
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Customer email',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+              ),
+              verticalSpaceSmall,
+              TextFormField(
+                decoration: InputDecoration(
+                    labelText: 'Customer address',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.name,
+                controller: addressController,
+              ),
+              verticalSpaceIntermitent,
+              GestureDetector(
+                onTap: () {
+                  model.saveCustomerData();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: defaultBorderRadius,
+                    color: kcPrimaryColor,
+                  ),
+                  child: model.isBusy
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
+                        )
+                      : Text(
+                          "Create",
+                          style: ktsButtonText,
+                        ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

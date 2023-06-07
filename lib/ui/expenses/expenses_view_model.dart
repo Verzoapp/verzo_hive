@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:verzo_one/app/app.locator.dart';
+import 'package:verzo_one/app/app.router.dart';
 import 'package:verzo_one/services/expenses_service.dart';
 
 class ExpensesViewModel extends BaseViewModel
@@ -12,9 +13,9 @@ class ExpensesViewModel extends BaseViewModel
   final _expenseService = locator<ExpenseService>();
   final scrollController = ScrollController();
 
-  final _expenses = ReactiveValue<List<Expenses?>>([]);
-  List<Expenses?> get expenses => _expenses.value;
-  final _take = ReactiveValue<num>(0);
+  final _expenses = ReactiveValue<List<Expenses>>([]);
+  List<Expenses> get expenses => _expenses.value;
+  final _take = ReactiveValue<num>(10);
   num get take => _take.value;
   final _cursor = ReactiveValue<String?>(null);
   String? get cursor => _cursor.value;
@@ -23,20 +24,42 @@ class ExpensesViewModel extends BaseViewModel
     listenToReactiveValues([_expenses, _take, _cursor]);
   }
 
-  Future<List<Expenses?>> getExpenseByBusiness() async {
+  Future<List<Expenses>> getExpenseByBusiness() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String businessIdValue = prefs.getString('id') ?? '';
 
     // Retrieve existing expense categories
     final expenseList = await _expenseService.getExpenseByBusiness(
-      businessId: businessIdValue,
-    );
+        businessId: businessIdValue, take: _take.value);
+    _expenses.value.addAll(expenseList);
+    // if (expenseList.isNotEmpty) {
+    //   _cursor.value = '';
+    //   // _cursor.value = expenseList.last.id;
+    // // }
+    // notifyListeners();
+    return _expenses.value;
+  }
+
+  Future<List<Expenses>> getExpenseByBusinessPagination() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String businessIdValue = prefs.getString('id') ?? '';
+
+    // Retrieve existing expense categories
+    final expenseList = await _expenseService.getExpenseByBusiness(
+        businessId: businessIdValue, take: _take.value, cursor: _cursor.value);
     _expenses.value.addAll(expenseList);
     if (expenseList.isNotEmpty) {
       _cursor.value = '';
       // _cursor.value = expenseList.last.id;
     }
+    notifyListeners();
     return _expenses.value;
+  }
+
+  Future<bool> archiveExpense(String expenseId) async {
+    final bool isArchived =
+        await _expenseService.archiveExpense(expenseId: expenseId);
+    return isArchived;
   }
 
   void addNewExpense(List<Expenses> expense) {
@@ -46,54 +69,17 @@ class ExpensesViewModel extends BaseViewModel
     notifyListeners();
   }
 
-  // Future<void> deleteExpense() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String expenseId = prefs.getString('expense_id') ?? '';
-  //   await _expenseService.deleteExpense(expenseId: expenseId);
-  // }
-
-  // Future<void> showDeleteConfirmationDialog(BuildContext context) async {
-  //   final confirmed = await showDialog<bool>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Confirm Delete'),
-  //         content: Text('Are you sure you want to delete this expense?'),
-  //         actions: [
-  //           TextButton(
-  //             child: Text('No'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop(false);
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text('Yes'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop(true);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-
-  //   if (confirmed == true) {
-  //     // User confirmed deletion, call the deleteExpense function
-  //     deleteExpense();
-  //   }
-  // }
-
   @override
   Future<void> initialise() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _cursor.value = prefs.getString('cursorId');
     await getExpenseByBusiness();
-    scrollController.addListener(() async {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
-        await getExpenseByBusiness();
-      }
-    });
+    // scrollController.addListener(() async {
+    //   if (scrollController.position.maxScrollExtent ==
+    //       scrollController.offset) {
+    //     await getExpenseByBusiness();
+    //   }
+    // });
   }
 }
 // // class ExpensesViewModel
@@ -178,5 +164,3 @@ class ExpensesViewModel extends BaseViewModel
 //     return getExpenseByBusiness();
 //   }
 // }
-
-class NameOfClassViewModel extends BaseViewModel {}

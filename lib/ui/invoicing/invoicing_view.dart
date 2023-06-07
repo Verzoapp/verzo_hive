@@ -53,7 +53,7 @@ class _InvoicesViewState extends State<InvoicesView> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ExpensesView()),
+      MaterialPageRoute(builder: (context) => ExpensesView()),
     );
   }
 

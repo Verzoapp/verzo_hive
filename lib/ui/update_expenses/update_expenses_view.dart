@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+import 'package:verzo_one/app/app.locator.dart';
 import 'package:verzo_one/services/expenses_service.dart';
 import 'package:verzo_one/ui/create_merchant/create_merchant_view.dart';
 import 'package:verzo_one/ui/dumb_widgets/authentication_layout.dart';
@@ -20,21 +21,24 @@ import 'update_expenses_view.form.dart';
   FormTextField(name: 'updateMerchantId')
 ])
 class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
+  final Expenses selectedExpense;
   UpdateExpensesView({
     Key? key,
+    required this.selectedExpense,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UpdateExpensesViewModel>.reactive(
-      viewModelBuilder: () => UpdateExpensesViewModel(),
-      onModelReady: (model) async {
+      viewModelBuilder: () =>
+          UpdateExpensesViewModel(passexpense: selectedExpense),
+      onModelReady: (model) {
+        model.setSelectedExpense();
         model.getExpenseCategoryWithSets();
         model.getMerchantsByBusiness();
         model.addNewMerchant;
         listenToFormUpdated(model);
       },
-      // onModelReady: (model) => onModelReady,
       builder: (
         context,
         model,
@@ -44,7 +48,7 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
               body: AuthenticationLayout(
         busy: model.isBusy,
         onBackPressed: model.navigateBack,
-        onMainButtonTapped: () => model.updateExpenseData,
+        onMainButtonTapped: () => model.updateExpenseData(),
         title: 'Update Expense',
         subtitle: '',
         mainButtonTitle: 'Update',
@@ -58,8 +62,7 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
               keyboardType: TextInputType.name,
-              // controller: updateDescriptionController,
-              controller: updateDescriptionController,
+              controller: model.updateDescriptionController,
             ),
             verticalSpaceSmall,
             DropdownButtonFormField(
@@ -68,11 +71,11 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
               items: model.expenseCategorydropdownItems,
-              value: updateExpenseCategoryIdController.text.isEmpty
+              value: model.updateExpenseCategoryIdController.text.isEmpty
                   ? null
-                  : updateExpenseCategoryIdController.text,
+                  : model.updateExpenseCategoryIdController.text,
               onChanged: (value) {
-                updateExpenseCategoryIdController.text = value.toString();
+                model.updateExpenseCategoryIdController.text = value.toString();
               },
             ),
             verticalSpaceSmall,
@@ -82,11 +85,11 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
               keyboardType: TextInputType.number,
-              controller: updateAmountController,
+              controller: model.updateAmountController,
             ),
             verticalSpaceSmall,
             TextFormField(
-              controller: updateExpenseDateController,
+              controller: model.updateExpenseDateController,
               decoration: InputDecoration(
                   labelText: 'Date',
                   labelStyle: ktsFormText,
@@ -102,7 +105,7 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
                 if (pickeddate != null) {
                   String formattedDate =
                       DateFormat('yyyy-MM-dd').format(pickeddate);
-                  updateExpenseDateController.text = formattedDate;
+                  model.updateExpenseDateController.text = formattedDate;
                 }
               },
             ),
@@ -113,9 +116,9 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
                   labelStyle: ktsFormText,
                   border: defaultFormBorder),
               items: model.merchantdropdownItems,
-              value: updateMerchantIdController.text.isEmpty
+              value: model.updateMerchantIdController.text.isEmpty
                   ? null
-                  : updateMerchantIdController.text,
+                  : model.updateMerchantIdController.text,
               onChanged: (value) async {
                 if (value == 'new_category') {
                   await showModalBottomSheet(
@@ -129,7 +132,7 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
                     // reset the `_isCreatingMerchant` flag when the bottom sheet is closed
                   });
                 } else {
-                  updateMerchantIdController.text = value.toString();
+                  model.updateMerchantIdController.text = value.toString();
                 }
               },
             ),
@@ -154,19 +157,5 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
         ),
       )),
     );
-  }
-
-  void onModelReady(UpdateExpensesViewModel model) {
-    model.getExpenseCategoryWithSets();
-    model.getMerchantsByBusiness();
-    model.addNewMerchant; // Pass the merchants if needed
-    listenToFormUpdated(model);
-
-    // // Set the initial values of the text fields
-    // updateDescriptionController.text = expenses.description;
-    // updateExpenseCategoryIdController.text = expenses.expenseCategoryId;
-    // updateAmountController.text = expenses.amount.toString();
-    // updateExpenseDateController.text = expenses.expenseDate;
-    // // updateMerchantIdController.text = expenses.merchantId;
   }
 }

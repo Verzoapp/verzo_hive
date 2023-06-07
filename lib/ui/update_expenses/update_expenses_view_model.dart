@@ -12,19 +12,38 @@ class UpdateExpensesViewModel extends FormViewModel {
   final navigationService = locator<NavigationService>();
   final _expenseService = locator<ExpenseService>();
   final _merchantService = locator<MerchantService>();
-  // Expenses expense;
 
-  // TextEditingController descriptionController = TextEditingController();
-  // TextEditingController amountController = TextEditingController();
-  // TextEditingController expenseDateController = TextEditingController();
-  // TextEditingController merchantIdController = TextEditingController();
+  late Expenses expense; // Add selectedExpense variable
+  late String expenseId;
+  // bool? recurringValue;
 
-  // UpdateExpensesViewModel({required this.expense}) {
-  //   descriptionController.text = expense.description;
-  //   amountController.text = expense.amount.toString();
-  //   expenseDateController.text = expense.expenseDate;
-  //   merchantIdController.text = expense.merchantId ?? '';
+  UpdateExpensesViewModel({required Expenses passexpense}) {
+    expense = passexpense;
+  }
+
+  void setSelectedExpense() {
+    expenseId = expense.id;
+    // Set the form field values based on the selected expense properties
+    updateDescriptionController.text = expense.description;
+    updateAmountController.text = expense.amount.toString();
+    updateExpenseDateController.text = expense.expenseDate;
+    updateExpenseCategoryIdController.text = expense.expenseCategoryId;
+    updateMerchantIdController.text = expense.merchantId ?? '';
+    // recurringValue = expense.recurring;
+    notifyListeners();
+  }
+
+  // void setRecurring(bool value) {
+  //   recurringValue = value;
+  //   notifyListeners();
   // }
+
+  TextEditingController updateDescriptionController = TextEditingController();
+  TextEditingController updateAmountController = TextEditingController();
+  TextEditingController updateExpenseDateController = TextEditingController();
+  TextEditingController updateMerchantIdController = TextEditingController();
+  TextEditingController updateExpenseCategoryIdController =
+      TextEditingController();
 
   List<DropdownMenuItem<String>> expenseCategorydropdownItems = [];
   List<DropdownMenuItem<String>> merchantdropdownItems = [];
@@ -74,16 +93,16 @@ class UpdateExpensesViewModel extends FormViewModel {
   }
 
   Future<ExpenseUpdateResult> runExpenseUpdate() async {
-    final prefs = await SharedPreferences.getInstance();
-    final expenseIdValue = prefs.getString('id');
+    // final prefs = await SharedPreferences.getInstance();
+    // // final expenseIdValue = prefs.getString('id');
     return _expenseService.updateExpenses(
-      // expenseId: expenseIdValue ?? '',
-      expenseId: expenseIdValue ?? '',
-      description: updateDescriptionValue,
-      amount: double.parse(updateAmountValue ?? ''),
-      expenseCategoryId: updateExpenseCategoryIdValue,
-      merchantId: updateMerchantIdValue,
-      expenseDate: updateExpenseDateValue ?? '',
+      expenseId: expenseId,
+      description: updateDescriptionController.text,
+      amount: double.parse(updateAmountController.text),
+      expenseCategoryId: updateExpenseCategoryIdController.text,
+      merchantId: updateMerchantIdController.text,
+      expenseDate: updateExpenseDateController.text,
+      // reccuring: recurringValue
     );
   }
 

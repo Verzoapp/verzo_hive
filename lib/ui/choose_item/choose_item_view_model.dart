@@ -33,6 +33,7 @@ class ChooseItemViewModel extends FutureViewModel<List<Items>> {
     if (item.isNotEmpty) {
       newItem.addAll(item);
     }
+    getProductOrServiceByBusiness();
     notifyListeners();
   }
 

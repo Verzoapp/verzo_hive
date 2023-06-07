@@ -124,6 +124,7 @@ class InvoiceService {
                     'price': itemDetail.price,
                     'quantity': itemDetail.quantity,
                     'index': itemDetail.index,
+                    'unitId': itemDetail.unitId
                   })
               .toList(),
         },
@@ -420,15 +421,16 @@ class Invoices {
 class ItemDetail {
   final String id;
   final String type;
-  final num price;
-  final num? quantity;
   final num index;
+  final num price;
+  final num quantity;
+  final String? unitId;
 
-  ItemDetail({
-    required this.id,
-    required this.type,
-    required this.price,
-    this.quantity,
-    required this.index,
-  });
+  ItemDetail(
+      {required this.id,
+      required this.type,
+      required this.index,
+      required this.price,
+      required this.quantity,
+      this.unitId});
 }

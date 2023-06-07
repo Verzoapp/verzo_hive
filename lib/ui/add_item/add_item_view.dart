@@ -11,6 +11,8 @@ import 'package:verzo_one/ui/shared/ui_helpers.dart';
   FormTextField(name: 'price'),
   FormTextField(name: 'basicUnit'),
   FormTextField(name: 'quantityInStock'),
+  FormTextField(name: 'productUnitId'),
+  FormTextField(name: 'serviceUnitId'),
 ])
 class AddItemView extends StatelessWidget with $AddItemView {
   AddItemView({
@@ -21,7 +23,11 @@ class AddItemView extends StatelessWidget with $AddItemView {
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddItemViewModel>.reactive(
       viewModelBuilder: () => AddItemViewModel(),
-      onModelReady: (model) => listenToFormUpdated(model),
+      onModelReady: (model) {
+        model.getProductUnits();
+        model.getServiceUnits();
+        listenToFormUpdated(model);
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: kcPrimaryColor,
@@ -40,7 +46,7 @@ class AddItemView extends StatelessWidget with $AddItemView {
           toolbarHeight: 80,
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +75,7 @@ class AddItemView extends StatelessWidget with $AddItemView {
                 ),
               ],
             ),
-            verticalSpaceSmall,
+            verticalSpaceTiny,
             if (model.isProduct) ...[
               TextFormField(
                 decoration: InputDecoration(
@@ -106,6 +112,20 @@ class AddItemView extends StatelessWidget with $AddItemView {
                 keyboardType: TextInputType.name,
                 controller: quantityInStockController,
               ),
+              verticalSpaceSmall,
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                    labelText: 'Product Unit',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                items: model.productUnitdropdownItems,
+                value: productUnitIdController.text.isEmpty
+                    ? null
+                    : productUnitIdController.text,
+                onChanged: (value) {
+                  productUnitIdController.text = value.toString();
+                },
+              ),
             ] else ...[
               TextFormField(
                 decoration: InputDecoration(
@@ -123,6 +143,20 @@ class AddItemView extends StatelessWidget with $AddItemView {
                     border: defaultFormBorder),
                 keyboardType: TextInputType.name,
                 controller: priceController,
+              ),
+              verticalSpaceSmall,
+              DropdownButtonFormField(
+                decoration: InputDecoration(
+                    labelText: 'Service Unit',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                items: model.serviceUnitdropdownItems,
+                value: serviceUnitIdController.text.isEmpty
+                    ? null
+                    : serviceUnitIdController.text,
+                onChanged: (value) {
+                  serviceUnitIdController.text = value.toString();
+                },
               ),
             ],
             verticalSpaceMedium,

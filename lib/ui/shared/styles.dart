@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Colors
-const Color kcPrimaryColor = Color(0xff029EFF);
+const Color kcPrimaryColor = Color(0xff027DFF);
 const Color kcButtonTextColor = Colors.white;
 const Color kcTextColor = Color(0xff141414);
 const Color kcTextColorLight = Color(0xff888888);

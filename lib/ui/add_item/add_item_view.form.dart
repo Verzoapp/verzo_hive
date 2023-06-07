@@ -13,6 +13,8 @@ const String ProductNameValueKey = 'productName';
 const String PriceValueKey = 'price';
 const String BasicUnitValueKey = 'basicUnit';
 const String QuantityInStockValueKey = 'quantityInStock';
+const String ProductUnitIdValueKey = 'productUnitId';
+const String ServiceUnitIdValueKey = 'serviceUnitId';
 
 final Map<String, TextEditingController> _AddItemViewTextEditingControllers =
     {};
@@ -24,6 +26,8 @@ final Map<String, String? Function(String?)?> _AddItemViewTextValidations = {
   PriceValueKey: null,
   BasicUnitValueKey: null,
   QuantityInStockValueKey: null,
+  ProductUnitIdValueKey: null,
+  ServiceUnitIdValueKey: null,
 };
 
 mixin $AddItemView on StatelessWidget {
@@ -35,11 +39,19 @@ mixin $AddItemView on StatelessWidget {
       _getFormTextEditingController(BasicUnitValueKey);
   TextEditingController get quantityInStockController =>
       _getFormTextEditingController(QuantityInStockValueKey);
+  TextEditingController get productUnitIdController =>
+      _getFormTextEditingController(ProductUnitIdValueKey);
+  TextEditingController get serviceUnitIdController =>
+      _getFormTextEditingController(ServiceUnitIdValueKey);
   FocusNode get productNameFocusNode => _getFormFocusNode(ProductNameValueKey);
   FocusNode get priceFocusNode => _getFormFocusNode(PriceValueKey);
   FocusNode get basicUnitFocusNode => _getFormFocusNode(BasicUnitValueKey);
   FocusNode get quantityInStockFocusNode =>
       _getFormFocusNode(QuantityInStockValueKey);
+  FocusNode get productUnitIdFocusNode =>
+      _getFormFocusNode(ProductUnitIdValueKey);
+  FocusNode get serviceUnitIdFocusNode =>
+      _getFormFocusNode(ServiceUnitIdValueKey);
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
@@ -66,6 +78,8 @@ mixin $AddItemView on StatelessWidget {
     priceController.addListener(() => _updateFormData(model));
     basicUnitController.addListener(() => _updateFormData(model));
     quantityInStockController.addListener(() => _updateFormData(model));
+    productUnitIdController.addListener(() => _updateFormData(model));
+    serviceUnitIdController.addListener(() => _updateFormData(model));
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -77,6 +91,8 @@ mixin $AddItemView on StatelessWidget {
     priceController.addListener(() => _updateFormData(model));
     basicUnitController.addListener(() => _updateFormData(model));
     quantityInStockController.addListener(() => _updateFormData(model));
+    productUnitIdController.addListener(() => _updateFormData(model));
+    serviceUnitIdController.addListener(() => _updateFormData(model));
   }
 
   final bool _autoTextFieldValidation = true;
@@ -94,6 +110,8 @@ mixin $AddItemView on StatelessWidget {
           PriceValueKey: priceController.text,
           BasicUnitValueKey: basicUnitController.text,
           QuantityInStockValueKey: quantityInStockController.text,
+          ProductUnitIdValueKey: productUnitIdController.text,
+          ServiceUnitIdValueKey: serviceUnitIdController.text,
         }),
     );
     if (_autoTextFieldValidation || forceValidate) {
@@ -108,6 +126,8 @@ mixin $AddItemView on StatelessWidget {
         PriceValueKey: _getValidationMessage(PriceValueKey),
         BasicUnitValueKey: _getValidationMessage(BasicUnitValueKey),
         QuantityInStockValueKey: _getValidationMessage(QuantityInStockValueKey),
+        ProductUnitIdValueKey: _getValidationMessage(ProductUnitIdValueKey),
+        ServiceUnitIdValueKey: _getValidationMessage(ServiceUnitIdValueKey),
       });
 
   /// Returns the validation message for the given key
@@ -144,6 +164,10 @@ extension ValueProperties on FormViewModel {
   String? get basicUnitValue => this.formValueMap[BasicUnitValueKey] as String?;
   String? get quantityInStockValue =>
       this.formValueMap[QuantityInStockValueKey] as String?;
+  String? get productUnitIdValue =>
+      this.formValueMap[ProductUnitIdValueKey] as String?;
+  String? get serviceUnitIdValue =>
+      this.formValueMap[ServiceUnitIdValueKey] as String?;
 
   bool get hasProductName =>
       this.formValueMap.containsKey(ProductNameValueKey) &&
@@ -157,6 +181,12 @@ extension ValueProperties on FormViewModel {
   bool get hasQuantityInStock =>
       this.formValueMap.containsKey(QuantityInStockValueKey) &&
       (quantityInStockValue?.isNotEmpty ?? false);
+  bool get hasProductUnitId =>
+      this.formValueMap.containsKey(ProductUnitIdValueKey) &&
+      (productUnitIdValue?.isNotEmpty ?? false);
+  bool get hasServiceUnitId =>
+      this.formValueMap.containsKey(ServiceUnitIdValueKey) &&
+      (serviceUnitIdValue?.isNotEmpty ?? false);
 
   bool get hasProductNameValidationMessage =>
       this.fieldsValidationMessages[ProductNameValueKey]?.isNotEmpty ?? false;
@@ -167,6 +197,10 @@ extension ValueProperties on FormViewModel {
   bool get hasQuantityInStockValidationMessage =>
       this.fieldsValidationMessages[QuantityInStockValueKey]?.isNotEmpty ??
       false;
+  bool get hasProductUnitIdValidationMessage =>
+      this.fieldsValidationMessages[ProductUnitIdValueKey]?.isNotEmpty ?? false;
+  bool get hasServiceUnitIdValidationMessage =>
+      this.fieldsValidationMessages[ServiceUnitIdValueKey]?.isNotEmpty ?? false;
 
   String? get productNameValidationMessage =>
       this.fieldsValidationMessages[ProductNameValueKey];
@@ -176,6 +210,10 @@ extension ValueProperties on FormViewModel {
       this.fieldsValidationMessages[BasicUnitValueKey];
   String? get quantityInStockValidationMessage =>
       this.fieldsValidationMessages[QuantityInStockValueKey];
+  String? get productUnitIdValidationMessage =>
+      this.fieldsValidationMessages[ProductUnitIdValueKey];
+  String? get serviceUnitIdValidationMessage =>
+      this.fieldsValidationMessages[ServiceUnitIdValueKey];
 }
 
 extension Methods on FormViewModel {
@@ -188,4 +226,8 @@ extension Methods on FormViewModel {
   setQuantityInStockValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[QuantityInStockValueKey] =
           validationMessage;
+  setProductUnitIdValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[ProductUnitIdValueKey] = validationMessage;
+  setServiceUnitIdValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[ServiceUnitIdValueKey] = validationMessage;
 }

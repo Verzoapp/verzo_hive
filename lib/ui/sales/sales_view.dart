@@ -46,7 +46,7 @@ class _SalesViewState extends State<SalesView> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ExpensesView()),
+      MaterialPageRoute(builder: (context) => ExpensesView()),
     );
   }
 

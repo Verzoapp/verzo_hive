@@ -11,9 +11,11 @@ class ProductsxServicesService {
 
 //Products
   final MutationOptions _createProductMutation;
+  final QueryOptions _getProductUnits;
 
 //Services
   final MutationOptions _createServiceMutation;
+  final QueryOptions _getServiceUnits;
 
 //product/services
   final QueryOptions _getProductOrServiceByBusinessQuery;
@@ -34,6 +36,16 @@ class ProductsxServicesService {
         }
       '''),
         ),
+        _getProductUnits = QueryOptions(
+          document: gql('''
+        query GetProductUnits{
+          getProductUnits{
+            id
+            unitName
+            }
+          }
+        '''),
+        ),
         _createServiceMutation = MutationOptions(
           document: gql('''
         mutation CreateService(\$input: CreateService!) {
@@ -43,6 +55,16 @@ class ProductsxServicesService {
             price
           }
          }
+        '''),
+        ),
+        _getServiceUnits = QueryOptions(
+          document: gql('''
+        query GetServiceUnits{
+          getServiceUnits{
+            id
+            unitName
+            }
+          }
         '''),
         ),
         _getProductOrServiceByBusinessQuery = QueryOptions(
@@ -65,7 +87,8 @@ class ProductsxServicesService {
       required double price,
       required double basicUnit,
       required double quantityInStock,
-      required String businessId}) async {
+      required String businessId,
+      String? productUnitId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
     final businessId = prefs.getString('id');
@@ -96,7 +119,8 @@ class ProductsxServicesService {
           'price': price,
           'basicUnit': basicUnit,
           'quantityInStock': quantityInStock,
-          'businessId': businessId
+          'businessId': businessId,
+          'productUnitId': productUnitId
         },
       },
     );
@@ -131,11 +155,36 @@ class ProductsxServicesService {
     return ProductCreationResult(product: product);
   }
 
+  Future<List<ProductUnit>> getProductUnits() async {
+    final QueryOptions options = QueryOptions(
+      document: _getProductUnits.document,
+    );
+
+    final QueryResult productUnitsResult = await client.value.query(options);
+
+    if (productUnitsResult.hasException) {
+      throw GraphQLProductError(
+        message: productUnitsResult.exception?.graphqlErrors.first.message
+            .toString(),
+      );
+    }
+
+    final List productUnitsData =
+        productUnitsResult.data?['getProductUnits'] ?? [];
+
+    final List<ProductUnit> productUnits = productUnitsData.map((data) {
+      return ProductUnit(id: data['id'], unitName: data['unitName']);
+    }).toList();
+
+    return productUnits;
+  }
+
 //Service
   Future<ServiceCreationResult> createServices(
       {required String name,
       required double price,
-      required String businessId}) async {
+      required String businessId,
+      String? serviceUnitId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
     final businessId = prefs.getString('id');
@@ -161,7 +210,12 @@ class ProductsxServicesService {
     final MutationOptions options = MutationOptions(
       document: _createServiceMutation.document,
       variables: {
-        'input': {'name': name, 'price': price, 'businessId': businessId},
+        'input': {
+          'name': name,
+          'price': price,
+          'businessId': businessId,
+          'serviceUnitId': serviceUnitId
+        },
       },
     );
 
@@ -193,6 +247,30 @@ class ProductsxServicesService {
         result_price: result_price);
 
     return ServiceCreationResult(service: service);
+  }
+
+  Future<List<ServiceUnit>> getServiceUnits() async {
+    final QueryOptions options = QueryOptions(
+      document: _getServiceUnits.document,
+    );
+
+    final QueryResult serviceUnitsResult = await client.value.query(options);
+
+    if (serviceUnitsResult.hasException) {
+      throw GraphQLProductError(
+        message: serviceUnitsResult.exception?.graphqlErrors.first.message
+            .toString(),
+      );
+    }
+
+    final List serviceUnitsData =
+        serviceUnitsResult.data?['getServiceUnits'] ?? [];
+
+    final List<ServiceUnit> serviceUnits = serviceUnitsData.map((data) {
+      return ServiceUnit(id: data['id'], unitName: data['unitName']);
+    }).toList();
+
+    return serviceUnits;
   }
 
   Future<List<Items>> getProductOrServiceByBusiness(
@@ -230,12 +308,26 @@ class ProductsxServicesService {
   }
 }
 
+class ProductUnit {
+  final String id;
+  final String unitName;
+
+  ProductUnit({required this.id, required this.unitName});
+}
+
+class ServiceUnit {
+  final String id;
+  final String unitName;
+
+  ServiceUnit({required this.id, required this.unitName});
+}
+
 class Items {
   final String id;
   final String title;
   final String type;
   num price;
-  num? quantity = 1;
+  num quantity = 1;
 
   Items(
       {required this.id,

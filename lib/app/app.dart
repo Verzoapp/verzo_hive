@@ -45,10 +45,7 @@ import 'package:verzo_one/ui/views/second_screen.dart';
     Singleton(classType: ProductsxServicesService)
   ],
   routes: [
-    MaterialRoute(
-      page: HomeScreen,
-      name: 'homeScreenRoute',
-    ),
+    MaterialRoute(page: HomeScreen, name: 'homeScreenRoute'),
     MaterialRoute(
       page: FirstScreen,
       name: 'firstScreenRoute',

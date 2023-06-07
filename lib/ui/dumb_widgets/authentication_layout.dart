@@ -42,7 +42,7 @@ class AuthenticationLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: ListView(children: [
         if (onBackPressed == null) verticalSpaceTiny,
         if (onBackPressed != null)
@@ -55,15 +55,13 @@ class AuthenticationLayout extends StatelessWidget {
             ),
             onPressed: onBackPressed,
           ),
-        if (onBackPressed == null) verticalSpaceTiny,
-        if (onBackPressed != null) verticalSpaceSmall,
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.asset(
               'assets/images/verzo_logo.svg',
-              width: 102,
-              height: 21,
+              width: 110,
+              height: 25,
             )
           ],
         ),
@@ -72,7 +70,7 @@ class AuthenticationLayout extends StatelessWidget {
           title!,
           style: ktsHeaderText,
         ),
-        verticalSpaceSmall,
+        verticalSpaceTiny,
         Text(
           subtitle!,
           style: ktsParagraphText,
@@ -86,7 +84,7 @@ class AuthenticationLayout extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: GestureDetector(
               onTap: () async {
-                String url = "https://www.fluttercampus.com";
+                String url = "https://alpha.verzo.app/forgotPassword";
                 var urllaunchable = await canLaunchUrlString(
                     url); //canLaunch is from url_launcher package
                 if (urllaunchable) {
@@ -94,7 +92,11 @@ class AuthenticationLayout extends StatelessWidget {
                       url); //launch is from url_launcher package to launch URL
                 } else {}
               },
-              child: Text('Forgot Password?', style: ktsSmallBodyText),
+              child: Text(
+                'Forgot Password?',
+                style: ktsSmallBodyText,
+                selectionColor: kcPrimaryColor,
+              ),
             ),
           ),
         if (onForgotPassword != null) verticalSpaceRegular,

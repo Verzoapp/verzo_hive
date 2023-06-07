@@ -14,6 +14,7 @@ import 'package:verzo_one/ui/invoicing/invoicing_view.dart';
 import 'package:verzo_one/ui/sales/sales_view.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
+import 'package:verzo_one/ui/update_expenses/update_expenses_view_model.dart';
 
 class ExpensesView extends StatefulWidget {
   const ExpensesView({
@@ -41,7 +42,7 @@ class _ExpensesViewState extends State<ExpensesView> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SalesView()),
+      MaterialPageRoute(builder: (context) => SalesView()),
     );
   }
 
@@ -51,7 +52,7 @@ class _ExpensesViewState extends State<ExpensesView> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ExpensesView()),
+      MaterialPageRoute(builder: (context) => ExpensesView()),
     );
   }
 
@@ -61,7 +62,7 @@ class _ExpensesViewState extends State<ExpensesView> {
     });
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const InvoicesView()),
+      MaterialPageRoute(builder: (context) => InvoicesView()),
     );
   }
 
@@ -71,6 +72,7 @@ class _ExpensesViewState extends State<ExpensesView> {
         viewModelBuilder: () => ExpensesViewModel(),
         onModelReady: (model) async {
           model.addNewExpense;
+          model.archiveExpense;
         },
         builder: (context, model, child) {
           if (model.isBusy) {
@@ -164,7 +166,11 @@ class _ExpensesViewState extends State<ExpensesView> {
                         if (index == model.expenses.length) {
                           return const CircularProgressIndicator();
                         } else {
-                          return ExpenseCard(expenses: model.expenses[index]!);
+                          return ExpenseCard(
+                              expenses: model.expenses[index]!,
+                              archiveExpense: () {
+                                model.archiveExpense(model.expenses[index].id);
+                              });
                         }
                       },
                       separatorBuilder: (BuildContext context, int index) {
@@ -199,10 +205,13 @@ class _ExpensesViewState extends State<ExpensesView> {
 }
 
 class ExpenseCard extends StatelessWidget {
-  ExpenseCard({Key? key, required this.expenses}) : super(key: key);
+  ExpenseCard({Key? key, required this.expenses, required this.archiveExpense})
+      : super(key: key);
   final navigationService = locator<NavigationService>();
-
+  final DialogService _dialogService = locator<DialogService>();
   final Expenses expenses;
+  final Function archiveExpense;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -228,20 +237,33 @@ class ExpenseCard extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              navigationService.navigateTo(Routes.updateExpenseRoute);
-            },
+            onPressed: (() {
+              navigationService.navigateToUpdateExpenseRoute(
+                  selectedExpense: expenses);
+            }),
           ),
+          IconButton(
+              onPressed: () async {
+                final DialogResponse? response =
+                    await _dialogService.showConfirmationDialog(
+                        dialogPlatform: DialogPlatform.Cupertino,
+                        title: 'Archive Expense',
+                        description:
+                            'Are you sure you want to archive this expense?',
+                        barrierDismissible: true,
+                        cancelTitle: 'Cancel',
+                        confirmationTitle: 'Ok');
+                if (response?.confirmed == true) {
+// Call the archiveExpense function
+                  archiveExpense();
+                }
+              },
+              icon: const Icon(Icons.archive))
         ],
       ),
     );
   }
 }
-
-
-
-
-
 
 // Text(
 //                     expenses.description,
