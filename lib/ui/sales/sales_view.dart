@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
+import 'package:verzo_one/helpers/balance_json.dart';
 import 'package:verzo_one/ui/dashboard/dashboard_view.dart';
 import 'package:verzo_one/ui/expenses/expenses_view.dart';
 import 'package:verzo_one/ui/invoicing/invoicing_view.dart';
+import 'package:verzo_one/ui/sales/categories.dart';
 import 'package:verzo_one/ui/sales/sales_view_model.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
@@ -62,294 +64,178 @@ class _SalesViewState extends State<SalesView> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return ViewModelBuilder<SalesViewModel>.reactive(
-      viewModelBuilder: () => SalesViewModel(),
-      onModelReady: (model) => () {},
-      builder: (context, model, child) => Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: kcPrimaryColor,
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          fixedColor: kcPrimaryColor,
-          iconSize: 24,
-          showUnselectedLabels: true,
-          unselectedItemColor: kcTextColorLight,
-          currentIndex: selectedPageIndex,
-          onTap: (index) {
-            if (index == 0) {
-              onHomeTapped();
-            } else if (index == 2) {
-              onExpensesTapped();
-            } else if (index == 3) {
-              onInvoicingTapped();
-            }
-          },
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.sell), label: 'Sales'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart), label: 'Expenses'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long), label: 'Incoicing')
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-          child: ListView(
-            children: [
-              verticalSpaceTiny,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/verzo_logo.svg',
-                    width: 102,
-                    height: 21,
+        viewModelBuilder: () => SalesViewModel(),
+        onModelReady: (model) => () {},
+        builder: (context, model, child) => Scaffold(
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: kcPrimaryColor,
+                onPressed: () {},
+                child: const Icon(Icons.add),
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                fixedColor: kcPrimaryColor,
+                iconSize: 24,
+                showUnselectedLabels: true,
+                unselectedItemColor: kcTextColorLight,
+                currentIndex: selectedPageIndex,
+                onTap: (index) {
+                  if (index == 0) {
+                    onHomeTapped();
+                  } else if (index == 2) {
+                    onExpensesTapped();
+                  } else if (index == 3) {
+                    onInvoicingTapped();
+                  }
+                },
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
                   ),
-                  const CircleAvatar(
-                    backgroundColor: kcTextColorLight,
-                    foregroundColor: kcButtonTextColor,
-                    radius: 16,
-                    child: Text('V'),
-                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.sell), label: 'Sales'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.shopping_cart), label: 'Expenses'),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.receipt_long), label: 'Incoicing')
                 ],
               ),
-              verticalSpaceRegular,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Recent Sales',
-                    style: ktsHeaderText,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcButtonTextColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '+N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcButtonTextColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '+N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcButtonTextColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '+N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcStrokeColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '+N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcStrokeColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '+N200,000',
-                              style: ktsBodyText,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 80,
-                    child: Card(
-                      color: kcStrokeColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: defaultTagBorderRadius),
-                      margin: const EdgeInsets.all(6.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Steven Summers',
-                                  style: ktsBodyText,
-                                ),
-                                Text(
-                                  '02 Minutes Ago',
-                                  style: ktsBodyTextLight,
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '+N200,000',
-                              style: ktsBodyText,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+              // appBar: AppBar(
+              //   backgroundColor: Colors.white,
+              //   elevation: 0,
+              //   leading: IconButton(
+              //     icon: Icon(
+              //       Icons.arrow_back,
+              //       color: kcPrimaryColor,
+              //     ),
+              //     onPressed: () {},
+              //   ),
+              //   actions: <Widget>[
+              //     IconButton(
+              //       icon: Icon(
+              //         Icons.search,
+              //         color: kcPrimaryColor,
+              //       ),
+              //       onPressed: () {},
+              //     ),
+              //     IconButton(
+              //       icon: Icon(
+              //         Icons.shopping_cart,
+              //         color: kcPrimaryColor,
+              //       ),
+              //       onPressed: () {},
+              //     ),
+              //     // SizedBox(width: kDefaultPaddin / 2)
+              //   ],
+              // ),
+              // body: SingleChildScrollView(
+              //   scrollDirection: Axis.vertical,
+              //   child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: <Widget>[
+              //         Padding(
+              //           padding: const EdgeInsets.symmetric(
+              //               horizontal: 20, vertical: 20),
+              //           child: Text(
+              //             "Women",
+              //             style: Theme.of(context)
+              //                 .textTheme
+              //                 .headline5!
+              //                 .copyWith(fontWeight: FontWeight.bold),
+              //           ),
+              //         ),
+              //         Categories(),
+              //         rowey(),
+              //         verticalSpaceTiny,
+              //         rowey(),
+              //         verticalSpaceTiny,
+              //         rowey()
+            ));
   }
 }
+
+// class rowey extends StatelessWidget {
+//   const rowey({
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 10),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Container(
+//                 padding: EdgeInsets.all(20),
+//                 height: 180,
+//                 width: 180,
+//                 decoration: BoxDecoration(
+//                   color: kcPrimaryColor,
+//                   borderRadius: BorderRadius.circular(16),
+//                 ),
+//                 child: SvgPicture.asset(
+//                   'assets/images/Screenshot 2023-04-16 at 10.30.01.png',
+//                 ),
+//               ),
+//               verticalSpaceTiny,
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(horizontal: 5),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       'Office Code',
+//                       style: ktsBodyTextLight,
+//                     ),
+//                     Text(
+//                       'N234000',
+//                       style: ktsBodyTextBold,
+//                     ),
+//                   ],
+//                 ),
+//               )
+//             ],
+//           ),
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Container(
+//                 padding: EdgeInsets.all(20),
+//                 height: 180,
+//                 width: 180,
+//                 decoration: BoxDecoration(
+//                   color: kcPrimaryColor,
+//                   borderRadius: BorderRadius.circular(16),
+//                 ),
+//               ),
+//               verticalSpaceTiny,
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(horizontal: 5),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       'Office Code',
+//                       style: ktsBodyTextLight,
+//                     ),
+//                     Text(
+//                       'N234000',
+//                       style: ktsBodyTextBold,
+//                     ),
+//                   ],
+//                 ),
+//               )
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

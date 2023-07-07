@@ -24,13 +24,13 @@ class VerificationView extends StatelessWidget with $VerificationView {
       viewModelBuilder: () => VerificationViewModel(),
       builder: (context, model, child) => Scaffold(
           body: AuthenticationLayout(
-        onBackPressed: model.navigateBack,
+        // onBackPressed: model.navigateBack,
         busy: model.isBusy,
         onMainButtonTapped: model.getVerificationResponse,
-        onResendVerificationCodeTapped: () {},
+        onResendVerificationCodeTapped: model.resendVerification,
         validationMessage: model.validationMessage,
         title: 'Verification',
-        subtitle: 'We have sent the verification code to your email',
+        subtitle: 'We have sent a verification code to your email',
         form: Form(
           child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16),
@@ -42,7 +42,7 @@ class VerificationView extends StatelessWidget with $VerificationView {
                   width: 64,
                   child: TextFormField(
                     decoration: InputDecoration(
-                        hintText: '0',
+                        // hintText: '0',
                         labelStyle: ktsFormText,
                         border: defaultFormBorder),
                     controller: otp1Controller,
@@ -65,7 +65,7 @@ class VerificationView extends StatelessWidget with $VerificationView {
                   width: 64,
                   child: TextFormField(
                     decoration: InputDecoration(
-                        hintText: '0',
+                        // hintText: '0',
                         labelStyle: ktsFormText,
                         border: defaultFormBorder),
                     controller: otp2Controller,
@@ -88,7 +88,7 @@ class VerificationView extends StatelessWidget with $VerificationView {
                   width: 64,
                   child: TextFormField(
                     decoration: InputDecoration(
-                        hintText: '0',
+                        // hintText: '0',
                         labelStyle: ktsFormText,
                         border: defaultFormBorder),
                     controller: otp3Controller,
@@ -111,7 +111,7 @@ class VerificationView extends StatelessWidget with $VerificationView {
                   width: 64,
                   child: TextFormField(
                     decoration: InputDecoration(
-                        hintText: '0',
+                        // hintText: '0',
                         labelStyle: ktsFormText,
                         border: defaultFormBorder),
                     controller: otp4Controller,

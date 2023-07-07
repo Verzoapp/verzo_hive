@@ -23,7 +23,7 @@ class ForgotPasswordView extends StatelessWidget with $ForgotPasswordView {
           body: AuthenticationLayout(
         busy: model.isBusy,
         onMainButtonTapped: model.saveData,
-        onForgotPasswordResend: () {},
+        // onForgotPasswordResend: () {},
         validationMessage: model.validationMessage,
         title: 'Forgot Password',
         subtitle: 'Please kindly input your email address',

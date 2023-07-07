@@ -43,7 +43,7 @@ class MerchantService {
       {required String name, required String businessId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
-    final businessId = prefs.getString('id');
+    final businessId = prefs.getString('businessId');
 
     if (token == null) {
       return MerchantCreationResult.error(
@@ -78,7 +78,6 @@ class MerchantService {
 
     var merchant_id = result.data?['createMerchant']['id'];
     var merchant_name = result.data?['createMerchant']['name'];
-    var merchant_businessId = result.data?['createMerchant']['businessId'];
 
     if (result.hasException) {
       return MerchantCreationResult.error(
@@ -96,8 +95,8 @@ class MerchantService {
       );
     }
 
-    var merchant = MerchantCreationSuccessResult(
-        id: merchant_id, name: merchant_name, businessId: merchant_businessId);
+    var merchant =
+        MerchantCreationSuccessResult(id: merchant_id, name: merchant_name);
 
     return MerchantCreationResult(merchant: merchant);
   }
@@ -171,10 +170,8 @@ class MerchantCreationResult {
 class MerchantCreationSuccessResult {
   final String id;
   final String name;
-  final String businessId;
 
-  MerchantCreationSuccessResult(
-      {required this.id, required this.name, required this.businessId});
+  MerchantCreationSuccessResult({required this.id, required this.name});
 }
 
 class GraphQLMerchantError {

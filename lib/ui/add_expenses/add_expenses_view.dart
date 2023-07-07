@@ -42,6 +42,7 @@ class AddExpensesView extends StatelessWidget with $AddExpensesView {
       builder: (context, model, child) => Scaffold(
         body: AuthenticationLayout(
           busy: model.isBusy,
+          validationMessage: model.validationMessage,
           onBackPressed: model.navigateBack,
           onMainButtonTapped: () => model.saveExpenseData(),
           title: 'Add Expense',
@@ -123,7 +124,7 @@ class AddExpensesView extends StatelessWidget with $AddExpensesView {
               verticalSpaceSmall,
               DropdownButtonFormField(
                 decoration: InputDecoration(
-                    labelText: ' Merchant',
+                    labelText: ' Merchant (Optional)',
                     labelStyle: ktsFormText,
                     border: defaultFormBorder),
                 items: model.merchantdropdownItems,
@@ -147,23 +148,23 @@ class AddExpensesView extends StatelessWidget with $AddExpensesView {
                   }
                 },
               ),
-              verticalSpaceSmall,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Recurring',
-                    style: ktsFormText,
-                  ),
-                  // Spacer(),
-                  Switch(
-                    value: model.recurringValue,
-                    onChanged: (value) {
-                      model.setRecurring(value);
-                    },
-                  ),
-                ],
-              ),
+              // verticalSpaceSmall,
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       'Recurring',
+              //       style: ktsFormText,
+              //     ),
+              //     // Spacer(),
+              //     Switch(
+              //       value: model.recurringValue,
+              //       onChanged: (value) {
+              //         model.setRecurring(value);
+              //       },
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),

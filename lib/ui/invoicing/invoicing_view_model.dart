@@ -13,12 +13,18 @@ class InvoicesViewModel extends FutureViewModel<List<Invoices>> {
   Future<List<Invoices>> futureToRun() => getInvoiceByBusiness();
   Future<List<Invoices>> getInvoiceByBusiness() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String businessIdValue = prefs.getString('id') ?? '';
+    String businessIdValue = prefs.getString('businessId') ?? '';
 
     // Retrieve existing expense categories
     final invoices =
         await _invoiceService.getInvoiceByBusiness(businessId: businessIdValue);
     return invoices;
+  }
+
+  Future<bool> archiveInvoice(String invoiceId) async {
+    final bool isArchived =
+        await _invoiceService.archiveInvoice(invoiceId: invoiceId);
+    return isArchived;
   }
 
   void addNewInvoice(List<Invoices> invoice) {

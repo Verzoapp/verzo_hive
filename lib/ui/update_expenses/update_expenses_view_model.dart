@@ -17,9 +17,7 @@ class UpdateExpensesViewModel extends FormViewModel {
   late String expenseId;
   // bool? recurringValue;
 
-  UpdateExpensesViewModel({required Expenses passexpense}) {
-    expense = passexpense;
-  }
+  UpdateExpensesViewModel({required Expenses expense});
 
   void setSelectedExpense() {
     expenseId = expense.id;
@@ -93,8 +91,6 @@ class UpdateExpensesViewModel extends FormViewModel {
   }
 
   Future<ExpenseUpdateResult> runExpenseUpdate() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // // final expenseIdValue = prefs.getString('id');
     return _expenseService.updateExpenses(
       expenseId: expenseId,
       description: updateDescriptionController.text,
@@ -122,7 +118,5 @@ class UpdateExpensesViewModel extends FormViewModel {
   void navigateBack() => navigationService.back();
 
   @override
-  void setFormStatus() {
-    // TODO: implement setFormStatus
-  }
+  void setFormStatus() {}
 }

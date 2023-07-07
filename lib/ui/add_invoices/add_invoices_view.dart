@@ -20,6 +20,7 @@ import 'package:verzo_one/ui/shared/ui_helpers.dart';
 @FormView(fields: [
   FormTextField(name: 'customerId'),
   FormTextField(name: 'dueDate'),
+  FormTextField(name: 'dateOfIssue'),
   FormTextField(name: 'VAT', initialValue: '0.00'),
   FormTextField(name: 'discount', initialValue: '0.00')
 ])
@@ -69,6 +70,28 @@ class AddInvoicesView extends StatelessWidget with $AddInvoicesView {
                     String formattedDate =
                         DateFormat('yyyy-MM-dd').format(pickeddate);
                     dueDateController.text = formattedDate;
+                  }
+                },
+              ),
+              verticalSpaceTiny,
+              TextFormField(
+                controller: dateOfIssueController,
+                decoration: InputDecoration(
+                    labelText: 'Date Of Issue',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                keyboardType: TextInputType.datetime,
+                onTap: () async {
+                  DateTime? pickeddate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(DateTime.now().year - 5),
+                    lastDate: DateTime(DateTime.now().year + 5),
+                  );
+                  if (pickeddate != null) {
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(pickeddate);
+                    dateOfIssueController.text = formattedDate;
                   }
                 },
               ),
@@ -270,7 +293,7 @@ class AddInvoicesView extends StatelessWidget with $AddInvoicesView {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Discount',
+                            'Discount (Optional)',
                             style: ktsBodyTextLight,
                           ),
                           SizedBox(

@@ -18,6 +18,9 @@ const Widget horizontalSpaceLarge = SizedBox(
 );
 
 // Vertical Spacing
+const Widget verticalSpaceMinute = SizedBox(
+  height: 4,
+);
 const Widget verticalSpaceTiny = SizedBox(
   height: 8,
 );

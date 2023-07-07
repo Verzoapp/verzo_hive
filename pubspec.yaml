@@ -47,6 +47,7 @@ dependencies:
     fl_chart: ^0.55.1
     url_launcher: ^6.1.10
     dropdown_search: ^3.0.1
+    phosphor_flutter: ^2.0.0
 
 dev_dependencies:
     flutter_test:
@@ -73,6 +74,7 @@ flutter:
 
     assets:
         - assets/images/verzo_logo.svg
+        - assets/images/Screenshot 2023-04-16 at 10.30.01.png
 
     # To add assets to your application, add an assets section, like this:
     # assets:

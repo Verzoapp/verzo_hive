@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -120,6 +122,7 @@ class _ExpensesViewState extends State<ExpensesView> {
                       icon: Icon(Icons.receipt_long), label: 'Incoicing')
                 ]),
             body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               child: Column(
                 children: [
@@ -154,48 +157,69 @@ class _ExpensesViewState extends State<ExpensesView> {
                       ),
                     ],
                   ),
-                  if (model.expenses.isEmpty)
+                  // if (model.expenses.isEmpty)
+                  //   const Text('No Expense')
+                  // else
+                  //   ListView.separated(
+                  //     scrollDirection: Axis.vertical,
+                  //     physics: const NeverScrollableScrollPhysics(),
+                  //     primary: true,
+                  //     shrinkWrap: true,
+                  //     itemCount: model.expenses.length + (model.isBusy ? 1 : 0),
+                  //     itemBuilder: (context, index) {
+                  //       if (index == model.expenses.length) {
+                  //         return const CircularProgressIndicator();
+                  //       } else {
+                  //         return ExpenseCard(
+                  //           expenses: model.expenses[index]!,
+                  //           archiveExpense: () {
+                  //             model.archiveExpense(model.expenses[index].id);
+                  //           },
+                  //           expenseId: model.expenses[index].id,
+                  //         );
+                  //       }
+                  //     },
+                  //     separatorBuilder: (BuildContext context, int index) {
+                  //       return verticalSpaceTiny;
+                  //     },
+                  //   ),
+                  if (model.data == null)
                     const Text('No Expense')
                   else
                     ListView.separated(
+                      scrollDirection: Axis.vertical,
                       physics: const NeverScrollableScrollPhysics(),
                       primary: true,
                       shrinkWrap: true,
-                      itemCount: model.expenses.length + (model.isBusy ? 1 : 0),
+                      itemCount: model.data!.length,
                       itemBuilder: (context, index) {
-                        if (index == model.expenses.length) {
+                        var expense = model.data![index];
+                        if (index == model.data!.length) {
                           return const CircularProgressIndicator();
                         } else {
                           return ExpenseCard(
-                              expenses: model.expenses[index]!,
-                              archiveExpense: () {
-                                model.archiveExpense(model.expenses[index].id);
-                              });
+                            expenses: expense,
+                            archiveExpense: () {
+                              model.archiveExpense(expense.id);
+                            },
+                            expenseId: expense.id,
+                          );
                         }
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return verticalSpaceTiny;
+                        return Column(
+                          children: [
+                            // verticalSpaceTiny,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 2),
+                              child: Divider(
+                                thickness: 0.4,
+                              ),
+                            )
+                          ],
+                        );
                       },
                     ),
-                  // PagedListView<int, Expenses>(
-                  //   shrinkWrap: true,
-                  //   primary: false,
-                  //   pagingController: model.data!,
-                  //   builderDelegate: PagedChildBuilderDelegate<Expenses>(
-                  //     itemBuilder: (context, expenses, index) {
-                  //       return ExpenseCard(expenses: expenses);
-                  //     },
-                  //     firstPageProgressIndicatorBuilder: (context) {
-                  //       return const CircularProgressIndicator();
-                  //     },
-                  //     newPageProgressIndicatorBuilder: (context) {
-                  //       return const CircularProgressIndicator();
-                  //     },
-                  //     noItemsFoundIndicatorBuilder: (context) {
-                  //       return const Text('No Expense');
-                  //     },
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -205,18 +229,24 @@ class _ExpensesViewState extends State<ExpensesView> {
 }
 
 class ExpenseCard extends StatelessWidget {
-  ExpenseCard({Key? key, required this.expenses, required this.archiveExpense})
-      : super(key: key);
+  ExpenseCard({
+    Key? key,
+    required this.expenses,
+    required this.archiveExpense,
+    required this.expenseId,
+  }) : super(key: key);
   final navigationService = locator<NavigationService>();
   final DialogService _dialogService = locator<DialogService>();
   final Expenses expenses;
+  final String expenseId;
+
   final Function archiveExpense;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: defaultTagBorderRadius),
-      tileColor: kcStrokeColor,
+      // tileColor: kcStrokeColor,
       title: Text(
         expenses.description,
         style: ktsBodyText,
@@ -236,7 +266,17 @@ class ExpenseCard extends StatelessWidget {
             style: ktsBodyText,
           ),
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.visibility),
+            onPressed: (() {
+              navigationService.navigateToViewExpenseRoute(
+                  selectedExpense: expenses);
+            }),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.edit,
+              size: 20,
+            ),
             onPressed: (() {
               navigationService.navigateToUpdateExpenseRoute(
                   selectedExpense: expenses);
@@ -258,7 +298,10 @@ class ExpenseCard extends StatelessWidget {
                   archiveExpense();
                 }
               },
-              icon: const Icon(Icons.archive))
+              icon: const Icon(
+                Icons.archive,
+                size: 20,
+              ))
         ],
       ),
     );

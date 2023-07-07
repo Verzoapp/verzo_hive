@@ -15,10 +15,11 @@ class ChooseItemViewModel extends FutureViewModel<List<Items>> {
   List<Items> items = [];
   List<Items> selectedItems = [];
   List<Items> newItem = [];
-
+  @override
+  Future<List<Items>> futureToRun() => getProductOrServiceByBusiness();
   Future<List<Items>> getProductOrServiceByBusiness() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String businessIdValue = prefs.getString('id') ?? '';
+    String businessIdValue = prefs.getString('businessId') ?? '';
 
     // Retrieve existing products/services
     final productsorservices = await _productservicesService
@@ -38,7 +39,4 @@ class ChooseItemViewModel extends FutureViewModel<List<Items>> {
   }
 
   void navigateBack() => navigationService.back();
-
-  @override
-  Future<List<Items>> futureToRun() => getProductOrServiceByBusiness();
 }

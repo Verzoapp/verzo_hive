@@ -73,6 +73,7 @@ class _InvoicesViewState extends State<InvoicesView> {
         viewModelBuilder: () => InvoicesViewModel(),
         onModelReady: (model) async {
           model.addNewInvoice;
+          model.archiveInvoice;
         },
         builder: (context, model, child) {
           if (model.isBusy) {
@@ -119,6 +120,7 @@ class _InvoicesViewState extends State<InvoicesView> {
               ],
             ),
             body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               child: Column(
                 children: [
@@ -162,7 +164,14 @@ class _InvoicesViewState extends State<InvoicesView> {
                       shrinkWrap: true,
                       itemCount: model.data!.length,
                       itemBuilder: (context, index) {
-                        return InvoiceCard(invoices: model.data![index]);
+                        var invoice = model.data![index];
+                        return InvoiceCard(
+                          invoices: invoice,
+                          // model.data![index],
+                          archiveInvoice: () {
+                            model.archiveInvoice(invoice.id);
+                          },
+                        );
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return verticalSpaceTiny;
@@ -177,9 +186,12 @@ class _InvoicesViewState extends State<InvoicesView> {
 }
 
 class InvoiceCard extends StatelessWidget {
-  const InvoiceCard({Key? key, required this.invoices}) : super(key: key);
-
+  InvoiceCard({Key? key, required this.invoices, required this.archiveInvoice})
+      : super(key: key);
+  final navigationService = locator<NavigationService>();
+  final DialogService _dialogService = locator<DialogService>();
   final Invoices invoices;
+  final Function archiveInvoice;
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -195,10 +207,46 @@ class InvoiceCard extends StatelessWidget {
         invoices.createdAt,
         style: ktsBodyTextLight,
       ),
-      trailing: Text(
-        NumberFormat.currency(locale: 'en', symbol: '\N')
-            .format(invoices.totalAmount),
-        style: ktsBodyText,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            NumberFormat.currency(locale: 'en', symbol: 'N')
+                .format(invoices.totalAmount),
+            style: ktsBodyText,
+          ),
+          IconButton(
+            icon: const Icon(Icons.read_more),
+            onPressed: (() {
+              // navigationService.navigateToUpdateInvoiceRoute(
+              //     selectedInvoice: invoices);
+            }),
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: (() {
+              navigationService.navigateToUpdateInvoiceRoute(
+                  selectedInvoice: invoices);
+            }),
+          ),
+          IconButton(
+              onPressed: () async {
+                final DialogResponse? response =
+                    await _dialogService.showConfirmationDialog(
+                        dialogPlatform: DialogPlatform.Cupertino,
+                        title: 'Archive Invoice',
+                        description:
+                            'Are you sure you want to archive this invoice?',
+                        barrierDismissible: true,
+                        cancelTitle: 'Cancel',
+                        confirmationTitle: 'Ok');
+                if (response?.confirmed == true) {
+// Call the archiveExpense function
+                  archiveInvoice();
+                }
+              },
+              icon: const Icon(Icons.archive))
+        ],
       ),
     );
   }

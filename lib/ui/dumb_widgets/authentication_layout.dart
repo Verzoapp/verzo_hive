@@ -16,7 +16,7 @@ class AuthenticationLayout extends StatelessWidget {
   final Function()? onLoginTapped;
   final Function()? onResendVerificationCodeTapped;
   final Function()? onForgotPassword;
-  final Function()? onForgotPasswordResend;
+  // final Function()? onForgotPasswordResend;
   final Function()? onBackPressed;
   final String? validationMessage;
   final bool busy;
@@ -33,7 +33,7 @@ class AuthenticationLayout extends StatelessWidget {
       this.onLoginTapped,
       this.onResendVerificationCodeTapped,
       this.onForgotPassword,
-      this.onForgotPasswordResend,
+      // this.onForgotPasswordResend,
       this.onBackPressed,
       this.validationMessage,
       this.busy = false})
@@ -42,7 +42,7 @@ class AuthenticationLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView(children: [
         if (onBackPressed == null) verticalSpaceTiny,
         if (onBackPressed != null)
@@ -61,7 +61,7 @@ class AuthenticationLayout extends StatelessWidget {
             SvgPicture.asset(
               'assets/images/verzo_logo.svg',
               width: 110,
-              height: 25,
+              height: 30,
             )
           ],
         ),
@@ -94,8 +94,7 @@ class AuthenticationLayout extends StatelessWidget {
               },
               child: Text(
                 'Forgot Password?',
-                style: ktsSmallBodyText,
-                selectionColor: kcPrimaryColor,
+                style: ktsforgotpasswordText,
               ),
             ),
           ),
@@ -182,7 +181,7 @@ class AuthenticationLayout extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Didn\'t recieve a code? ',
+                'Didn\'t recieve the code? ',
                 style: ktsBodyTextLight,
               ),
               GestureDetector(
@@ -195,28 +194,28 @@ class AuthenticationLayout extends StatelessWidget {
               )
             ],
           ),
-        if (onForgotPasswordResend != null) verticalSpaceSmall,
-        if (onForgotPasswordResend != null)
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Didn\'t recieve an email? Change email address or ',
-                  style: ktsBodyTextLight,
-                ),
-                GestureDetector(
-                  onTap: onForgotPasswordResend,
-                  child: const Text('Resend email',
-                      style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: kcPrimaryColor,
-                      )),
-                )
-              ],
-            ),
-          ),
+        // if (onForgotPasswordResend != null) verticalSpaceSmall,
+        // if (onForgotPasswordResend != null)
+        // Align(
+        //   alignment: Alignment.center,
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Text(
+        //         'Didn\'t recieve an email? Change email address or ',
+        //         style: ktsBodyTextLight,
+        //       ),
+        //       GestureDetector(
+        //         onTap: (() {}),
+        //         child: const Text('Resend email',
+        //             style: TextStyle(
+        //               decoration: TextDecoration.underline,
+        //               color: kcPrimaryColor,
+        //             )),
+        //       )
+        //     ],
+        //   ),
+        // ),
       ]),
     );
   }

@@ -1,0 +1,6 @@
+package com.example.verzo_mobile
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

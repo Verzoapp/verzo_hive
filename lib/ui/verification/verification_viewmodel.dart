@@ -14,6 +14,7 @@ class VerificationViewModel extends FormViewModel {
   final FocusNode digit3FocusNode = FocusNode();
   final FocusNode digit4FocusNode = FocusNode();
   final NavigationService navigationService = locator<NavigationService>();
+  final DialogService dialogService = locator<DialogService>();
 
   String otpDigit1 = '';
   String otpDigit2 = '';
@@ -50,9 +51,24 @@ class VerificationViewModel extends FormViewModel {
     // TODO: implement setFormStatus
   }
 
-  Future<VerificationResult> runVerification() =>
-      _otpVerificationService.verifyOTP(
-          code: double.parse('$otp1Value$otp2Value$otp3Value$otp4Value'));
+  Future<bool> resendVerification() async {
+    await dialogService.showDialog(
+        dialogPlatform: DialogPlatform.Cupertino,
+        title: 'Resend Verification',
+        description: 'We have resent a verification code to your email',
+        barrierDismissible: true);
+    bool verificationResent =
+        await _otpVerificationService.resendVerification();
+    return verificationResent;
+  }
+
+  Future<VerificationResult> runVerification() {
+    final otpValue =
+        '${otp1Value ?? ''}${otp2Value ?? ''}${otp3Value ?? ''}${otp4Value ?? ''}';
+    final otpCode = double.tryParse(otpValue) ?? 0.0;
+
+    return _otpVerificationService.verifyOTP(code: otpCode);
+  }
 
   Future getVerificationResponse() async {
     final result = await runBusyFuture(runVerification());
@@ -67,6 +83,4 @@ class VerificationViewModel extends FormViewModel {
   }
 
   void navigateBack() => navigationService.back();
-  void navigateToCreateAccount() =>
-      navigationService.navigateTo(Routes.createAccountRoute);
 }

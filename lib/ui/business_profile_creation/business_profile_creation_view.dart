@@ -27,57 +27,63 @@ class BusinessProfileCreationView extends StatelessWidget
     return ViewModelBuilder<BusinessProfileCreationViewModel>.reactive(
       viewModelBuilder: () => BusinessProfileCreationViewModel(),
       onModelReady: (model) async {
-        await model.getBusinessCategories();
+        model.getBusinessCategories();
         listenToFormUpdated(model);
       },
       builder: (context, model, child) => Scaffold(
         body: AuthenticationLayout(
           busy: model.isBusy,
-          onBackPressed: model.navigateBack,
+          validationMessage: model.validationMessage,
+          // onBackPressed: model.navigateBack,
           onMainButtonTapped: () => model.saveBusinessData(),
           title: 'Business Profile',
-          subtitle: 'Please fill the form below to create a business profile',
-          mainButtonTitle: 'Create BUsiness',
-          form: Column(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                    labelText: 'Enter business name',
-                    labelStyle: ktsFormText,
-                    border: defaultFormBorder),
-                controller: businessNameController,
-              ),
-              verticalSpaceSmall,
-              TextFormField(
-                decoration: InputDecoration(
-                    labelText: 'Enter email',
-                    labelStyle: ktsFormText,
-                    border: defaultFormBorder),
-                controller: businessEmailController,
-              ),
-              verticalSpaceSmall,
-              TextFormField(
-                decoration: InputDecoration(
-                    labelText: 'Enter phone number',
-                    labelStyle: ktsFormText,
-                    border: defaultFormBorder),
-                controller: businessMobileController,
-              ),
-              verticalSpaceSmall,
-              DropdownButtonFormField(
-                decoration: InputDecoration(
-                    labelText: 'Business Category',
-                    labelStyle: ktsFormText,
-                    border: defaultFormBorder),
-                items: model.dropdownItems,
-                value: businessCategoryIdController.text.isEmpty
-                    ? null
-                    : businessCategoryIdController.text,
-                onChanged: (value) {
-                  businessCategoryIdController.text = value.toString();
-                },
-              ),
-            ],
+          subtitle: 'Please fill the form to create a business profile',
+          mainButtonTitle: 'Create Business Profile',
+          form: Form(
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                      labelText: 'Enter Business Name',
+                      labelStyle: ktsFormText,
+                      border: defaultFormBorder),
+                  controller: businessNameController,
+                  keyboardType: TextInputType.name,
+                ),
+                verticalSpaceSmall,
+                TextFormField(
+                  decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: ktsFormText,
+                      border: defaultFormBorder),
+                  controller: businessEmailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                verticalSpaceSmall,
+                TextFormField(
+                  decoration: InputDecoration(
+                      labelText: 'Phone Number (optional)',
+                      labelStyle: ktsFormText,
+                      border: defaultFormBorder),
+                  controller: businessMobileController,
+                  keyboardType: TextInputType.phone,
+                ),
+                verticalSpaceSmall,
+                DropdownButtonFormField(
+                  decoration: InputDecoration(
+                      labelText: 'Business Category',
+                      labelStyle: ktsFormText,
+                      border: defaultFormBorder),
+                  items: model.businessCategorydropdownItems,
+                  value: businessCategoryIdController.text.isEmpty
+                      ? null
+                      : businessCategoryIdController.text,
+                  onChanged: (value) {
+                    businessCategoryIdController.text = value.toString();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -30,8 +30,7 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UpdateExpensesViewModel>.reactive(
-      viewModelBuilder: () =>
-          UpdateExpensesViewModel(passexpense: selectedExpense),
+      viewModelBuilder: () => UpdateExpensesViewModel(expense: selectedExpense),
       onModelReady: (model) {
         model.setSelectedExpense();
         model.getExpenseCategoryWithSets();

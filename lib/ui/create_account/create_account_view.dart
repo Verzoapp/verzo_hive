@@ -25,37 +25,47 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
         busy: model.isBusy,
         onMainButtonTapped: () => model.saveData(),
         onLoginTapped: model.navigateToLogin,
-        onBackPressed: model.navigateBack,
         validationMessage: model.validationMessage,
         title: 'Create Account',
-        subtitle: 'Create an account to sign up.',
+        subtitle: 'Create an account to sign up',
         mainButtonTitle: 'Sign Up',
         form: Form(
           child: Column(
             children: [
               TextFormField(
                 decoration: InputDecoration(
+                    // prefixIcon: const Icon(Icons.email),
                     labelText: 'Enter email',
                     labelStyle: ktsFormText,
                     border: defaultFormBorder),
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
-                validator: ((value) {}),
+                // validator: ((value) {
+                //   if (value!.isEmpty) {
+                //     return 'Please enter an email';
+                //   }
+                // }),
               ),
               verticalSpaceSmall,
               TextFormField(
-                obscureText: true,
+                obscureText: !model.isPasswordVisible,
                 decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: ktsFormText,
-                    border: defaultFormBorder),
+                    border: defaultFormBorder,
+                    suffixIcon: GestureDetector(
+                      onTap: model.togglePasswordVisibility,
+                      child: Icon(model.isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    )),
                 controller: passwordController,
                 keyboardType: TextInputType.visiblePassword,
               ),
               verticalSpaceSmall,
               TextFormField(
                 decoration: InputDecoration(
-                    labelText: 'Enter full name',
+                    labelText: 'Full name',
                     labelStyle: ktsFormText,
                     border: defaultFormBorder),
                 controller: fullNameController,

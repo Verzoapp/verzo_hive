@@ -9,21 +9,23 @@ import '../../app/app.locator.dart';
 
 class BusinessProfileCreationViewModel extends FormViewModel {
   final navigationService = locator<NavigationService>();
+  final DialogService dialogService = locator<DialogService>();
   final _businessCreationService = locator<BusinessCreationService>();
-  List<DropdownMenuItem<String>> dropdownItems = [];
+  List<DropdownMenuItem<String>> businessCategorydropdownItems = [];
 
   @override
   void setFormStatus() {}
 
-  Future<void> getBusinessCategories() async {
+  Future<List<BusinessCategory>> getBusinessCategories() async {
     final businessCategories =
         await _businessCreationService.getBusinessCategories();
-    dropdownItems = businessCategories.map((businessCategory) {
+    businessCategorydropdownItems = businessCategories.map((businessCategory) {
       return DropdownMenuItem<String>(
         value: businessCategory.id.toString(),
         child: Text(businessCategory.categoryName),
       );
     }).toList();
+    return businessCategories;
   }
 
   Future<BusinessCreationResult> runBusinessCreation() =>
@@ -37,6 +39,11 @@ class BusinessProfileCreationViewModel extends FormViewModel {
     final result = await runBusyFuture(runBusinessCreation());
 
     if (result.business != null) {
+      await dialogService.showDialog(
+          dialogPlatform: DialogPlatform.Cupertino,
+          title: 'Business Profile',
+          description: 'Business profile has been sucessfully created',
+          barrierDismissible: true);
       // navigate to success route
       navigationService.replaceWith(Routes.loginRoute);
     } else if (result.error != null) {

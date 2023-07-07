@@ -9,6 +9,7 @@ class OTPVerificationService {
   ValueNotifier<GraphQLClient> client;
 
   final MutationOptions _verificationMutation;
+  final MutationOptions _resendVerificationMutation;
 
   OTPVerificationService()
       : client = ValueNotifier(GraphQLClient(
@@ -19,6 +20,13 @@ class OTPVerificationService {
           document: gql('''
         mutation Verification(\$input: Float!) {
           verification(code: \$input) 
+        }
+      '''),
+        ),
+        _resendVerificationMutation = MutationOptions(
+          document: gql('''
+        mutation ResendVerification{
+          resendVerification
         }
       '''),
         );
@@ -55,8 +63,6 @@ class OTPVerificationService {
 
     final QueryResult result = await newClient.mutate(options);
 
-    var isSuccessful = result.data?['verification'];
-
     if (result.hasException) {
       return VerificationResult.error(
         error: GraphQLAuthError(
@@ -64,6 +70,7 @@ class OTPVerificationService {
         ),
       );
     }
+    var isSuccessful = result.data?['verification'];
 
     if (result.data == null || result.data!['verification'] == null) {
       return VerificationResult.error(
@@ -76,6 +83,42 @@ class OTPVerificationService {
     var verification = VerificationSuccessResult(isSuccessful: isSuccessful);
 
     return VerificationResult(verificationResponse: verification);
+  }
+
+  Future<bool> resendVerification() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw GraphQLAuthError(
+        message: "Access token not found",
+      );
+    }
+
+    // Use the token to create an authlink
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
+
+    // Create a new GraphQLClient with the authlink
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
+
+    final MutationOptions options = MutationOptions(
+      document: _resendVerificationMutation.document,
+    );
+
+    final QueryResult result = await newClient.mutate(options);
+    if (result.hasException) {
+      // Handle any errors that may have occurred during the log out process
+      throw Exception(result.exception);
+    }
+
+    bool verificationResent = result.data?['resendVerification'];
+
+    return verificationResent;
   }
 }
 

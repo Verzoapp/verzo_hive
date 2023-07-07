@@ -75,6 +75,8 @@ class ProductsxServicesService {
             title
             type
             price
+            productUnitId
+            serviceUnitId
             businessId
             }
           }
@@ -91,7 +93,7 @@ class ProductsxServicesService {
       String? productUnitId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
-    final businessId = prefs.getString('id');
+    final businessId = prefs.getString('businessId');
 
     if (token == null) {
       return ProductCreationResult.error(
@@ -187,7 +189,7 @@ class ProductsxServicesService {
       String? serviceUnitId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
-    final businessId = prefs.getString('id');
+    final businessId = prefs.getString('businessId');
 
     if (token == null) {
       return ServiceCreationResult.error(
@@ -283,13 +285,13 @@ class ProductsxServicesService {
     final QueryResult productorserviceByBusinessResult =
         await client.value.query(options);
 
-    // if (productorserviceByBusinessResult.hasException) {
-    //   throw GraphQLInvoiceError(
-    //     message: productorserviceByBusinessResult
-    //         .exception?.graphqlErrors.first.message
-    //         .toString(),
-    //   );
-    // }
+    if (productorserviceByBusinessResult.hasException) {
+      throw GraphQLProductError(
+        message: productorserviceByBusinessResult
+            .exception?.graphqlErrors.first.message
+            .toString(),
+      );
+    }
 
     final List productsorservicesData = productorserviceByBusinessResult
             .data?['getProductOrServiceByBusiness'] ??
@@ -301,6 +303,8 @@ class ProductsxServicesService {
           title: data['title'],
           type: data['type'],
           price: data['price'],
+          productUnitId: data['productUnitId'],
+          serviceUnitId: data['serviceUnitId'],
           quantity: 1);
     }).toList();
 
@@ -325,7 +329,9 @@ class ServiceUnit {
 class Items {
   final String id;
   final String title;
-  final String type;
+  late final String type;
+  final String? productUnitId;
+  final String? serviceUnitId;
   num price;
   num quantity = 1;
 
@@ -333,6 +339,8 @@ class Items {
       {required this.id,
       required this.title,
       required this.type,
+      this.productUnitId,
+      this.serviceUnitId,
       required this.price,
       required this.quantity});
 }

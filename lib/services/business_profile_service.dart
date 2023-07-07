@@ -41,7 +41,7 @@ class BusinessCreationService {
 
   Future<BusinessCreationResult> createBusinessProfile(
       {required String businessName,
-      String? businessEmail,
+      required String businessEmail,
       String? businessMobile,
       required String businessCategoryId}) async {
     final prefs = await SharedPreferences.getInstance();
@@ -80,12 +80,6 @@ class BusinessCreationService {
 
     final QueryResult result = await newClient.mutate(options);
 
-    var resultbusiness_id = result.data?['createBusiness']['id'];
-    var result_businessName = result.data?['createBusiness']['businessName'];
-    var result_businessEmail = result.data?['createBusiness']['businessEmail'];
-    var result_businessMobile =
-        result.data?['createBusiness']['businessMobile'];
-
     if (result.hasException) {
       return BusinessCreationResult.error(
         error: GraphQLBusinessError(
@@ -94,7 +88,13 @@ class BusinessCreationService {
       );
     }
 
-    prefs.setString('id', resultbusiness_id ?? "");
+    var resultbusiness_id = result.data?['createBusiness']['id'];
+    var result_businessName = result.data?['createBusiness']['businessName'];
+    var result_businessEmail = result.data?['createBusiness']['businessEmail'];
+    var result_businessMobile =
+        result.data?['createBusiness']['businessMobile'];
+
+    // prefs.setString('id', resultbusiness_id ?? "");
     // prefs.setString('businessName', result_businessName ?? "");
     // prefs.setString('businessEmail', result_businessEmail ?? "");
     // prefs.setString('businessMobile', result_businessMobile ?? "");
@@ -108,8 +108,12 @@ class BusinessCreationService {
   }
 
   Future<List<BusinessCategory>> getBusinessCategories() async {
+    final QueryOptions options = QueryOptions(
+      document: _getBusinessCategoriesQuery.document,
+    );
+
     final QueryResult businessCategoriesResult =
-        await client.value.query(_getBusinessCategoriesQuery);
+        await client.value.query(options);
 
     if (businessCategoriesResult.hasException) {
       GraphQLBusinessError(
@@ -118,11 +122,11 @@ class BusinessCreationService {
       );
     }
 
-    final List categoriesData =
+    final List businessCategoriesData =
         businessCategoriesResult.data?['getBusinessCategories'] ?? [];
 
     final List<BusinessCategory> businessCategories =
-        categoriesData.map((data) {
+        businessCategoriesData.map((data) {
       return BusinessCategory(
         id: data['id'],
         categoryName: data['categoryName'],
@@ -154,13 +158,13 @@ class BusinessCreationSuccessResult {
   BusinessCreationSuccessResult({
     required this.resultbusiness_id,
     required this.result_businessName,
-    this.result_businessEmail,
+    required this.result_businessEmail,
     this.result_businessMobile,
   });
 
   late final String resultbusiness_id;
   late final String result_businessName;
-  late final String? result_businessEmail;
+  late final String result_businessEmail;
   late final String? result_businessMobile;
 }
 

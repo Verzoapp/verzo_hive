@@ -10,6 +10,7 @@ import 'login_view.form.dart';
 class LoginViewModel extends FormViewModel {
   final navigationService = locator<NavigationService>();
   final _authenticationService = locator<AuthenticationService>();
+  bool isPasswordVisible = false;
 
   @override
   void setFormStatus() {}
@@ -35,4 +36,9 @@ class LoginViewModel extends FormViewModel {
 
   void navigateToCreateAccount() =>
       navigationService.navigateTo(Routes.createAccountRoute);
+
+  void togglePasswordVisibility() {
+    isPasswordVisible = !isPasswordVisible;
+    notifyListeners();
+  }
 }

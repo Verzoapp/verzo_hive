@@ -11,6 +11,7 @@ class ExpenseService {
 
 //Expense
   final MutationOptions _createExpenseMutation;
+  final QueryOptions _getExpenseByIdQuery;
   final MutationOptions _updateExpenseMutation;
   final MutationOptions _archiveExpenseMutation;
   final QueryOptions _getExpenseByBusinessMobileQuery;
@@ -39,6 +40,26 @@ class ExpenseService {
         }
       '''),
         ),
+        _getExpenseByIdQuery = QueryOptions(
+          document: gql('''
+        query GetExpenseById(\$expenseId: String!){
+          getExpenseById(expenseId: \$expenseId){
+            id
+            amount
+            description
+            expenseDate
+            merchant{
+              name
+            }
+            merchantId
+            expenseCategory{
+              name
+            }
+            expenseCategoryId
+            }
+          }
+        '''),
+        ),
         _updateExpenseMutation = MutationOptions(
           document: gql('''
             mutation UpdateExpense(\$expenseId: String!, \$input: UpdateExpense) {
@@ -60,8 +81,14 @@ class ExpenseService {
             description
             amount
             expenseDate
+            expenseCategory{
+              name
+            }
             expenseCategoryId
             merchantId
+            merchant{
+              name
+            }
             }
             cursorId
             }
@@ -111,7 +138,7 @@ class ExpenseService {
       required String expenseDate}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
-    final businessId = prefs.getString('id');
+    final businessId = prefs.getString('businessId');
 
     if (token == null) {
       return ExpenseCreationResult.error(
@@ -180,6 +207,36 @@ class ExpenseService {
         result_expenseDate: result_expenseDate);
 
     return ExpenseCreationResult(expense: expense);
+  }
+
+  Future<Expenses> getExpenseById({required String expenseId}) async {
+    final QueryOptions options = QueryOptions(
+      document: _getExpenseByIdQuery.document,
+      variables: {'expenseId': expenseId},
+    );
+
+    final QueryResult expenseByIdResult = await client.value.query(options);
+
+    if (expenseByIdResult.hasException) {
+      throw GraphQLExpenseError(
+        message:
+            expenseByIdResult.exception?.graphqlErrors.first.message.toString(),
+      );
+    }
+
+    final expenseByIdData = expenseByIdResult.data?['getExpenseById'] ?? [];
+
+    final Expenses expenseById = Expenses(
+        id: expenseByIdData['id'],
+        description: expenseByIdData['description'],
+        expenseCategoryId: expenseByIdData['expenseCategoryId'],
+        expenseCategoryName: expenseByIdData['expenseCategory']['name'],
+        expenseDate: expenseByIdData['expenseDate'],
+        merchantId: expenseByIdData['merchantId'],
+        // merchantName: expenseByIdData['merchant']['name'],
+        amount: expenseByIdData['amount']);
+
+    return expenseById;
   }
 
   Future<ExpenseUpdateResult> updateExpenses(
@@ -290,8 +347,6 @@ class ExpenseService {
       );
     }
 
-    
-
     final List expensesData = expenseByBusinessResult
             .data?['getExpenseByBusinessMobile']['expenseByBusiness'] ??
         [];
@@ -309,6 +364,8 @@ class ExpenseService {
           amount: data['amount'],
           expenseDate: data['expenseDate'],
           merchantId: data['merchantId'],
+          // merchantName: data['merchant']['name'] ?? 'Unknown Merchant',
+          expenseCategoryName: data['expenseCategory']['name'],
           expenseCategoryId: data['expenseCategoryId'],
           recurring: data['recurring']);
     }).toList();
@@ -351,7 +408,7 @@ class ExpenseService {
       throw Exception(result.exception);
     }
 
-    final bool isArchived = result.data?['archiveExpense'] ?? false;
+    bool isArchived = result.data?['archiveExpense'] ?? false;
 
     return isArchived;
   }
@@ -535,7 +592,9 @@ class Expenses {
   final num amount;
   final String expenseDate;
   final String expenseCategoryId;
+  final String expenseCategoryName;
   String? merchantId;
+  String? merchantName;
   bool? recurring;
 
   Expenses(
@@ -544,114 +603,8 @@ class Expenses {
       required this.amount,
       required this.expenseDate,
       required this.expenseCategoryId,
+      required this.expenseCategoryName,
       this.merchantId,
+      this.merchantName,
       this.recurring});
-}
-
-class ExpenseResponse {
-  Data? data;
-
-  ExpenseResponse({this.data});
-
-  ExpenseResponse.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
-}
-
-class Data {
-  GetExpenseByBusinessMobile? getExpenseByBusinessMobile;
-
-  Data({this.getExpenseByBusinessMobile});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    getExpenseByBusinessMobile = json['getExpenseByBusinessMobile'] != null
-        ? new GetExpenseByBusinessMobile.fromJson(
-            json['getExpenseByBusinessMobile'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.getExpenseByBusinessMobile != null) {
-      data['getExpenseByBusinessMobile'] =
-          this.getExpenseByBusinessMobile!.toJson();
-    }
-    return data;
-  }
-}
-
-class GetExpenseByBusinessMobile {
-  List<ExpenseByBusiness>? expenseByBusiness;
-  String? cursorId;
-
-  GetExpenseByBusinessMobile({this.expenseByBusiness, this.cursorId});
-
-  GetExpenseByBusinessMobile.fromJson(Map<String, dynamic> json) {
-    if (json['expenseByBusiness'] != null) {
-      expenseByBusiness = <ExpenseByBusiness>[];
-      json['expenseByBusiness'].forEach((v) {
-        expenseByBusiness!.add(new ExpenseByBusiness.fromJson(v));
-      });
-    }
-    cursorId = json['cursorId'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.expenseByBusiness != null) {
-      data['expenseByBusiness'] =
-          this.expenseByBusiness!.map((v) => v.toJson()).toList();
-    }
-    data['cursorId'] = this.cursorId;
-    return data;
-  }
-}
-
-class ExpenseByBusiness {
-  String? id;
-  String? expenseCategoryId;
-  String? createdAt;
-  String? description;
-  bool? recurring;
-  String? expenseDate;
-  bool? archived;
-
-  ExpenseByBusiness(
-      {this.id,
-      this.expenseCategoryId,
-      this.createdAt,
-      this.description,
-      this.recurring,
-      this.expenseDate,
-      this.archived});
-
-  ExpenseByBusiness.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    expenseCategoryId = json['expenseCategoryId'];
-    createdAt = json['createdAt'];
-    description = json['description'];
-    recurring = json['recurring'];
-    expenseDate = json['expenseDate'];
-    archived = json['archived'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = id;
-    data['expenseCategoryId'] = expenseCategoryId;
-    data['createdAt'] = this.createdAt;
-    data['description'] = this.description;
-    data['recurring'] = this.recurring;
-    data['expenseDate'] = this.expenseDate;
-    data['archived'] = this.archived;
-    return data;
-  }
 }

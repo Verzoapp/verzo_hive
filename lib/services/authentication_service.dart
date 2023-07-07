@@ -29,10 +29,8 @@ class AuthenticationService {
         ),
         _logOutMutation = MutationOptions(
           document: gql('''
-        mutation LogOut(\$userId: String!) {
-          logOut(userId: \$userId) {
-            message
-          }
+        mutation LogOut {
+          logOut 
         }
       '''),
         ),
@@ -66,9 +64,6 @@ class AuthenticationService {
 
     final QueryResult result = await client.value.mutate(options);
 
-    var accessToken = result.data?['signIn']['access_token'];
-    var refreshToken = result.data?['signIn']['refresh_token'];
-
     if (result.hasException) {
       return AuthenticationResult.error(
         error: GraphQLAuthError(
@@ -76,6 +71,9 @@ class AuthenticationService {
         ),
       );
     }
+
+    var accessToken = result.data?['signIn']['access_token'];
+    var refreshToken = result.data?['signIn']['refresh_token'];
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('access_token', accessToken ?? "");
@@ -88,20 +86,33 @@ class AuthenticationService {
     return AuthenticationResult(tokens: tokens);
   }
 
-  Future<void> logout(String userId) async {
+  Future<bool> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw GraphQLAuthError(
+        message: "Access token not found",
+      );
+    }
+// Use the token to create an authlink
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
+
+    // Create a new GraphQLClient with the authlink
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
+
     // Make a GraphQL mutation to the authentication endpoint to log out the current user
     final MutationOptions options = MutationOptions(
       document: _logOutMutation.document,
-      variables: {
-        'input': {
-          'userId': userId,
-        },
-      },
     );
 
-    final QueryResult result = await client.value.mutate(options);
+    final QueryResult result = await newClient.mutate(options);
 
-    final prefs = await SharedPreferences.getInstance();
     prefs.setString('access_token', '');
     prefs.setString('refresh_token', '');
     prefs.setBool('isLoggedIn', false);
@@ -110,6 +121,9 @@ class AuthenticationService {
       // Handle any errors that may have occurred during the log out process
       throw Exception(result.exception);
     }
+    bool logOut = result.data?['logOut'];
+
+    return logOut;
   }
 
   Future<CreateAccountWithEmailResult> createAccountWithEmail(
@@ -130,9 +144,6 @@ class AuthenticationService {
 
     final QueryResult result = await client.value.mutate(options);
 
-    var accessToken = result.data?['signUp']['access_token'];
-    var refreshToken = result.data?['signUp']['refresh_token'];
-
     if (result.hasException) {
       return CreateAccountWithEmailResult.error(
         error: GraphQLAuthError(
@@ -140,6 +151,9 @@ class AuthenticationService {
         ),
       );
     }
+
+    var accessToken = result.data?['signUp']['access_token'];
+    var refreshToken = result.data?['signUp']['refresh_token'];
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('access_token', accessToken ?? "");

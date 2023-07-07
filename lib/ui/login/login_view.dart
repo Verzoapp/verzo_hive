@@ -28,27 +28,42 @@ class LoginView extends StatelessWidget with $LoginView {
         validationMessage: model.validationMessage,
         title: 'Welcome to Verzo',
         subtitle: 'Please kindly input your details to Login',
-        form: Column(
-          children: [
-            TextFormField(
-              decoration: InputDecoration(
-                  labelText: 'Enter email',
-                  labelStyle: ktsFormText,
-                  border: defaultFormBorder),
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            verticalSpaceSmall,
-            TextFormField(
-              obscureText: true,
-              decoration: InputDecoration(
-                  labelText: 'Password',
-                  labelStyle: ktsFormText,
-                  border: defaultFormBorder),
-              controller: passwordController,
-              keyboardType: TextInputType.visiblePassword,
-            ),
-          ],
+        form: Form(
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: InputDecoration(
+                    // prefixIcon: const Icon(Icons.email),
+                    labelText: 'Enter email',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder),
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                validator: ((value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a valid email';
+                  }
+                }),
+              ),
+              verticalSpaceSmall,
+              TextFormField(
+                obscureText: !model.isPasswordVisible,
+                decoration: InputDecoration(
+                    // prefixIcon: const Icon(Icons.lock),
+                    labelText: 'Password',
+                    labelStyle: ktsFormText,
+                    border: defaultFormBorder,
+                    suffixIcon: GestureDetector(
+                      onTap: model.togglePasswordVisibility,
+                      child: Icon(model.isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    )),
+                controller: passwordController,
+                keyboardType: TextInputType.visiblePassword,
+              ),
+            ],
+          ),
         ),
         onForgotPassword: model.navigateToForgotPassword,
         mainButtonTitle: 'Login',

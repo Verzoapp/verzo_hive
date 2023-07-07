@@ -14,6 +14,7 @@ import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 
 import '../services/authentication_service.dart';
 import '../services/business_profile_service.dart';
+import '../services/dashboard_service.dart';
 import '../services/expenses_service.dart';
 import '../services/invoices_service.dart';
 import '../services/merchant_service.dart';
@@ -40,4 +41,5 @@ Future<void> setupLocator(
   locator.registerSingleton(ExpenseService());
   locator.registerSingleton(InvoiceService());
   locator.registerSingleton(ProductsxServicesService());
+  locator.registerSingleton(DashboardService());
 }

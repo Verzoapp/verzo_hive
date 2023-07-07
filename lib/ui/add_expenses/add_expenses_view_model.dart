@@ -47,7 +47,7 @@ class AddExpensesViewModel extends FormViewModel {
 
   Future<List<Merchants>> getMerchantsByBusiness() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String businessIdValue = prefs.getString('id') ?? '';
+    String businessIdValue = prefs.getString('businessId') ?? '';
 
 // Retrieve existing expense categories
     final merchants = await _merchantService.getMerchantsByBusiness(
@@ -78,7 +78,7 @@ class AddExpensesViewModel extends FormViewModel {
 
   Future<ExpenseCreationResult> runExpenseCreation() async {
     final prefs = await SharedPreferences.getInstance();
-    final businessIdValue = prefs.getString('id');
+    final businessIdValue = prefs.getString('businessId');
     return _expenseService.createExpenses(
         description: descriptionValue ?? '',
         amount: double.parse(amountValue ?? ''),

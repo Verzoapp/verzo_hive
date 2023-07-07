@@ -100,7 +100,7 @@ class AddInvoicesViewModel extends FormViewModel with Initialisable {
 
   Future<List<Customers>> getCustomersByBusiness() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String businessIdValue = prefs.getString('id') ?? '';
+    String businessIdValue = prefs.getString('businessId') ?? '';
 
     // Retrieve existing customers
     final customers = await _invoiceService.getCustomerByBusiness(
@@ -132,12 +132,13 @@ class AddInvoicesViewModel extends FormViewModel with Initialisable {
 
   Future<InvoiceCreationResult> runInvoiceCreation() async {
     final prefs = await SharedPreferences.getInstance();
-    final businessIdValue = prefs.getString('id');
+    final businessIdValue = prefs.getString('businessId');
     return _invoiceService.createInvoices(
         customerId: customerIdValue ?? '',
         businessId: businessIdValue ?? '',
         item: convertItemsToItemDetails(selectedItems),
         dueDate: dueDateValue ?? '',
+        dateOfIssue: dateOfIssueValue ?? '',
         vat: double.parse(vatValue ?? ''),
         discount: double.parse(discountValue ?? ''));
   }
