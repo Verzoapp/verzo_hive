@@ -11,16 +11,11 @@ import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
 import './update_expenses_view_model.dart';
-import 'update_expenses_view.form.dart';
+// import 'update_expenses_view.form.dart';
 
-@FormView(fields: [
-  FormTextField(name: 'updateDescription'),
-  FormTextField(name: 'updateAmount'),
-  FormTextField(name: 'updateExpenseCategoryId'),
-  FormTextField(name: 'updateExpenseDate'),
-  FormTextField(name: 'updateMerchantId')
-])
-class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
+class UpdateExpensesView extends StatelessWidget
+// with $UpdateExpensesView
+{
   final Expenses selectedExpense;
   UpdateExpensesView({
     Key? key,
@@ -31,12 +26,12 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
   Widget build(BuildContext context) {
     return ViewModelBuilder<UpdateExpensesViewModel>.reactive(
       viewModelBuilder: () => UpdateExpensesViewModel(expense: selectedExpense),
-      onModelReady: (model) {
+      onModelReady: (model) async {
+        await model.getExpenseCategoryWithSets();
         model.setSelectedExpense();
-        model.getExpenseCategoryWithSets();
         model.getMerchantsByBusiness();
         model.addNewMerchant;
-        listenToFormUpdated(model);
+        // listenToFormUpdated(model);
       },
       builder: (
         context,
@@ -49,8 +44,8 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
         onBackPressed: model.navigateBack,
         onMainButtonTapped: () => model.updateExpenseData(),
         title: 'Update Expense',
-        subtitle: '',
-        mainButtonTitle: 'Update',
+        subtitle: 'Make changes to this expense',
+        mainButtonTitle: 'Save',
         form: Column(
           children: [
             TextFormField(
@@ -118,23 +113,37 @@ class UpdateExpensesView extends StatelessWidget with $UpdateExpensesView {
               value: model.updateMerchantIdController.text.isEmpty
                   ? null
                   : model.updateMerchantIdController.text,
-              onChanged: (value) async {
-                if (value == 'new_category') {
-                  await showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CreateMerchantView();
-                    },
-                  ).whenComplete(() async {
-                    await model.getMerchantsByBusiness();
-
-                    // reset the `_isCreatingMerchant` flag when the bottom sheet is closed
-                  });
-                } else {
-                  model.updateMerchantIdController.text = value.toString();
-                }
+              onChanged: (value) {
+                model.updateMerchantIdController.text = value.toString();
               },
-            ),
+            )
+            // DropdownButtonFormField(
+            //   decoration: InputDecoration(
+            //       labelText: ' Merchant',
+            //       labelStyle: ktsFormText,
+            //       border: defaultFormBorder),
+            //   items: model.merchantdropdownItems,
+            //   value: model.updateMerchantIdController.text.isEmpty
+            //       ? null
+            //       : model.updateMerchantIdController.text,
+            //   onChanged: (value) async {
+            //     if (value == 'new_category') {
+            //       await showModalBottomSheet(
+            //         context: context,
+            //         builder: (BuildContext context) {
+            //           return CreateMerchantView();
+            //         },
+            //       ).whenComplete(() async {
+            //         await model.getMerchantsByBusiness();
+
+            //         // reset the `_isCreatingMerchant` flag when the bottom sheet is closed
+            //       });
+            //     } else {
+            //       model.updateMerchantIdController.text = value.toString();
+            //     }
+            //   },
+            // ),
+            ,
             verticalSpaceSmall,
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

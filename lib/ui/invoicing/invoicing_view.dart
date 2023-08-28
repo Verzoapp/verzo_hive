@@ -13,6 +13,7 @@ import 'package:verzo_one/ui/invoicing/invoicing_view_model.dart';
 import 'package:verzo_one/ui/sales/sales_view.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
+import 'package:verzo_one/ui/view_invoices/view_invoices_view_model.dart';
 
 class InvoicesView extends StatefulWidget {
   const InvoicesView({
@@ -72,17 +73,17 @@ class _InvoicesViewState extends State<InvoicesView> {
     return ViewModelBuilder<InvoicesViewModel>.reactive(
         viewModelBuilder: () => InvoicesViewModel(),
         onModelReady: (model) async {
-          model.addNewInvoice;
+          // model.addNewInvoice;
           model.archiveInvoice;
         },
         builder: (context, model, child) {
-          if (model.isBusy) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
+          // if (model.isBusy) {
+          //   return const Scaffold(
+          //     body: Center(
+          //       child: CircularProgressIndicator(),
+          //     ),
+          //   );
+          // }
           return Scaffold(
             floatingActionButton: FloatingActionButton(
               backgroundColor: kcPrimaryColor,
@@ -121,62 +122,83 @@ class _InvoicesViewState extends State<InvoicesView> {
             ),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 50),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   verticalSpaceTiny,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/verzo_logo.svg',
-                        width: 102,
-                        height: 21,
-                      ),
-                      const CircleAvatar(
-                        backgroundColor: kcTextColorLight,
-                        foregroundColor: kcButtonTextColor,
-                        radius: 16,
-                        child: Text('V'),
-                      ),
-                    ],
+                  SvgPicture.asset(
+                    'assets/images/verzo_logo.svg',
+                    width: 110,
+                    height: 30,
                   ),
-                  verticalSpaceRegular,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Recent Invoices',
-                        style: ktsHeaderText,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                  if (model.data == null)
-                    Text('No Invoice')
-                  else
-                    ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      primary: true,
-                      shrinkWrap: true,
-                      itemCount: model.data!.length,
-                      itemBuilder: (context, index) {
-                        var invoice = model.data![index];
-                        return InvoiceCard(
-                          invoices: invoice,
-                          // model.data![index],
-                          archiveInvoice: () {
-                            model.archiveInvoice(invoice.id);
-                          },
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return verticalSpaceTiny;
-                      },
+                  verticalSpaceIntermitent,
+                  // Text(
+                  //   'Recent Invoices',
+                  //   style: ktsHeaderText,
+                  // ),
+                  verticalSpaceSmall,
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: kcButtonTextColor,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: kcTextColorLight.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          // changes position of shadow
+                        ),
+                      ],
                     ),
+                    child: Column(
+                      children: [
+                        TextField(
+                          // onChanged: (value) =>
+                          // model.runFilter(value),
+                          decoration: InputDecoration(
+                            labelText: 'Search',
+                            prefixIcon: const Icon(Icons.search),
+                            labelStyle: ktsFormText,
+                            border: defaultFormBorder,
+                          ),
+                        ),
+                        verticalSpaceTiny,
+                        Builder(builder: (context) {
+                          if (model.isBusy) {
+                            return const CircularProgressIndicator(
+                              color: kcPrimaryColor,
+                            );
+                          }
+                          if (model.data == null) {
+                            return const Text('No Invoice');
+                          }
+                          return ListView.separated(
+                            padding: const EdgeInsets.all(2),
+                            physics: const NeverScrollableScrollPhysics(),
+                            primary: true,
+                            shrinkWrap: true,
+                            itemCount: model.data!.length,
+                            itemBuilder: (context, index) {
+                              var invoice = model.data![index];
+                              return InvoiceCard(
+                                invoices: invoice,
+                                // model.data![index],
+                                archiveInvoice: () {
+                                  model.archiveInvoice(invoice.id);
+                                },
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return verticalSpaceTiny;
+                            },
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -216,10 +238,10 @@ class InvoiceCard extends StatelessWidget {
             style: ktsBodyText,
           ),
           IconButton(
-            icon: const Icon(Icons.read_more),
-            onPressed: (() {
-              // navigationService.navigateToUpdateInvoiceRoute(
-              //     selectedInvoice: invoices);
+            icon: const Icon(Icons.visibility),
+            onPressed: (() async {
+              navigationService.navigateToViewInvoiceRoute(
+                  selectedInvoice: invoices);
             }),
           ),
           IconButton(

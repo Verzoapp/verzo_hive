@@ -4,10 +4,33 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:verzo_one/app/app.locator.dart';
 import 'package:verzo_one/services/invoices_service.dart';
 
-class CustomersViewModel extends FutureViewModel<List<Customers>> {
+class CustomersViewModel extends FutureViewModel<List<Customers>>
+// with ReactiveServiceMixin
+{
   final navigationService = locator<NavigationService>();
   final _invoiceService = locator<InvoiceService>();
-  List<Customers> newCustomer = [];
+  // List<Customers> customers = [];
+  // List<Customers> filteredCustomers = [];
+
+  // final _filteredCustomers = ReactiveValue<List<Customers>>([]);
+  // List<Customers> get filteredCustomers => _filteredCustomers.value;
+
+  // CustomersViewModel() {
+  //   listenToReactiveValues([
+  //     _filteredCustomers,
+  //   ]);
+  // }
+  // void runFilter(String value) {
+  //   // print('Filtering with value: $value');
+  //   _filteredCustomers.value = customers
+  //       .where((customer) =>
+  //           customer.name.toLowerCase().contains(value.toLowerCase()) ||
+  //           customer.email.toLowerCase().contains(value.toLowerCase()))
+  //       .toList();
+
+  //   // print('Filtered Customers: ${_filteredCustomers.value}');
+  //   notifyListeners();
+  // }
 
   @override
   Future<List<Customers>> futureToRun() => getCustomersByBusiness();
@@ -19,7 +42,7 @@ class CustomersViewModel extends FutureViewModel<List<Customers>> {
     final customers = await _invoiceService.getCustomerByBusiness(
         businessId: businessIdValue);
     // customerList = customers;
-    // filteredCustomerList = customers;
+    // _filteredCustomers.value = customers;
     notifyListeners();
 
     return customers;
@@ -29,12 +52,5 @@ class CustomersViewModel extends FutureViewModel<List<Customers>> {
     final bool isArchived =
         await _invoiceService.archiveCustomer(customerId: customerId);
     return isArchived;
-  }
-
-  void addNewCustomer(List<Customers> customer) {
-    if (customer.isNotEmpty) {
-      newCustomer.addAll(customer);
-    }
-    notifyListeners();
   }
 }

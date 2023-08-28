@@ -7,21 +7,6 @@ import 'package:verzo_one/app/app.router.dart';
 import 'package:verzo_one/services/expenses_service.dart';
 
 class ExpensesViewModel extends FutureViewModel<List<Expenses>> {
-  // with ReactiveServiceMixin, Initialisable {
-
-  // @override
-  // Future<void> initialise() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   _cursor.value = prefs.getString('cursorId');
-  //   await getExpenseByBusiness();
-  //   // scrollController.addListener(() async {
-  //   //   if (scrollController.position.maxScrollExtent ==
-  //   //       scrollController.offset) {
-  //   //     await getExpenseByBusiness();
-  //   //   }
-  //   // });
-  // }
-
   List<Expenses> newExpense = [];
   final navigationService = locator<NavigationService>();
   final _expenseService = locator<ExpenseService>();
@@ -72,10 +57,10 @@ class ExpensesViewModel extends FutureViewModel<List<Expenses>> {
     return isArchived;
   }
 
-  void addNewExpense(List<Expenses> expense) {
-    if (expense.isNotEmpty) {
-      newExpense.addAll(expense);
-    }
-    notifyListeners();
-  }
+  // void addNewExpense(List<Expenses> expense) {
+  //   if (expense.isNotEmpty) {
+  //     newExpense.addAll(expense);
+  //   }
+  //   notifyListeners();
+  // }
 }

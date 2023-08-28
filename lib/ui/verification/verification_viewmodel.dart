@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:stacked_services/stacked_services.dart';
 import 'package:verzo_one/services/otp_verification_service.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,9 @@ class VerificationViewModel extends FormViewModel {
   final FocusNode digit4FocusNode = FocusNode();
   final NavigationService navigationService = locator<NavigationService>();
   final DialogService dialogService = locator<DialogService>();
+
+  int resendCounter = 0;
+  Timer? resendCooldownTimer;
 
   String otpDigit1 = '';
   String otpDigit2 = '';
@@ -52,14 +57,52 @@ class VerificationViewModel extends FormViewModel {
   }
 
   Future<bool> resendVerification() async {
-    await dialogService.showDialog(
+    if (resendCounter >= 1) {
+      // Check if the resend counter has reached the limit
+      if (resendCooldownTimer == null || !resendCooldownTimer!.isActive) {
+        // Start the cooldown timer for 3 minutes
+        resendCooldownTimer = Timer(const Duration(minutes: 3), () {
+          resendCooldownTimer = null;
+          resendCounter = 0;
+          notifyListeners(); // Update the UI after cooldown
+        });
+
+        await dialogService.showDialog(
+          dialogPlatform: DialogPlatform.Cupertino,
+          title: 'Resend Verification',
+          description: 'We have resent a verification code to your email',
+          barrierDismissible: true,
+        );
+
+        bool verificationResent =
+            await _otpVerificationService.resendVerification();
+        return verificationResent;
+      } else {
+        // Resend button is on cooldown
+
+        await dialogService.showDialog(
+          dialogPlatform: DialogPlatform.Cupertino,
+          title: "Resend Verification Failed",
+          description: 'Resend button disabled: try again in 3 minutes',
+          barrierDismissible: true,
+        );
+        return false;
+      }
+    } else {
+      // Increment the resend counter and resend the verification code
+      resendCounter++;
+
+      await dialogService.showDialog(
         dialogPlatform: DialogPlatform.Cupertino,
         title: 'Resend Verification',
         description: 'We have resent a verification code to your email',
-        barrierDismissible: true);
-    bool verificationResent =
-        await _otpVerificationService.resendVerification();
-    return verificationResent;
+        barrierDismissible: true,
+      );
+
+      bool verificationResent =
+          await _otpVerificationService.resendVerification();
+      return verificationResent;
+    }
   }
 
   Future<VerificationResult> runVerification() {

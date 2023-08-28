@@ -18,6 +18,31 @@ class CreateAccountViewModel extends FormViewModel {
   }
   // CreateAccountViewModel() : super(successRoute: Routes.verificationRoute);
 
+  // // Password validation method
+  // bool isPasswordValid(String password) {
+  //   // Password must be at least 8 characters long
+  //   if (password.length < 8) return false;
+
+  //   // Regex patterns to check for uppercase, lowercase, special character, and number
+  //   final hasUppercase = RegExp(r'[A-Z]').hasMatch(password);
+  //   final hasLowercase = RegExp(r'[a-z]').hasMatch(password);
+  //   final hasSpecialChar = RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
+  //   final hasNumber = RegExp(r'[0-9]').hasMatch(password);
+
+  //   // Check if all conditions are met
+  //   return hasUppercase && hasLowercase && hasSpecialChar && hasNumber;
+  // }
+
+//   bool isPasswordValid(String password) {
+//   // Use a single regular expression to check all conditions
+//   final passwordRegex = RegExp(
+//     r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$',
+//   );
+
+//   // Check if the password matches the regular expression
+//   return passwordRegex.hasMatch(password);
+// }
+
   Future<CreateAccountWithEmailResult> runAuthentication() =>
       _authenticationService.createAccountWithEmail(
           email: emailValue ?? '',
@@ -26,6 +51,14 @@ class CreateAccountViewModel extends FormViewModel {
 
   Future saveData() async {
     final result = await runBusyFuture(runAuthentication());
+
+    // if (!isPasswordValid(passwordValue ?? '')) {
+    //   setValidationMessage(
+    //       'Password must be at least 8 characters, contain at least one uppercase letter, one special character, one lowercase letter, and one number.');
+    //   return;
+    // // }
+
+    // setValidationMessage(null); // Clear previous validation message
 
     if (result.tokens != null) {
       // navigate to success route

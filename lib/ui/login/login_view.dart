@@ -24,6 +24,7 @@ class LoginView extends StatelessWidget with $LoginView {
           body: AuthenticationLayout(
         busy: model.isBusy,
         onMainButtonTapped: model.saveData,
+        // onSecondaryButtonTapped: (() {}),
         onCreateAccountTapped: model.navigateToCreateAccount,
         validationMessage: model.validationMessage,
         title: 'Welcome to Verzo',
@@ -33,10 +34,15 @@ class LoginView extends StatelessWidget with $LoginView {
             children: [
               TextFormField(
                 decoration: InputDecoration(
-                    // prefixIcon: const Icon(Icons.email),
-                    labelText: 'Enter email',
+                    labelText: 'Enter email *',
                     labelStyle: ktsFormText,
-                    border: defaultFormBorder),
+                    fillColor: kcFillColor,
+                    filled: true,
+                    // border: defaultFormBorder,
+                    enabledBorder: defaultFormBorder,
+                    focusedBorder: defaultFocusedFormBorder),
+                // textCapitalization: TextCapitalization.words,
+                style: ktsBodyText,
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 validator: ((value) {
@@ -49,16 +55,19 @@ class LoginView extends StatelessWidget with $LoginView {
               TextFormField(
                 obscureText: !model.isPasswordVisible,
                 decoration: InputDecoration(
-                    // prefixIcon: const Icon(Icons.lock),
-                    labelText: 'Password',
+                    labelText: 'Password *',
                     labelStyle: ktsFormText,
-                    border: defaultFormBorder,
+                    fillColor: kcFillColor,
+                    filled: true,
+                    enabledBorder: defaultFormBorder,
+                    focusedBorder: defaultFocusedFormBorder,
                     suffixIcon: GestureDetector(
                       onTap: model.togglePasswordVisibility,
                       child: Icon(model.isPasswordVisible
                           ? Icons.visibility
                           : Icons.visibility_off),
                     )),
+                style: ktsBodyText,
                 controller: passwordController,
                 keyboardType: TextInputType.visiblePassword,
               ),
@@ -67,7 +76,8 @@ class LoginView extends StatelessWidget with $LoginView {
         ),
         onForgotPassword: model.navigateToForgotPassword,
         mainButtonTitle: 'Login',
-        showTermsText: true,
+        // secondaryButtonTitle: 'Continue with Google',
+        // showTermsText: true,
       )),
     );
   }

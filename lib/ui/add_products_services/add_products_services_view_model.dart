@@ -9,7 +9,7 @@ import 'package:verzo_one/ui/add_products_services/add_products_services_view.fo
 
 class AddProductsServicesViewModel extends FormViewModel {
   final navigationService = locator<NavigationService>();
-  final _createProductService = locator<ProductsxServicesService>();
+  final _productxService = locator<ProductsxServicesService>();
 
   bool isProduct = true;
 
@@ -17,7 +17,7 @@ class AddProductsServicesViewModel extends FormViewModel {
   List<DropdownMenuItem<String>> serviceUnitdropdownItems = [];
 
   Future<List<ProductUnit>> getProductUnits() async {
-    final productUnits = await _createProductService.getProductUnits();
+    final productUnits = await _productxService.getProductUnits();
     productUnitdropdownItems = productUnits.map((productUnit) {
       return DropdownMenuItem<String>(
         value: productUnit.id.toString(),
@@ -28,7 +28,7 @@ class AddProductsServicesViewModel extends FormViewModel {
   }
 
   Future<List<ServiceUnit>> getServiceUnits() async {
-    final serviceUnits = await _createProductService.getServiceUnits();
+    final serviceUnits = await _productxService.getServiceUnits();
     serviceUnitdropdownItems = serviceUnits.map((serviceUnit) {
       return DropdownMenuItem<String>(
         value: serviceUnit.id.toString(),
@@ -41,12 +41,12 @@ class AddProductsServicesViewModel extends FormViewModel {
   Future<ProductCreationResult> runProductCreation() async {
     final prefs = await SharedPreferences.getInstance();
     final businessIdValue = prefs.getString('id');
-    return _createProductService.createProducts(
+    return _productxService.createProducts(
         productName: productNameValue ?? '',
         businessId: businessIdValue ?? '',
         price: double.parse(priceValue ?? ''),
         basicUnit: double.parse(basicUnitValue ?? ''),
-        quantityInStock: double.parse(quantityInStockValue ?? ''),
+        // quantityInStock: double.parse(quantityInStockValue ?? ''),
         productUnitId: productUnitIdValue ?? '');
   }
 
@@ -66,7 +66,7 @@ class AddProductsServicesViewModel extends FormViewModel {
   Future<ServiceCreationResult> runServiceCreation() async {
     final prefs = await SharedPreferences.getInstance();
     final businessIdValue = prefs.getString('id');
-    return _createProductService.createServices(
+    return _productxService.createServices(
         name: productNameValue ?? '',
         businessId: businessIdValue ?? '',
         price: double.parse(priceValue ?? ''),

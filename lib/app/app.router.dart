@@ -5,40 +5,63 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/cupertino.dart' as _i30;
-import 'package:flutter/foundation.dart' as _i31;
+import 'package:flutter/cupertino.dart' as _i42;
+import 'package:flutter/foundation.dart' as _i43;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i34;
-import 'package:verzo_one/services/expenses_service.dart' as _i32;
-import 'package:verzo_one/services/invoices_service.dart' as _i33;
-import 'package:verzo_one/ui/add_customers/add_customers_view.dart' as _i27;
-import 'package:verzo_one/ui/add_expenses/add_expenses_view.dart' as _i18;
-import 'package:verzo_one/ui/add_invoices/add_invoices_view.dart' as _i20;
-import 'package:verzo_one/ui/add_item/add_item_view.dart' as _i17;
+import 'package:stacked_services/stacked_services.dart' as _i48;
+import 'package:verzo_one/services/expenses_service.dart' as _i44;
+import 'package:verzo_one/services/invoices_service.dart' as _i45;
+import 'package:verzo_one/services/product&services_service.dart' as _i47;
+import 'package:verzo_one/services/purchase_order_service.dart' as _i46;
+import 'package:verzo_one/ui/add_customers/add_customers_view.dart' as _i37;
+import 'package:verzo_one/ui/add_expenses/add_expenses_view.dart' as _i20;
+import 'package:verzo_one/ui/add_invoices/add_invoices_view.dart' as _i22;
+import 'package:verzo_one/ui/add_item/add_item_view.dart' as _i18;
 import 'package:verzo_one/ui/add_products_services/add_products_services_view.dart'
-    as _i28;
-import 'package:verzo_one/ui/add_sales/add_sales_view.dart' as _i19;
+    as _i38;
+import 'package:verzo_one/ui/add_purchase_item/add_purchase_item_view.dart'
+    as _i19;
+import 'package:verzo_one/ui/add_purchase_order/add_purchase_order_view.dart'
+    as _i36;
+import 'package:verzo_one/ui/add_sales/add_sales_view.dart' as _i21;
 import 'package:verzo_one/ui/business_profile_creation/business_profile_creation_view.dart'
     as _i10;
 import 'package:verzo_one/ui/choose_item/choose_item_view.dart' as _i16;
+import 'package:verzo_one/ui/choose_purchaseItem/choose_purchaseItem_view.dart'
+    as _i17;
 import 'package:verzo_one/ui/create_account/create_account_view.dart' as _i6;
-import 'package:verzo_one/ui/create_merchant/create_merchant_view.dart' as _i29;
-import 'package:verzo_one/ui/customers/customers_view.dart' as _i26;
+import 'package:verzo_one/ui/create_merchant/create_merchant_view.dart' as _i39;
+import 'package:verzo_one/ui/customers/customers_view.dart' as _i34;
 import 'package:verzo_one/ui/dashboard/dashboard_view.dart' as _i12;
 import 'package:verzo_one/ui/expenses/expenses_view.dart' as _i13;
 import 'package:verzo_one/ui/forgot_password/forgot_password_view.dart' as _i8;
 import 'package:verzo_one/ui/invoicing/invoicing_view.dart' as _i15;
 import 'package:verzo_one/ui/login/login_view.dart' as _i7;
+import 'package:verzo_one/ui/make_purchase_payment/make_purchase_payment_view.dart'
+    as _i41;
 import 'package:verzo_one/ui/products_services/products_services_view.dart'
-    as _i25;
+    as _i33;
+import 'package:verzo_one/ui/purchase_order/purchase_order_view.dart' as _i35;
 import 'package:verzo_one/ui/sales/sales_view.dart' as _i14;
 import 'package:verzo_one/ui/select_tags/select_tags_view.dart' as _i11;
-import 'package:verzo_one/ui/update_expenses/update_expenses_view.dart' as _i21;
-import 'package:verzo_one/ui/update_invoices/update_invoices_view.dart' as _i22;
+import 'package:verzo_one/ui/update_customers/update_customers_view.dart'
+    as _i24;
+import 'package:verzo_one/ui/update_expenses/update_expenses_view.dart' as _i23;
+import 'package:verzo_one/ui/update_invoices/update_invoices_view.dart' as _i27;
+import 'package:verzo_one/ui/update_products_services/update_products_services_view.dart'
+    as _i26;
+import 'package:verzo_one/ui/update_purchases/update_purchases_view.dart'
+    as _i25;
+import 'package:verzo_one/ui/upload_merchant_invoice_to_purchase/upload_merchant_invoice_to_purchase_view.dart'
+    as _i40;
 import 'package:verzo_one/ui/verification/verification_view.dart' as _i9;
-import 'package:verzo_one/ui/view_customers/view_customers_view.dart' as _i24;
-import 'package:verzo_one/ui/view_expenses/view_expenses_view.dart' as _i23;
+import 'package:verzo_one/ui/view_customers/view_customers_view.dart' as _i30;
+import 'package:verzo_one/ui/view_expenses/view_expenses_view.dart' as _i28;
+import 'package:verzo_one/ui/view_invoices/view_invoices_view.dart' as _i29;
+import 'package:verzo_one/ui/view_products_services/view_products_services_view.dart'
+    as _i32;
+import 'package:verzo_one/ui/view_purchase/view_purchase_view.dart' as _i31;
 import 'package:verzo_one/ui/views/first_screen.dart' as _i3;
 import 'package:verzo_one/ui/views/home_screen.dart' as _i2;
 import 'package:verzo_one/ui/views/login_screen.dart' as _i4;
@@ -75,7 +98,11 @@ class Routes {
 
   static const chooseItemRoute = '/choose-item-view';
 
+  static const choosePurchaseItemRoute = '/choose-purchase-item-view';
+
   static const addItemRoute = '/add-item-view';
+
+  static const addPurchaseItemRoute = '/add-purchase-item-view';
 
   static const addExpenseRoute = '/add-expenses-view';
 
@@ -85,21 +112,42 @@ class Routes {
 
   static const updateExpenseRoute = '/update-expenses-view';
 
+  static const updateCustomerRoute = '/update-customers-view';
+
+  static const updatePurchaseRoute = '/update-purchases-view';
+
+  static const updateProductsServicesRoute = '/update-products-services-view';
+
   static const updateInvoiceRoute = '/update-invoices-view';
 
   static const viewExpenseRoute = '/view-expenses-view';
 
+  static const viewInvoiceRoute = '/view-invoices-view';
+
   static const viewCustomerRoute = '/view-customers-view';
+
+  static const viewPurchaseRoute = '/view-purchase-view';
+
+  static const viewProductsServicesRoute = '/view-products-services-view';
 
   static const productsServicesRoute = '/products-services-view';
 
   static const customersRoute = '/customers-view';
+
+  static const purchaseOrderRoute = '/purchase-order-view';
+
+  static const addPurchaseOrderRoute = '/add-purchase-order-view';
 
   static const addCustomersRoute = '/add-customers-view';
 
   static const addProductsServicesRoute = '/add-products-services-view';
 
   static const createMerchantRoute = '/create-merchant-view';
+
+  static const uploadMerchantInvoiceToPurchaseRoute =
+      '/upload-merchant-invoice-to-purchase-view';
+
+  static const makePurchasePaymentRoute = '/make-purchase-payment-view';
 
   static const all = <String>{
     homeScreenRoute,
@@ -117,19 +165,31 @@ class Routes {
     salesRoute,
     invoicingRoute,
     chooseItemRoute,
+    choosePurchaseItemRoute,
     addItemRoute,
+    addPurchaseItemRoute,
     addExpenseRoute,
     addSalesRoute,
     addInvoiceRoute,
     updateExpenseRoute,
+    updateCustomerRoute,
+    updatePurchaseRoute,
+    updateProductsServicesRoute,
     updateInvoiceRoute,
     viewExpenseRoute,
+    viewInvoiceRoute,
     viewCustomerRoute,
+    viewPurchaseRoute,
+    viewProductsServicesRoute,
     productsServicesRoute,
     customersRoute,
+    purchaseOrderRoute,
+    addPurchaseOrderRoute,
     addCustomersRoute,
     addProductsServicesRoute,
     createMerchantRoute,
+    uploadMerchantInvoiceToPurchaseRoute,
+    makePurchasePaymentRoute,
   };
 }
 
@@ -196,56 +256,104 @@ class StackedRouter extends _i1.RouterBase {
       page: _i16.ChooseItemView,
     ),
     _i1.RouteDef(
+      Routes.choosePurchaseItemRoute,
+      page: _i17.ChoosePurchaseItemView,
+    ),
+    _i1.RouteDef(
       Routes.addItemRoute,
-      page: _i17.AddItemView,
+      page: _i18.AddItemView,
+    ),
+    _i1.RouteDef(
+      Routes.addPurchaseItemRoute,
+      page: _i19.AddPurchaseItemView,
     ),
     _i1.RouteDef(
       Routes.addExpenseRoute,
-      page: _i18.AddExpensesView,
+      page: _i20.AddExpensesView,
     ),
     _i1.RouteDef(
       Routes.addSalesRoute,
-      page: _i19.AddSalesView,
+      page: _i21.AddSalesView,
     ),
     _i1.RouteDef(
       Routes.addInvoiceRoute,
-      page: _i20.AddInvoicesView,
+      page: _i22.AddInvoicesView,
     ),
     _i1.RouteDef(
       Routes.updateExpenseRoute,
-      page: _i21.UpdateExpensesView,
+      page: _i23.UpdateExpensesView,
+    ),
+    _i1.RouteDef(
+      Routes.updateCustomerRoute,
+      page: _i24.UpdateCustomersView,
+    ),
+    _i1.RouteDef(
+      Routes.updatePurchaseRoute,
+      page: _i25.UpdatePurchasesView,
+    ),
+    _i1.RouteDef(
+      Routes.updateProductsServicesRoute,
+      page: _i26.UpdateProductsServicesView,
     ),
     _i1.RouteDef(
       Routes.updateInvoiceRoute,
-      page: _i22.UpdateInvoicesView,
+      page: _i27.UpdateInvoicesView,
     ),
     _i1.RouteDef(
       Routes.viewExpenseRoute,
-      page: _i23.ViewExpensesView,
+      page: _i28.ViewExpensesView,
+    ),
+    _i1.RouteDef(
+      Routes.viewInvoiceRoute,
+      page: _i29.ViewInvoicesView,
     ),
     _i1.RouteDef(
       Routes.viewCustomerRoute,
-      page: _i24.ViewCustomersView,
+      page: _i30.ViewCustomersView,
+    ),
+    _i1.RouteDef(
+      Routes.viewPurchaseRoute,
+      page: _i31.ViewPurchaseView,
+    ),
+    _i1.RouteDef(
+      Routes.viewProductsServicesRoute,
+      page: _i32.ViewProductsServicesView,
     ),
     _i1.RouteDef(
       Routes.productsServicesRoute,
-      page: _i25.ProductsServicesView,
+      page: _i33.ProductsServicesView,
     ),
     _i1.RouteDef(
       Routes.customersRoute,
-      page: _i26.CustomersView,
+      page: _i34.CustomersView,
+    ),
+    _i1.RouteDef(
+      Routes.purchaseOrderRoute,
+      page: _i35.PurchaseOrderView,
+    ),
+    _i1.RouteDef(
+      Routes.addPurchaseOrderRoute,
+      page: _i36.AddPurchaseOrderView,
     ),
     _i1.RouteDef(
       Routes.addCustomersRoute,
-      page: _i27.AddCustomersView,
+      page: _i37.AddCustomersView,
     ),
     _i1.RouteDef(
       Routes.addProductsServicesRoute,
-      page: _i28.AddProductsServicesView,
+      page: _i38.AddProductsServicesView,
     ),
     _i1.RouteDef(
       Routes.createMerchantRoute,
-      page: _i29.CreateMerchantView,
+      page: _i39.CreateMerchantView,
+    ),
+    _i1.RouteDef(
+      Routes.uploadMerchantInvoiceToPurchaseRoute,
+      page: _i40.UploadMerchantInvoiceToPurchaseView,
+    ),
+    _i1.RouteDef(
+      Routes.makePurchasePaymentRoute,
+      page: _i41.MakePurchasePaymentView,
     ),
   ];
 
@@ -281,7 +389,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<CreateAccountViewArguments>(
         orElse: () => const CreateAccountViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => _i6.CreateAccountView(key: args.key),
         settings: data,
       );
@@ -290,7 +398,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<LoginViewArguments>(
         orElse: () => const LoginViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => _i7.LoginView(key: args.key),
         settings: data,
       );
@@ -299,7 +407,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ForgotPasswordViewArguments>(
         orElse: () => const ForgotPasswordViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => _i8.ForgotPasswordView(key: args.key),
         settings: data,
       );
@@ -308,7 +416,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<VerificationViewArguments>(
         orElse: () => const VerificationViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => _i9.VerificationView(key: args.key),
         settings: data,
       );
@@ -317,7 +425,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<BusinessProfileCreationViewArguments>(
         orElse: () => const BusinessProfileCreationViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => _i10.BusinessProfileCreationView(key: args.key),
         settings: data,
       );
@@ -326,143 +434,238 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SelectTagsViewArguments>(
         orElse: () => const SelectTagsViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) =>
             _i11.SelectTagsView(key: args.key, busy: args.busy),
         settings: data,
       );
     },
     _i12.DashboardView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => const _i12.DashboardView(),
         settings: data,
       );
     },
     _i13.ExpensesView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => const _i13.ExpensesView(),
         settings: data,
       );
     },
     _i14.SalesView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => const _i14.SalesView(),
         settings: data,
       );
     },
     _i15.InvoicesView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => const _i15.InvoicesView(),
         settings: data,
       );
     },
     _i16.ChooseItemView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
+      return _i42.CupertinoPageRoute<dynamic>(
         builder: (context) => const _i16.ChooseItemView(),
         settings: data,
       );
     },
-    _i17.AddItemView: (data) {
+    _i17.ChoosePurchaseItemView: (data) {
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => const _i17.ChoosePurchaseItemView(),
+        settings: data,
+      );
+    },
+    _i18.AddItemView: (data) {
       final args = data.getArgs<AddItemViewArguments>(
         orElse: () => const AddItemViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i17.AddItemView(key: args.key),
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i18.AddItemView(key: args.key),
         settings: data,
       );
     },
-    _i18.AddExpensesView: (data) {
+    _i19.AddPurchaseItemView: (data) {
+      final args = data.getArgs<AddPurchaseItemViewArguments>(
+        orElse: () => const AddPurchaseItemViewArguments(),
+      );
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i19.AddPurchaseItemView(key: args.key),
+        settings: data,
+      );
+    },
+    _i20.AddExpensesView: (data) {
       final args = data.getArgs<AddExpensesViewArguments>(
         orElse: () => const AddExpensesViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i18.AddExpensesView(key: args.key),
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i20.AddExpensesView(key: args.key),
         settings: data,
       );
     },
-    _i19.AddSalesView: (data) {
+    _i21.AddSalesView: (data) {
       final args = data.getArgs<AddSalesViewArguments>(
         orElse: () => const AddSalesViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i19.AddSalesView(key: args.key, busy: args.busy),
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i21.AddSalesView(key: args.key, busy: args.busy),
         settings: data,
       );
     },
-    _i20.AddInvoicesView: (data) {
+    _i22.AddInvoicesView: (data) {
       final args = data.getArgs<AddInvoicesViewArguments>(
         orElse: () => const AddInvoicesViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i20.AddInvoicesView(key: args.key),
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i22.AddInvoicesView(key: args.key),
         settings: data,
       );
     },
-    _i21.UpdateExpensesView: (data) {
+    _i23.UpdateExpensesView: (data) {
       final args = data.getArgs<UpdateExpensesViewArguments>(nullOk: false);
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i21.UpdateExpensesView(
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i23.UpdateExpensesView(
             key: args.key, selectedExpense: args.selectedExpense),
         settings: data,
       );
     },
-    _i22.UpdateInvoicesView: (data) {
-      final args = data.getArgs<UpdateInvoicesViewArguments>(nullOk: false);
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i22.UpdateInvoicesView(
-            key: args.key, selectedInvoice: args.selectedInvoice),
-        settings: data,
-      );
-    },
-    _i23.ViewExpensesView: (data) {
-      final args = data.getArgs<ViewExpensesViewArguments>(nullOk: false);
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i23.ViewExpensesView(
-            key: args.key, selectedExpense: args.selectedExpense),
-        settings: data,
-      );
-    },
-    _i24.ViewCustomersView: (data) {
-      final args = data.getArgs<ViewCustomersViewArguments>(nullOk: false);
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i24.ViewCustomersView(
+    _i24.UpdateCustomersView: (data) {
+      final args = data.getArgs<UpdateCustomersViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i24.UpdateCustomersView(
             key: args.key, selectedCustomer: args.selectedCustomer),
         settings: data,
       );
     },
-    _i25.ProductsServicesView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i25.ProductsServicesView(),
+    _i25.UpdatePurchasesView: (data) {
+      final args = data.getArgs<UpdatePurchasesViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i25.UpdatePurchasesView(
+            key: args.key, selectedPurcahses: args.selectedPurcahses),
         settings: data,
       );
     },
-    _i26.CustomersView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i26.CustomersView(),
+    _i26.UpdateProductsServicesView: (data) {
+      final args =
+          data.getArgs<UpdateProductsServicesViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i26.UpdateProductsServicesView(
+            key: args.key, selectedItem: args.selectedItem),
         settings: data,
       );
     },
-    _i27.AddCustomersView: (data) {
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i27.AddCustomersView(),
+    _i27.UpdateInvoicesView: (data) {
+      final args = data.getArgs<UpdateInvoicesViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i27.UpdateInvoicesView(
+            key: args.key, selectedInvoice: args.selectedInvoice),
         settings: data,
       );
     },
-    _i28.AddProductsServicesView: (data) {
+    _i28.ViewExpensesView: (data) {
+      final args = data.getArgs<ViewExpensesViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i28.ViewExpensesView(
+            key: args.key, selectedExpense: args.selectedExpense),
+        settings: data,
+      );
+    },
+    _i29.ViewInvoicesView: (data) {
+      final args = data.getArgs<ViewInvoicesViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i29.ViewInvoicesView(
+            key: args.key, selectedInvoice: args.selectedInvoice),
+        settings: data,
+      );
+    },
+    _i30.ViewCustomersView: (data) {
+      final args = data.getArgs<ViewCustomersViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i30.ViewCustomersView(
+            key: args.key, selectedCustomer: args.selectedCustomer),
+        settings: data,
+      );
+    },
+    _i31.ViewPurchaseView: (data) {
+      final args = data.getArgs<ViewPurchaseViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i31.ViewPurchaseView(
+            key: args.key, selectedPurchase: args.selectedPurchase),
+        settings: data,
+      );
+    },
+    _i32.ViewProductsServicesView: (data) {
+      final args =
+          data.getArgs<ViewProductsServicesViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i32.ViewProductsServicesView(
+            key: args.key, selecteditem: args.selecteditem),
+        settings: data,
+      );
+    },
+    _i33.ProductsServicesView: (data) {
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i33.ProductsServicesView(),
+        settings: data,
+      );
+    },
+    _i34.CustomersView: (data) {
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i34.CustomersView(),
+        settings: data,
+      );
+    },
+    _i35.PurchaseOrderView: (data) {
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i35.PurchaseOrderView(),
+        settings: data,
+      );
+    },
+    _i36.AddPurchaseOrderView: (data) {
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i36.AddPurchaseOrderView(),
+        settings: data,
+      );
+    },
+    _i37.AddCustomersView: (data) {
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i37.AddCustomersView(),
+        settings: data,
+      );
+    },
+    _i38.AddProductsServicesView: (data) {
       final args = data.getArgs<AddProductsServicesViewArguments>(
         orElse: () => const AddProductsServicesViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i28.AddProductsServicesView(key: args.key),
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i38.AddProductsServicesView(key: args.key),
         settings: data,
       );
     },
-    _i29.CreateMerchantView: (data) {
+    _i39.CreateMerchantView: (data) {
       final args = data.getArgs<CreateMerchantViewArguments>(
         orElse: () => const CreateMerchantViewArguments(),
       );
-      return _i30.CupertinoPageRoute<dynamic>(
-        builder: (context) => _i29.CreateMerchantView(key: args.key),
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i39.CreateMerchantView(key: args.key),
+        settings: data,
+      );
+    },
+    _i40.UploadMerchantInvoiceToPurchaseView: (data) {
+      final args = data.getArgs<UploadMerchantInvoiceToPurchaseViewArguments>(
+          nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i40.UploadMerchantInvoiceToPurchaseView(
+            key: args.key, selectedPurchase: args.selectedPurchase),
+        settings: data,
+      );
+    },
+    _i41.MakePurchasePaymentView: (data) {
+      final args =
+          data.getArgs<MakePurchasePaymentViewArguments>(nullOk: false);
+      return _i42.CupertinoPageRoute<dynamic>(
+        builder: (context) => _i41.MakePurchasePaymentView(
+            key: args.key, selectedPurchase: args.selectedPurchase),
         settings: data,
       );
     },
@@ -477,37 +680,37 @@ class StackedRouter extends _i1.RouterBase {
 class HomeScreenArguments {
   const HomeScreenArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class CreateAccountViewArguments {
   const CreateAccountViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class LoginViewArguments {
   const LoginViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class ForgotPasswordViewArguments {
   const ForgotPasswordViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class VerificationViewArguments {
   const VerificationViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class BusinessProfileCreationViewArguments {
   const BusinessProfileCreationViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class SelectTagsViewArguments {
@@ -516,7 +719,7 @@ class SelectTagsViewArguments {
     this.busy = false,
   });
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 
   final bool busy;
 }
@@ -524,13 +727,19 @@ class SelectTagsViewArguments {
 class AddItemViewArguments {
   const AddItemViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
+}
+
+class AddPurchaseItemViewArguments {
+  const AddPurchaseItemViewArguments({this.key});
+
+  final _i43.Key? key;
 }
 
 class AddExpensesViewArguments {
   const AddExpensesViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class AddSalesViewArguments {
@@ -539,7 +748,7 @@ class AddSalesViewArguments {
     this.busy = false,
   });
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 
   final bool busy;
 }
@@ -547,7 +756,7 @@ class AddSalesViewArguments {
 class AddInvoicesViewArguments {
   const AddInvoicesViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class UpdateExpensesViewArguments {
@@ -556,9 +765,42 @@ class UpdateExpensesViewArguments {
     required this.selectedExpense,
   });
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 
-  final _i32.Expenses selectedExpense;
+  final _i44.Expenses selectedExpense;
+}
+
+class UpdateCustomersViewArguments {
+  const UpdateCustomersViewArguments({
+    this.key,
+    required this.selectedCustomer,
+  });
+
+  final _i43.Key? key;
+
+  final _i45.Customers selectedCustomer;
+}
+
+class UpdatePurchasesViewArguments {
+  const UpdatePurchasesViewArguments({
+    this.key,
+    required this.selectedPurcahses,
+  });
+
+  final _i43.Key? key;
+
+  final _i46.Purchases selectedPurcahses;
+}
+
+class UpdateProductsServicesViewArguments {
+  const UpdateProductsServicesViewArguments({
+    this.key,
+    required this.selectedItem,
+  });
+
+  final _i43.Key? key;
+
+  final _i47.Items selectedItem;
 }
 
 class UpdateInvoicesViewArguments {
@@ -567,9 +809,9 @@ class UpdateInvoicesViewArguments {
     required this.selectedInvoice,
   });
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 
-  final _i33.Invoices selectedInvoice;
+  final _i45.Invoices selectedInvoice;
 }
 
 class ViewExpensesViewArguments {
@@ -578,9 +820,20 @@ class ViewExpensesViewArguments {
     required this.selectedExpense,
   });
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 
-  final _i32.Expenses selectedExpense;
+  final _i44.Expenses selectedExpense;
+}
+
+class ViewInvoicesViewArguments {
+  const ViewInvoicesViewArguments({
+    this.key,
+    required this.selectedInvoice,
+  });
+
+  final _i43.Key? key;
+
+  final _i45.Invoices selectedInvoice;
 }
 
 class ViewCustomersViewArguments {
@@ -589,26 +842,70 @@ class ViewCustomersViewArguments {
     required this.selectedCustomer,
   });
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 
-  final _i33.Customers selectedCustomer;
+  final _i45.Customers selectedCustomer;
+}
+
+class ViewPurchaseViewArguments {
+  const ViewPurchaseViewArguments({
+    this.key,
+    required this.selectedPurchase,
+  });
+
+  final _i43.Key? key;
+
+  final _i46.Purchases selectedPurchase;
+}
+
+class ViewProductsServicesViewArguments {
+  const ViewProductsServicesViewArguments({
+    this.key,
+    required this.selecteditem,
+  });
+
+  final _i43.Key? key;
+
+  final _i47.Items selecteditem;
 }
 
 class AddProductsServicesViewArguments {
   const AddProductsServicesViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
 class CreateMerchantViewArguments {
   const CreateMerchantViewArguments({this.key});
 
-  final _i31.Key? key;
+  final _i43.Key? key;
 }
 
-extension NavigatorStateExtension on _i34.NavigationService {
+class UploadMerchantInvoiceToPurchaseViewArguments {
+  const UploadMerchantInvoiceToPurchaseViewArguments({
+    this.key,
+    required this.selectedPurchase,
+  });
+
+  final _i43.Key? key;
+
+  final _i46.Purchases selectedPurchase;
+}
+
+class MakePurchasePaymentViewArguments {
+  const MakePurchasePaymentViewArguments({
+    this.key,
+    required this.selectedPurchase,
+  });
+
+  final _i43.Key? key;
+
+  final _i46.Purchases selectedPurchase;
+}
+
+extension NavigatorStateExtension on _i48.NavigationService {
   Future<dynamic> navigateToHomeScreenRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -666,7 +963,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToCreateAccountRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -682,7 +979,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToLoginRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -698,7 +995,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToForgotPasswordRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -714,7 +1011,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToVerificationRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -730,7 +1027,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToBusinessProfileCreationRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -746,7 +1043,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToSelectTagsRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -832,8 +1129,22 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToChoosePurchaseItemRoute([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.choosePurchaseItemRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> navigateToAddItemRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -848,8 +1159,24 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToAddPurchaseItemRoute({
+    _i43.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.addPurchaseItemRoute,
+        arguments: AddPurchaseItemViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> navigateToAddExpenseRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -865,7 +1192,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToAddSalesRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -882,7 +1209,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToAddInvoiceRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -898,8 +1225,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToUpdateExpenseRoute({
-    _i31.Key? key,
-    required _i32.Expenses selectedExpense,
+    _i43.Key? key,
+    required _i44.Expenses selectedExpense,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -915,9 +1242,63 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToUpdateCustomerRoute({
+    _i43.Key? key,
+    required _i45.Customers selectedCustomer,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.updateCustomerRoute,
+        arguments: UpdateCustomersViewArguments(
+            key: key, selectedCustomer: selectedCustomer),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToUpdatePurchaseRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurcahses,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.updatePurchaseRoute,
+        arguments: UpdatePurchasesViewArguments(
+            key: key, selectedPurcahses: selectedPurcahses),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToUpdateProductsServicesRoute({
+    _i43.Key? key,
+    required _i47.Items selectedItem,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.updateProductsServicesRoute,
+        arguments: UpdateProductsServicesViewArguments(
+            key: key, selectedItem: selectedItem),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> navigateToUpdateInvoiceRoute({
-    _i31.Key? key,
-    required _i33.Invoices selectedInvoice,
+    _i43.Key? key,
+    required _i45.Invoices selectedInvoice,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -934,8 +1315,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToViewExpenseRoute({
-    _i31.Key? key,
-    required _i32.Expenses selectedExpense,
+    _i43.Key? key,
+    required _i44.Expenses selectedExpense,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -951,9 +1332,27 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToViewInvoiceRoute({
+    _i43.Key? key,
+    required _i45.Invoices selectedInvoice,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.viewInvoiceRoute,
+        arguments: ViewInvoicesViewArguments(
+            key: key, selectedInvoice: selectedInvoice),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> navigateToViewCustomerRoute({
-    _i31.Key? key,
-    required _i33.Customers selectedCustomer,
+    _i43.Key? key,
+    required _i45.Customers selectedCustomer,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -963,6 +1362,42 @@ extension NavigatorStateExtension on _i34.NavigationService {
     return navigateTo<dynamic>(Routes.viewCustomerRoute,
         arguments: ViewCustomersViewArguments(
             key: key, selectedCustomer: selectedCustomer),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToViewPurchaseRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurchase,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.viewPurchaseRoute,
+        arguments: ViewPurchaseViewArguments(
+            key: key, selectedPurchase: selectedPurchase),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToViewProductsServicesRoute({
+    _i43.Key? key,
+    required _i47.Items selecteditem,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.viewProductsServicesRoute,
+        arguments: ViewProductsServicesViewArguments(
+            key: key, selecteditem: selecteditem),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -997,6 +1432,34 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToPurchaseOrderRoute([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.purchaseOrderRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddPurchaseOrderRoute([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.addPurchaseOrderRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> navigateToAddCustomersRoute([
     int? routerId,
     bool preventDuplicates = true,
@@ -1012,7 +1475,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToAddProductsServicesRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1028,7 +1491,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToCreateMerchantRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1043,8 +1506,44 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToUploadMerchantInvoiceToPurchaseRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurchase,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.uploadMerchantInvoiceToPurchaseRoute,
+        arguments: UploadMerchantInvoiceToPurchaseViewArguments(
+            key: key, selectedPurchase: selectedPurchase),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToMakePurchasePaymentRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurchase,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.makePurchasePaymentRoute,
+        arguments: MakePurchasePaymentViewArguments(
+            key: key, selectedPurchase: selectedPurchase),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithHomeScreenRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1102,7 +1601,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithCreateAccountRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1118,7 +1617,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithLoginRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1134,7 +1633,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithForgotPasswordRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1150,7 +1649,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithVerificationRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1166,7 +1665,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithBusinessProfileCreationRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1182,7 +1681,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithSelectTagsRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -1268,8 +1767,22 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> replaceWithChoosePurchaseItemRoute([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.choosePurchaseItemRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithAddItemRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1284,8 +1797,24 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> replaceWithAddPurchaseItemRoute({
+    _i43.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.addPurchaseItemRoute,
+        arguments: AddPurchaseItemViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithAddExpenseRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1301,7 +1830,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithAddSalesRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     bool busy = false,
     int? routerId,
     bool preventDuplicates = true,
@@ -1318,7 +1847,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithAddInvoiceRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1334,8 +1863,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithUpdateExpenseRoute({
-    _i31.Key? key,
-    required _i32.Expenses selectedExpense,
+    _i43.Key? key,
+    required _i44.Expenses selectedExpense,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1351,9 +1880,63 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> replaceWithUpdateCustomerRoute({
+    _i43.Key? key,
+    required _i45.Customers selectedCustomer,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.updateCustomerRoute,
+        arguments: UpdateCustomersViewArguments(
+            key: key, selectedCustomer: selectedCustomer),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithUpdatePurchaseRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurcahses,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.updatePurchaseRoute,
+        arguments: UpdatePurchasesViewArguments(
+            key: key, selectedPurcahses: selectedPurcahses),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithUpdateProductsServicesRoute({
+    _i43.Key? key,
+    required _i47.Items selectedItem,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.updateProductsServicesRoute,
+        arguments: UpdateProductsServicesViewArguments(
+            key: key, selectedItem: selectedItem),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithUpdateInvoiceRoute({
-    _i31.Key? key,
-    required _i33.Invoices selectedInvoice,
+    _i43.Key? key,
+    required _i45.Invoices selectedInvoice,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1370,8 +1953,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithViewExpenseRoute({
-    _i31.Key? key,
-    required _i32.Expenses selectedExpense,
+    _i43.Key? key,
+    required _i44.Expenses selectedExpense,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1387,9 +1970,27 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> replaceWithViewInvoiceRoute({
+    _i43.Key? key,
+    required _i45.Invoices selectedInvoice,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.viewInvoiceRoute,
+        arguments: ViewInvoicesViewArguments(
+            key: key, selectedInvoice: selectedInvoice),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithViewCustomerRoute({
-    _i31.Key? key,
-    required _i33.Customers selectedCustomer,
+    _i43.Key? key,
+    required _i45.Customers selectedCustomer,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1399,6 +2000,42 @@ extension NavigatorStateExtension on _i34.NavigationService {
     return replaceWith<dynamic>(Routes.viewCustomerRoute,
         arguments: ViewCustomersViewArguments(
             key: key, selectedCustomer: selectedCustomer),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithViewPurchaseRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurchase,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.viewPurchaseRoute,
+        arguments: ViewPurchaseViewArguments(
+            key: key, selectedPurchase: selectedPurchase),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithViewProductsServicesRoute({
+    _i43.Key? key,
+    required _i47.Items selecteditem,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.viewProductsServicesRoute,
+        arguments: ViewProductsServicesViewArguments(
+            key: key, selecteditem: selecteditem),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1433,6 +2070,34 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> replaceWithPurchaseOrderRoute([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.purchaseOrderRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddPurchaseOrderRoute([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.addPurchaseOrderRoute,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithAddCustomersRoute([
     int? routerId,
     bool preventDuplicates = true,
@@ -1448,7 +2113,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithAddProductsServicesRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1464,7 +2129,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithCreateMerchantRoute({
-    _i31.Key? key,
+    _i43.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1473,6 +2138,42 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.createMerchantRoute,
         arguments: CreateMerchantViewArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithUploadMerchantInvoiceToPurchaseRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurchase,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.uploadMerchantInvoiceToPurchaseRoute,
+        arguments: UploadMerchantInvoiceToPurchaseViewArguments(
+            key: key, selectedPurchase: selectedPurchase),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithMakePurchasePaymentRoute({
+    _i43.Key? key,
+    required _i46.Purchases selectedPurchase,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.makePurchasePaymentRoute,
+        arguments: MakePurchasePaymentViewArguments(
+            key: key, selectedPurchase: selectedPurchase),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

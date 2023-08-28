@@ -20,7 +20,7 @@ class CreateCustomerViewModel extends FormViewModel {
     return _createCustomerService.createCustomer(
         name: customerNameValue ?? '',
         mobile: mobileValue ?? '',
-        email: emailValue ?? '',
+        email: '',
         address: addressValue ?? '',
         businessId: businessIdValue ?? '');
   }

@@ -33,6 +33,7 @@ class MerchantService {
           getMerchantsByBusiness(businessId: \$input) {
             id
             name
+            email
             businessId
             }
           }
@@ -40,7 +41,9 @@ class MerchantService {
         );
 
   Future<MerchantCreationResult> createMerchant(
-      {required String name, required String businessId}) async {
+      {required String name,
+      required String email,
+      required String businessId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
     final businessId = prefs.getString('businessId');
@@ -69,6 +72,7 @@ class MerchantService {
       variables: {
         'input': {
           'name': name,
+          'email': email,
           'businessId': businessId,
         },
       },
@@ -105,6 +109,7 @@ class MerchantService {
       {required String businessId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
+    final businessId = prefs.getString('businessId');
 
     if (token == null) {
       throw GraphQLMerchantError(
@@ -142,7 +147,10 @@ class MerchantService {
 
     final List<Merchants> merchants = merchantsData.map((data) {
       return Merchants(
-          id: data['id'], name: data['name'], businessId: data['businessId']);
+          id: data['id'],
+          name: data['name'],
+          businessId: data['businessId'],
+          email: data['email']);
     }).toList();
 
     return merchants;
@@ -152,9 +160,14 @@ class MerchantService {
 class Merchants {
   final String id;
   final String name;
+  final String email;
   final String businessId;
 
-  Merchants({required this.id, required this.name, required this.businessId});
+  Merchants(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.businessId});
 }
 
 class MerchantCreationResult {

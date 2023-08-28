@@ -5,20 +5,32 @@ import 'package:google_fonts/google_fonts.dart';
 const Color kcPrimaryColor = Color(0xff027DFF);
 const Color kcButtonTextColor = Colors.white;
 const Color kcTextColor = Color(0xff141414);
+Color kcTextFormColor = const Color(0xff141414).withOpacity(0.5);
 const Color kcTextColorLight = Color(0xff888888);
 Color kcStrokeColor = const Color(0xffABB3BF).withOpacity(0.5);
+Color kcFillColor = const Color(0xffD3D3D3).withOpacity(0.2);
 
 // Radius
 OutlineInputBorder defaultFormBorder = OutlineInputBorder(
     borderRadius: defaultBorderRadius,
     borderSide:
-        BorderSide(width: 0.5, style: BorderStyle.solid, color: kcStrokeColor));
+        BorderSide(width: 0.7, style: BorderStyle.solid, color: kcStrokeColor));
+
+OutlineInputBorder defaultFocusedFormBorder = OutlineInputBorder(
+  // Highlighted border when focused
+  borderRadius: defaultBorderRadius,
+  borderSide: const BorderSide(
+      width: 1, // Adjust the width to control the border thickness
+      color: kcPrimaryColor,
+      style: BorderStyle.solid // Highlight color
+      ),
+);
 
 OutlineInputBorder defaultFormBorderSmall = OutlineInputBorder(
     borderRadius: defaultBorderRadius,
     borderSide: BorderSide(
         width: 0.01, style: BorderStyle.solid, color: kcStrokeColor));
-BorderRadius defaultBorderRadius = BorderRadius.circular(6);
+BorderRadius defaultBorderRadius = BorderRadius.circular(12);
 
 BorderRadius defaultTagBorderRadius = BorderRadius.circular(20);
 
@@ -61,6 +73,11 @@ TextStyle ktsButtonText = GoogleFonts.dmSans(
   fontSize: kParagraphTextSize,
   fontWeight: FontWeight.normal,
 );
+TextStyle ktsButtonTextBlue = GoogleFonts.dmSans(
+  color: kcPrimaryColor,
+  fontSize: kParagraphTextSize,
+  fontWeight: FontWeight.normal,
+);
 TextStyle ktsButtonTextSmall = GoogleFonts.dmSans(
   color: kcButtonTextColor,
   fontSize: kBodyTextSize,
@@ -96,7 +113,7 @@ TextStyle ktsBodyText2 = GoogleFonts.dmSans(
 );
 
 TextStyle ktsFormText = GoogleFonts.dmSans(
-  color: kcTextColorLight, //2
+  color: kcTextFormColor, //2
   fontSize: kParagraphTextSize,
   fontWeight: FontWeight.normal,
 );

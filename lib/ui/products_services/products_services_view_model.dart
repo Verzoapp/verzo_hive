@@ -26,11 +26,22 @@ class ProductsServicesViewModel extends FutureViewModel<List<Items>> {
     return items;
   }
 
+  Future<bool> archiveProduct(String productId) async {
+    final bool isArchived =
+        await _productservicesService.archiveProduct(productId: productId);
+    return isArchived;
+  }
+
+  Future<bool> archiveService(String serviceId) async {
+    final bool isArchived =
+        await _productservicesService.archiveService(serviceId: serviceId);
+    return isArchived;
+  }
+
   void addNewItem(List<Items> item) {
     if (item.isNotEmpty) {
       newItem.addAll(item);
     }
-
     notifyListeners();
   }
 

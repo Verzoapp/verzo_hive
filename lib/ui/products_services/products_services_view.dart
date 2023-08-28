@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:verzo_one/app/app.locator.dart';
 import 'package:verzo_one/app/app.router.dart';
 import 'package:verzo_one/services/product&services_service.dart';
 import 'package:verzo_one/ui/customers/customers_view.dart';
@@ -22,10 +24,7 @@ class _ProductsServicesViewState extends State<ProductsServicesView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProductsServicesViewModel>.reactive(
       viewModelBuilder: () => ProductsServicesViewModel(),
-      onModelReady: (model) async {
-        model.getProductOrServiceByBusiness();
-        model.addNewItem(model.newItem);
-      },
+      onModelReady: (model) async {},
       builder: (
         BuildContext context,
         ProductsServicesViewModel model,
@@ -141,7 +140,6 @@ class _ProductsServicesViewState extends State<ProductsServicesView> {
                     ),
                   ),
                 ),
-                verticalSpaceTiny,
                 Expanded(
                   child: SingleChildScrollView(
                     primary: false,
@@ -150,8 +148,8 @@ class _ProductsServicesViewState extends State<ProductsServicesView> {
                       padding: const EdgeInsets.only(
                         top: 25,
                         bottom: 50,
-                        left: 15,
-                        right: 15,
+                        left: 6,
+                        right: 6,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,37 +206,63 @@ class _ProductsServicesViewState extends State<ProductsServicesView> {
                                   ),
                                 ],
                               ),
-                              child: Builder(builder: (context) {
-                                if (model.isBusy) {
-                                  return const CircularProgressIndicator(
-                                    color: kcPrimaryColor,
-                                  );
-                                }
-                                if (model.data == null) {
-                                  return const Text('No Products or services');
-                                }
-                                return ListView.separated(
-                                  padding: const EdgeInsets.all(18),
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  itemCount: model.data!.length,
-                                  itemBuilder: (context, index) {
-                                    var items = model.data![index];
-                                    return ItemCard(item: items);
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 2),
-                                      child: Divider(
-                                        thickness: 0.4,
-                                      ),
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    onChanged: (value) {
+                                      // model.runFilter(value)
+                                    },
+                                    decoration: InputDecoration(
+                                      labelText: 'Search',
+                                      prefixIcon: const Icon(Icons.search),
+                                      labelStyle: ktsFormText,
+                                      border: defaultFormBorder,
+                                    ),
+                                  ),
+                                  verticalSpaceTiny,
+                                  Builder(builder: (context) {
+                                    if (model.isBusy) {
+                                      return const CircularProgressIndicator(
+                                        color: kcPrimaryColor,
+                                      );
+                                    }
+                                    if (model.data == null) {
+                                      return const Text(
+                                          'No Products or services');
+                                    }
+                                    return ListView.separated(
+                                      padding: const EdgeInsets.all(12),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: model.data!.length,
+                                      itemBuilder: (context, index) {
+                                        var items = model.data![index];
+                                        return ItemCard(
+                                          item: items,
+                                          archiveProduct: () {
+                                            model.archiveProduct(items.id);
+                                          },
+                                          archiveService: () {
+                                            model.archiveService(items.id);
+                                          },
+                                        );
+                                      },
+                                      separatorBuilder:
+                                          (BuildContext context, int index) {
+                                        return const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Divider(
+                                            thickness: 0.4,
+                                          ),
+                                        );
+                                      },
                                     );
-                                  },
-                                );
-                              })),
+                                  }),
+                                ],
+                              )),
                         ],
                       ),
                     ),
@@ -252,12 +276,17 @@ class _ProductsServicesViewState extends State<ProductsServicesView> {
 }
 
 class ItemCard extends StatelessWidget {
-  const ItemCard({
-    Key? key,
-    required this.item,
-  }) : super(key: key);
-
+  ItemCard(
+      {Key? key,
+      required this.item,
+      required this.archiveProduct,
+      required this.archiveService})
+      : super(key: key);
+  final navigationService = locator<NavigationService>();
+  final DialogService _dialogService = locator<DialogService>();
   final Items item;
+  final Function archiveProduct;
+  final Function archiveService;
 
   @override
   Widget build(BuildContext context) {
@@ -297,10 +326,17 @@ class ItemCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: (() {
+              navigationService.navigateToUpdateProductsServicesRoute(
+                  selectedItem: item);
+            }),
+          ),
+          IconButton(
             icon: const Icon(Icons.visibility),
             onPressed: (() {
-              // navigationService.navigateToViewExpenseRoute(
-              //     selectedExpense: expenses);
+              navigationService.navigateToViewProductsServicesRoute(
+                  selecteditem: item);
             }),
           ),
           IconButton(
@@ -308,7 +344,27 @@ class ItemCard extends StatelessWidget {
               Icons.archive,
               size: 24,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              final DialogResponse? response =
+                  await _dialogService.showConfirmationDialog(
+                      dialogPlatform: DialogPlatform.Cupertino,
+                      title:
+                          'Archive ${item.type == 'P' ? 'Product' : 'Service'}',
+                      description:
+                          'Are you sure you want to archive this ${item.type == 'P' ? 'Product' : 'Service'}?',
+                      barrierDismissible: true,
+                      cancelTitle: 'Cancel',
+                      confirmationTitle: 'Ok');
+              if (response?.confirmed == true) {
+                if (item.type == 'P') {
+                  // Archive product
+                  archiveProduct();
+                } else {
+                  // Archive service
+                  archiveService();
+                }
+              }
+            },
           ),
         ],
       ),

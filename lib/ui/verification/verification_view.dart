@@ -24,7 +24,6 @@ class VerificationView extends StatelessWidget with $VerificationView {
       viewModelBuilder: () => VerificationViewModel(),
       builder: (context, model, child) => Scaffold(
           body: AuthenticationLayout(
-        // onBackPressed: model.navigateBack,
         busy: model.isBusy,
         onMainButtonTapped: model.getVerificationResponse,
         onResendVerificationCodeTapped: model.resendVerification,

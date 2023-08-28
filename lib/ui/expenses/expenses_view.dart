@@ -73,17 +73,10 @@ class _ExpensesViewState extends State<ExpensesView> {
     return ViewModelBuilder<ExpensesViewModel>.reactive(
         viewModelBuilder: () => ExpensesViewModel(),
         onModelReady: (model) async {
-          model.addNewExpense;
+          // model.addNewExpense;
           model.archiveExpense;
         },
         builder: (context, model, child) {
-          if (model.isBusy) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
           return Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: FloatingActionButton(
@@ -123,103 +116,98 @@ class _ExpensesViewState extends State<ExpensesView> {
                 ]),
             body: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 60),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   verticalSpaceTiny,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/verzo_logo.svg',
-                        width: 102,
-                        height: 21,
-                      ),
-                      const CircleAvatar(
-                        backgroundColor: kcTextColorLight,
-                        foregroundColor: kcButtonTextColor,
-                        radius: 16,
-                        child: Text('V'),
-                      ),
-                    ],
+                  SvgPicture.asset(
+                    'assets/images/verzo_logo.svg',
+                    width: 110,
+                    height: 30,
                   ),
-                  verticalSpaceRegular,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Recent Expenses',
-                        style: ktsHeaderText,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                  // if (model.expenses.isEmpty)
-                  //   const Text('No Expense')
-                  // else
-                  //   ListView.separated(
-                  //     scrollDirection: Axis.vertical,
-                  //     physics: const NeverScrollableScrollPhysics(),
-                  //     primary: true,
-                  //     shrinkWrap: true,
-                  //     itemCount: model.expenses.length + (model.isBusy ? 1 : 0),
-                  //     itemBuilder: (context, index) {
-                  //       if (index == model.expenses.length) {
-                  //         return const CircularProgressIndicator();
-                  //       } else {
-                  //         return ExpenseCard(
-                  //           expenses: model.expenses[index]!,
-                  //           archiveExpense: () {
-                  //             model.archiveExpense(model.expenses[index].id);
-                  //           },
-                  //           expenseId: model.expenses[index].id,
-                  //         );
-                  //       }
-                  //     },
-                  //     separatorBuilder: (BuildContext context, int index) {
-                  //       return verticalSpaceTiny;
-                  //     },
-                  //   ),
-                  if (model.data == null)
-                    const Text('No Expense')
-                  else
-                    ListView.separated(
-                      scrollDirection: Axis.vertical,
-                      physics: const NeverScrollableScrollPhysics(),
-                      primary: true,
-                      shrinkWrap: true,
-                      itemCount: model.data!.length,
-                      itemBuilder: (context, index) {
-                        var expense = model.data![index];
-                        if (index == model.data!.length) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          return ExpenseCard(
-                            expenses: expense,
-                            archiveExpense: () {
-                              model.archiveExpense(expense.id);
-                            },
-                            expenseId: expense.id,
-                          );
-                        }
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return Column(
-                          children: [
-                            // verticalSpaceTiny,
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 2),
-                              child: Divider(
-                                thickness: 0.4,
-                              ),
-                            )
-                          ],
-                        );
-                      },
+                  verticalSpaceIntermitent,
+                  // Text(
+                  //   'Recent Expenses',
+                  //   style: ktsHeaderText,
+                  //   textAlign: TextAlign.left,
+                  // ),
+                  verticalSpaceSmall,
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: kcButtonTextColor,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: kcTextColorLight.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          // changes position of shadow
+                        ),
+                      ],
                     ),
+                    child: Column(
+                      children: [
+                        TextField(
+                          // onChanged: (value) =>
+                          // model.runFilter(value),
+                          decoration: InputDecoration(
+                            labelText: 'Search',
+                            prefixIcon: const Icon(Icons.search),
+                            labelStyle: ktsFormText,
+                            border: defaultFormBorder,
+                          ),
+                        ),
+                        verticalSpaceTiny,
+                        Builder(builder: (context) {
+                          if (model.isBusy) {
+                            return const CircularProgressIndicator(
+                              color: kcPrimaryColor,
+                            );
+                          }
+                          if (model.data == null) {
+                            return const Text('No Newest Expense');
+                          }
+                          return ListView.separated(
+                            padding: const EdgeInsets.all(2),
+                            scrollDirection: Axis.vertical,
+                            physics: const NeverScrollableScrollPhysics(),
+                            primary: true,
+                            shrinkWrap: true,
+                            itemCount: model.data!.length,
+                            itemBuilder: (context, index) {
+                              var expense = model.data![index];
+                              return ExpenseCard(
+                                expenses: expense,
+                                archiveExpense: () {
+                                  model.archiveExpense(expense.id);
+                                  model.getExpenseByBusiness();
+                                },
+                                expenseId: expense.id,
+                              );
+                              // }
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return Column(
+                                children: const [
+                                  // verticalSpaceTiny,
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 2),
+                                    child: Divider(
+                                      thickness: 0.4,
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -266,19 +254,19 @@ class ExpenseCard extends StatelessWidget {
             style: ktsBodyText,
           ),
           IconButton(
-            icon: const Icon(Icons.visibility),
-            onPressed: (() {
-              navigationService.navigateToViewExpenseRoute(
-                  selectedExpense: expenses);
-            }),
-          ),
-          IconButton(
             icon: const Icon(
               Icons.edit,
               size: 20,
             ),
             onPressed: (() {
               navigationService.navigateToUpdateExpenseRoute(
+                  selectedExpense: expenses);
+            }),
+          ),
+          IconButton(
+            icon: const Icon(Icons.visibility),
+            onPressed: (() {
+              navigationService.navigateToViewExpenseRoute(
                   selectedExpense: expenses);
             }),
           ),

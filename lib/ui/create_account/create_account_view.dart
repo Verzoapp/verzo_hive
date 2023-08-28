@@ -23,7 +23,7 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
       builder: (context, model, child) => Scaffold(
           body: AuthenticationLayout(
         busy: model.isBusy,
-        onMainButtonTapped: () => model.saveData(),
+        onMainButtonTapped: model.saveData,
         onLoginTapped: model.navigateToLogin,
         validationMessage: model.validationMessage,
         title: 'Create Account',
@@ -37,7 +37,11 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                     // prefixIcon: const Icon(Icons.email),
                     labelText: 'Enter email',
                     labelStyle: ktsFormText,
-                    border: defaultFormBorder),
+                    fillColor: kcFillColor,
+                    filled: true,
+                    enabledBorder: defaultFormBorder,
+                    focusedBorder: defaultFocusedFormBorder),
+                style: ktsBodyText,
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 // validator: ((value) {
@@ -52,22 +56,32 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
                 decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: ktsFormText,
-                    border: defaultFormBorder,
+                    fillColor: kcFillColor,
+                    filled: true,
+                    enabledBorder: defaultFormBorder,
+                    focusedBorder: defaultFocusedFormBorder,
                     suffixIcon: GestureDetector(
                       onTap: model.togglePasswordVisibility,
                       child: Icon(model.isPasswordVisible
                           ? Icons.visibility
                           : Icons.visibility_off),
                     )),
+                style: ktsBodyText,
                 controller: passwordController,
                 keyboardType: TextInputType.visiblePassword,
               ),
               verticalSpaceSmall,
               TextFormField(
                 decoration: InputDecoration(
-                    labelText: 'Full name',
-                    labelStyle: ktsFormText,
-                    border: defaultFormBorder),
+                  labelText: 'Full name',
+                  labelStyle: ktsFormText,
+                  fillColor: kcFillColor,
+                  filled: true,
+                  enabledBorder: defaultFormBorder,
+                  focusedBorder: defaultFocusedFormBorder,
+                ),
+                textCapitalization: TextCapitalization.words,
+                style: ktsBodyText,
                 controller: fullNameController,
                 keyboardType: TextInputType.name,
               ),

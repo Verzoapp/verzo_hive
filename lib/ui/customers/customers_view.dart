@@ -6,6 +6,7 @@ import 'package:verzo_one/app/app.router.dart';
 import 'package:verzo_one/services/invoices_service.dart';
 import 'package:verzo_one/ui/dashboard/dashboard_view.dart';
 import 'package:verzo_one/ui/products_services/products_services_view.dart';
+import 'package:verzo_one/ui/purchase_order/purchase_order_view.dart';
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
@@ -24,8 +25,8 @@ class _CustomersViewState extends State<CustomersView> {
     return ViewModelBuilder<CustomersViewModel>.reactive(
       viewModelBuilder: () => CustomersViewModel(),
       onModelReady: (model) async {
-        model.getCustomersByBusiness();
-        model.addNewCustomer(model.newCustomer);
+        await model.getCustomersByBusiness();
+        // model.addNewCustomer(model.newCustomer);
       },
       builder: (
         BuildContext context,
@@ -87,6 +88,15 @@ class _CustomersViewState extends State<CustomersView> {
                   ),
                   ListTile(
                     leading: Icon(
+                      Icons.people,
+                    ),
+                    title: Text('Purchases'),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => PurchaseOrderView(),
+                    )),
+                  ),
+                  ListTile(
+                    leading: Icon(
                       Icons.assignment,
                     ),
                     title: Text('Products & Services'),
@@ -142,20 +152,19 @@ class _CustomersViewState extends State<CustomersView> {
                     ),
                   ),
                 ),
-                verticalSpaceTiny,
                 Expanded(
                   child: SingleChildScrollView(
                     primary: false,
                     scrollDirection: Axis.vertical,
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          top: 25, bottom: 50, left: 15, right: 15),
+                          top: 25, bottom: 50, left: 6, right: 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 300,
                               ),
                               Container(
@@ -198,48 +207,82 @@ class _CustomersViewState extends State<CustomersView> {
                                 boxShadow: [
                                   BoxShadow(
                                     color: kcTextColorLight.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
+                                    spreadRadius: 0,
+                                    blurRadius: 0,
                                     // changes position of shadow
                                   ),
                                 ],
                               ),
-                              child: Builder(builder: (context) {
-                                if (model.isBusy) {
-                                  return const CircularProgressIndicator(
-                                    color: kcPrimaryColor,
-                                  );
-                                }
-                                if (model.data == null) {
-                                  return const Text('No Customers');
-                                }
-                                return ListView.separated(
-                                  padding: const EdgeInsets.all(18),
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  itemCount: model.data!.length,
-                                  itemBuilder: (context, index) {
-                                    var customer = model.data![index];
-                                    return CustomerCard(
-                                      customer: customer,
-                                      archiveCustomer: () {
-                                        model.archiveCustomer(customer.id);
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    onChanged: (value) {},
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.all(12),
+                                      hintText: 'Search',
+                                      hintStyle: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 16),
+                                      prefixIcon: Icon(Icons.search,
+                                          color: Colors.grey[600]),
+                                      filled: true,
+                                      fillColor: Colors.grey.withOpacity(0.7),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                            color: Colors.grey[300]!, width: 1),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: const BorderSide(
+                                            color: kcPrimaryColor, width: 1),
+                                      ),
+                                    ),
+                                  ),
+                                  verticalSpaceTiny,
+                                  Builder(builder: (context) {
+                                    if (model.isBusy) {
+                                      return Column(children: const [
+                                        verticalSpaceLarge,
+                                        CircularProgressIndicator(
+                                          color: kcPrimaryColor,
+                                        ),
+                                        verticalSpaceLarge
+                                      ]);
+                                    }
+                                    if (model.data == null) {
+                                      return const Text('No Customers');
+                                    }
+                                    return ListView.separated(
+                                      padding: const EdgeInsets.all(12),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: model.data!.length,
+                                      itemBuilder: (context, index) {
+                                        var customer = model.data![index];
+                                        return CustomerCard(
+                                          customer: customer,
+                                          archiveCustomer: () {
+                                            model.archiveCustomer(customer.id);
+                                          },
+                                        );
+                                      },
+                                      separatorBuilder:
+                                          (BuildContext context, int index) {
+                                        return const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Divider(
+                                            thickness: 0.4,
+                                          ),
+                                        );
                                       },
                                     );
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 2),
-                                      child: Divider(
-                                        thickness: 0.4,
-                                      ),
-                                    );
-                                  },
-                                );
-                              })),
+                                  }),
+                                ],
+                              )),
                         ],
                       ),
                     ),
@@ -279,6 +322,13 @@ class CustomerCard extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: (() {
+              navigationService.navigateToUpdateCustomerRoute(
+                  selectedCustomer: customer);
+            }),
+          ),
           IconButton(
             icon: const Icon(Icons.visibility),
             onPressed: (() {

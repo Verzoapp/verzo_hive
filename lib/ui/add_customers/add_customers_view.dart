@@ -67,7 +67,7 @@ class AddCustomersView extends StatelessWidget with $AddCustomersView {
                     verticalSpaceSmall,
                     TextFormField(
                       decoration: InputDecoration(
-                          labelText: 'Customer address',
+                          labelText: 'Customer address (optional)',
                           labelStyle: ktsFormText,
                           border: defaultFormBorder),
                       keyboardType: TextInputType.name,

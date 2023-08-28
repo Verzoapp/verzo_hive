@@ -17,7 +17,9 @@ class CreateMerchantViewModel extends FormViewModel {
     final prefs = await SharedPreferences.getInstance();
     final businessIdValue = prefs.getString('id');
     return _createMerchantService.createMerchant(
-        name: nameValue ?? '', businessId: businessIdValue ?? '');
+        name: nameValue ?? '',
+        businessId: businessIdValue ?? '',
+        email: emailValue ?? '');
   }
 
   Future saveMerchantData() async {

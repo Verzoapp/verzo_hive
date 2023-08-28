@@ -68,7 +68,7 @@ class ViewCustomersView extends StatelessWidget {
                         labelStyle: ktsFormText,
                         border: defaultFormBorder),
                     keyboardType: TextInputType.name,
-                    // initialValue: model.customer.address,
+                    initialValue: model.customer.address,
                   ),
                 ],
               ),

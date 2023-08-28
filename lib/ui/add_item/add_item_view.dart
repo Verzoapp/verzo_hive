@@ -106,7 +106,7 @@ class AddItemView extends StatelessWidget with $AddItemView {
               verticalSpaceSmall,
               TextFormField(
                 decoration: InputDecoration(
-                    labelText: 'Quantity in stock',
+                    labelText: 'Quantity in stock (Optional)',
                     labelStyle: ktsFormText,
                     border: defaultFormBorder),
                 keyboardType: TextInputType.name,

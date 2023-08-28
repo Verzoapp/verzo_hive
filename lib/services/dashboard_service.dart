@@ -4,13 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:verzo_one/app/app.locator.dart';
+import 'package:verzo_one/app/app.router.dart';
 
 class DashboardService {
   ValueNotifier<GraphQLClient> client;
 
   final QueryOptions _getBusinessesByUserIdQuery;
   final QueryOptions _getExpensesForWeekQuery;
+  final QueryOptions _getPurchasesForWeekQuery;
   final QueryOptions _getExpensesForMonthQuery;
+  final QueryOptions _getPurchasesForMonthQuery;
   final QueryOptions _totalWeeklyInvoicesAmountQuery;
   final QueryOptions _totalMonthlyInvoicesAmountQuery;
 
@@ -44,6 +49,16 @@ class DashboardService {
             }
             '''),
         ),
+        _getPurchasesForWeekQuery = QueryOptions(
+          document: gql('''
+        query GetPurchasesForWeek (\$businessId: String!,\$weekly: Boolean){
+          getPurchasesForWeek (businessId: \$businessId, weekly: \$weekly){
+            totalPurchaseAmountThisWeek
+            totalPendingPurchaseAmountThisWeek
+            }
+            }
+            '''),
+        ),
         _getExpensesForMonthQuery = QueryOptions(
           document: gql('''
         query GetExpensesForMonth(\$businessId: String!,\$monthly: Boolean) {
@@ -51,6 +66,16 @@ class DashboardService {
             totalExpenseAmountThisMonth
             percentageOfExpenseToInvoiceThisMonth
             percentageIncreaseInExpenseThisMonth
+            }
+            }
+            '''),
+        ),
+        _getPurchasesForMonthQuery = QueryOptions(
+          document: gql('''
+        query GetPurchasesForMonth(\$businessId: String!,\$monthly: Boolean) {
+          getPurchasesForMonth (businessId: \$businessId, monthly: \$monthly){
+            totalPurchaseAmountThisMonth
+            totalPendingPurchaseAmountThisMonth
             }
             }
             '''),
@@ -85,6 +110,7 @@ class DashboardService {
         );
 
   Future<BusinessIdResult> businessId() async {
+    final navigationService = locator<NavigationService>();
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
 
@@ -108,15 +134,6 @@ class DashboardService {
     final QueryResult businessIdResult =
         await newClient.query(_getBusinessesByUserIdQuery);
 
-    var result_businessid =
-        businessIdResult.data?['getBusinessesByUserId']['businesses'][0]['id'];
-    var result_businessName = businessIdResult.data?['getBusinessesByUserId']
-        ['businesses'][0]['businessName'];
-    var result_businessEmail = businessIdResult.data?['getBusinessesByUserId']
-        ['businesses'][0]['businessEmail'];
-    var result_businessMobile = businessIdResult.data?['getBusinessesByUserId']
-        ['businesses'][0]['businessMobile'];
-
     if (businessIdResult.hasException) {
       return BusinessIdResult.error(
         error: GraphQLAuthError(
@@ -126,7 +143,35 @@ class DashboardService {
       );
     }
 
+    final businessesData =
+        businessIdResult.data?['getBusinessesByUserId']['businesses'];
+
+    if (businessesData.isEmpty) {
+      navigationService.replaceWith(Routes.businessProfileCreationRoute);
+      return BusinessIdResult.error(
+        error: GraphQLAuthError(
+          message: "No business ID found",
+        ),
+      );
+    }
+
+    var result_businessid = businessIdResult.data?['getBusinessesByUserId']
+            ['businesses'][0]['id'] ??
+        '';
+    var result_businessName = businessIdResult.data?['getBusinessesByUserId']
+            ['businesses'][0]['businessName'] ??
+        '';
+    var result_businessEmail = businessIdResult.data?['getBusinessesByUserId']
+            ['businesses'][0]['businessEmail'] ??
+        '';
+    var result_businessMobile = businessIdResult.data?['getBusinessesByUserId']
+            ['businesses'][0]['businessMobile'] ??
+        '';
+
     prefs.setString('businessId', result_businessid ?? '');
+    prefs.setString('businessName', result_businessName ?? '');
+    prefs.setString('businessEmail', result_businessEmail ?? '');
+    prefs.setString('businessMobile', result_businessMobile ?? '');
 
     var businessId = BusinessIdSuccessResult(
         result_businessId: result_businessid,
@@ -188,6 +233,54 @@ class DashboardService {
     return expensesForTheWeek;
   }
 
+  Future<PurchasesForWeek> getPurchasesForWeek(
+      {required String businessId, bool? weekly = true}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final businessId = prefs.getString('businessId');
+
+    if (token == null) {
+      throw GraphQLAuthError(
+        message: "Access token not found",
+      );
+    }
+
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
+
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
+
+    final QueryOptions options = QueryOptions(
+      document: _getPurchasesForWeekQuery.document,
+      variables: {'businessId': businessId, 'weekly': weekly},
+    );
+
+    final QueryResult purchasesResult = await newClient.query(options);
+
+    if (purchasesResult.hasException) {
+      throw GraphQLAuthError(
+        message:
+            purchasesResult.exception?.graphqlErrors.first.message.toString(),
+      );
+    }
+
+    final totalPurchaseAmountThisWeek = purchasesResult
+        .data?['getPurchasesForWeek']['totalPurchaseAmountThisWeek'];
+    final totalPendingPurchaseAmountThisWeek = purchasesResult
+        .data?['getPurchasesForWeek']['totalPendingPurchaseAmountThisWeek'];
+
+    var purchasesForTheWeek = PurchasesForWeek(
+      totalPurchaseAmountThisWeek: totalPurchaseAmountThisWeek,
+      totalPendingPurchaseAmountThisWeek: totalPendingPurchaseAmountThisWeek,
+    );
+
+    return purchasesForTheWeek;
+  }
+
   Future<ExpensesForMonth> getExpensesForMonth(
       {required String businessId, bool? monthly = true}) async {
     final prefs = await SharedPreferences.getInstance();
@@ -239,6 +332,54 @@ class DashboardService {
     );
 
     return expensesForTheMonth;
+  }
+
+  Future<PurchasesForMonth> getPurchasesForMonth(
+      {required String businessId, bool? weekly = true}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final businessId = prefs.getString('businessId');
+
+    if (token == null) {
+      throw GraphQLAuthError(
+        message: "Access token not found",
+      );
+    }
+
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
+
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
+
+    final QueryOptions options = QueryOptions(
+      document: _getPurchasesForMonthQuery.document,
+      variables: {'businessId': businessId, 'weekly': weekly},
+    );
+
+    final QueryResult purchasesResult = await newClient.query(options);
+
+    if (purchasesResult.hasException) {
+      throw GraphQLAuthError(
+        message:
+            purchasesResult.exception?.graphqlErrors.first.message.toString(),
+      );
+    }
+
+    final totalPurchaseAmountThisMonth = purchasesResult
+        .data?['getPurchasesForMonth']['totalPurchaseAmountThisMonth'];
+    final totalPendingPurchaseAmountThisMonth = purchasesResult
+        .data?['getPurchasesForMonth']['totalPendingPurchaseAmountThisMonth'];
+
+    var purchasesForTheMonth = PurchasesForMonth(
+      totalPurchaseAmountThisMonth: totalPurchaseAmountThisMonth,
+      totalPendingPurchaseAmountThisMonth: totalPendingPurchaseAmountThisMonth,
+    );
+
+    return purchasesForTheMonth;
   }
 
   Future<WeeklyInvoices> totalWeeklyInvoicesAmount(
@@ -432,6 +573,26 @@ class ExpensesForWeek {
       {required this.totalExpenseAmountThisWeek,
       required this.percentageOfExpenseToInvoiceThisWeek,
       required this.percentageIncreaseInExpenseThisWeek});
+}
+
+class PurchasesForWeek {
+  final num totalPurchaseAmountThisWeek;
+  final num totalPendingPurchaseAmountThisWeek;
+
+  PurchasesForWeek({
+    required this.totalPurchaseAmountThisWeek,
+    required this.totalPendingPurchaseAmountThisWeek,
+  });
+}
+
+class PurchasesForMonth {
+  final num totalPurchaseAmountThisMonth;
+  final num totalPendingPurchaseAmountThisMonth;
+
+  PurchasesForMonth({
+    required this.totalPurchaseAmountThisMonth,
+    required this.totalPendingPurchaseAmountThisMonth,
+  });
 }
 
 class BusinessIdResult {

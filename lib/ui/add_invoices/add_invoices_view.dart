@@ -73,7 +73,7 @@ class AddInvoicesView extends StatelessWidget with $AddInvoicesView {
                   }
                 },
               ),
-              verticalSpaceTiny,
+              verticalSpaceSmall,
               TextFormField(
                 controller: dateOfIssueController,
                 decoration: InputDecoration(
@@ -286,9 +286,7 @@ class AddInvoicesView extends StatelessWidget with $AddInvoicesView {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 6,
-                      ),
+                      verticalSpaceTiny,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

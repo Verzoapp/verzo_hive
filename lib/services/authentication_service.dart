@@ -4,8 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:verzo_one/app/app.locator.dart';
+import 'package:verzo_one/app/app.router.dart';
 
 class AuthenticationService {
+  final navigationService = locator<NavigationService>();
   ValueNotifier<GraphQLClient> client;
 
   final MutationOptions _signInMutation;
@@ -21,8 +25,11 @@ class AuthenticationService {
           document: gql('''
         mutation SignIn(\$input: SignInDetails!) {
           signIn(input: \$input) {
+            token{
             access_token
             refresh_token
+            }
+            verified
           }
         }
       '''),
@@ -72,16 +79,29 @@ class AuthenticationService {
       );
     }
 
-    var accessToken = result.data?['signIn']['access_token'];
-    var refreshToken = result.data?['signIn']['refresh_token'];
+    var accessToken = result.data?['signIn']['token']['access_token'];
+    var refreshToken = result.data?['signIn']['token']['refresh_token'];
+    var verified = result.data?['signIn']['verified'];
+
+    if (verified == null) {
+      navigationService.replaceWith(Routes.verificationRoute);
+      return AuthenticationResult.error(
+        error: GraphQLAuthError(
+          message: "No verification found",
+        ),
+      );
+    }
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('access_token', accessToken ?? "");
+    prefs.setBool('isVerified', verified);
     prefs.setString('refresh_token', refreshToken ?? "");
     prefs.setBool('isLoggedIn', true);
 
     var tokens = AuthenticationSuccessResult(
-        accessToken: accessToken, refreshToken: refreshToken);
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        verified: verified);
 
     return AuthenticationResult(tokens: tokens);
   }
@@ -199,13 +219,14 @@ class AuthenticationResult {
 }
 
 class AuthenticationSuccessResult {
-  AuthenticationSuccessResult({
-    required this.accessToken,
-    required this.refreshToken,
-  });
+  AuthenticationSuccessResult(
+      {required this.accessToken,
+      required this.refreshToken,
+      required this.verified});
 
   late final String accessToken;
   late final String refreshToken;
+  bool verified;
 }
 
 class GraphQLAuthError {

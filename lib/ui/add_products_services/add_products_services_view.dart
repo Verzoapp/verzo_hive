@@ -6,7 +6,6 @@ import './add_products_services_view_model.dart';
 
 import 'package:stacked/stacked_annotations.dart';
 import 'package:verzo_one/ui/dumb_widgets/authentication_layout.dart';
-import 'package:verzo_one/ui/setup_bottom_sheet_ui.dart';
 
 import 'package:verzo_one/ui/shared/styles.dart';
 import 'package:verzo_one/ui/shared/ui_helpers.dart';
@@ -115,15 +114,15 @@ class AddProductsServicesView extends StatelessWidget
                   controller: basicUnitController,
                 ),
                 verticalSpaceSmall,
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Quantity in stock',
-                      labelStyle: ktsFormText,
-                      border: defaultFormBorder),
-                  keyboardType: TextInputType.name,
-                  controller: quantityInStockController,
-                ),
-                verticalSpaceSmall,
+                // TextFormField(
+                //   decoration: InputDecoration(
+                //       labelText: 'Quantity in stock (Optional)',
+                //       labelStyle: ktsFormText,
+                //       border: defaultFormBorder),
+                //   keyboardType: TextInputType.name,
+                //   controller: quantityInStockController,
+                // ),
+                // verticalSpaceSmall,
                 DropdownButtonFormField(
                   decoration: InputDecoration(
                       labelText: 'Unit',

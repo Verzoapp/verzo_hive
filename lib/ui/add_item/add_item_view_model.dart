@@ -46,7 +46,6 @@ class AddItemViewModel extends FormViewModel {
         businessId: businessIdValue ?? '',
         price: double.parse(priceValue ?? ''),
         basicUnit: double.parse(basicUnitValue ?? ''),
-        quantityInStock: double.parse(quantityInStockValue ?? ''),
         productUnitId: productUnitIdValue ?? '');
   }
 

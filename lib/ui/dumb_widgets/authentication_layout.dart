@@ -9,9 +9,11 @@ class AuthenticationLayout extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final String? mainButtonTitle;
+  final String? secondaryButtonTitle;
   final Widget? form;
   final bool showTermsText;
   final Function()? onMainButtonTapped;
+  final Function()? onSecondaryButtonTapped;
   final Function()? onCreateAccountTapped;
   final Function()? onLoginTapped;
   final Function()? onResendVerificationCodeTapped;
@@ -26,9 +28,11 @@ class AuthenticationLayout extends StatelessWidget {
       required this.title,
       required this.subtitle,
       required this.mainButtonTitle,
+      this.secondaryButtonTitle,
       required this.form,
       this.showTermsText = false,
       this.onMainButtonTapped,
+      this.onSecondaryButtonTapped,
       this.onCreateAccountTapped,
       this.onLoginTapped,
       this.onResendVerificationCodeTapped,
@@ -128,6 +132,29 @@ class AuthenticationLayout extends StatelessWidget {
                   ),
           ),
         ),
+        verticalSpaceSmall,
+        if (secondaryButtonTitle != null)
+          GestureDetector(
+            onTap: onSecondaryButtonTapped,
+            child: Container(
+              width: double.infinity,
+              height: 50,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: defaultBorderRadius,
+                  color: kcButtonTextColor,
+                  border: Border.all(
+                      color: kcPrimaryColor.withOpacity(0.6), width: 1)),
+              child: busy
+                  ? const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(kcPrimaryColor),
+                    )
+                  : Text(
+                      secondaryButtonTitle!,
+                      style: ktsButtonTextBlue,
+                    ),
+            ),
+          ),
         verticalSpaceSmall,
         if (showTermsText == true)
           Text(

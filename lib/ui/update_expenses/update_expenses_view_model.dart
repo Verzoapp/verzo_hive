@@ -6,7 +6,6 @@ import 'package:verzo_one/app/app.locator.dart';
 import 'package:verzo_one/app/app.router.dart';
 import 'package:verzo_one/services/expenses_service.dart';
 import 'package:verzo_one/services/merchant_service.dart';
-import 'package:verzo_one/ui/update_expenses/update_expenses_view.form.dart';
 
 class UpdateExpensesViewModel extends FormViewModel {
   final navigationService = locator<NavigationService>();
@@ -14,10 +13,10 @@ class UpdateExpensesViewModel extends FormViewModel {
   final _merchantService = locator<MerchantService>();
 
   late Expenses expense; // Add selectedExpense variable
-  late String expenseId;
+  late final String expenseId;
   // bool? recurringValue;
 
-  UpdateExpensesViewModel({required Expenses expense});
+  UpdateExpensesViewModel({required this.expense});
 
   void setSelectedExpense() {
     expenseId = expense.id;
@@ -26,7 +25,7 @@ class UpdateExpensesViewModel extends FormViewModel {
     updateAmountController.text = expense.amount.toString();
     updateExpenseDateController.text = expense.expenseDate;
     updateExpenseCategoryIdController.text = expense.expenseCategoryId;
-    updateMerchantIdController.text = expense.merchantId ?? '';
+    updateMerchantIdController.text = expense.merchantId.toString();
     // recurringValue = expense.recurring;
     notifyListeners();
   }
@@ -72,13 +71,12 @@ class UpdateExpensesViewModel extends FormViewModel {
         child: Text(merchant.name),
       );
     }).toList();
-    notifyListeners();
 
 // Add "create new category" dropdown item
-    merchantdropdownItems.add(const DropdownMenuItem<String>(
-      value: 'new_category',
-      child: Text(' +  Create New Merchant'),
-    ));
+    // merchantdropdownItems.add(const DropdownMenuItem<String>(
+    //   value: 'new_category',
+    //   child: Text(' +  Create New Merchant'),
+    // ));
 
     return merchants;
   }
@@ -96,7 +94,7 @@ class UpdateExpensesViewModel extends FormViewModel {
       description: updateDescriptionController.text,
       amount: double.parse(updateAmountController.text),
       expenseCategoryId: updateExpenseCategoryIdController.text,
-      merchantId: updateMerchantIdController.text,
+      merchantId: updateMerchantIdController?.text,
       expenseDate: updateExpenseDateController.text,
       // reccuring: recurringValue
     );

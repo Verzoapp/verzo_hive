@@ -10,6 +10,7 @@ import 'package:verzo_one/ui/shared/ui_helpers.dart';
 
 @FormView(fields: [
   FormTextField(name: 'name'),
+  FormTextField(name: 'email'),
 ])
 class CreateMerchantView extends StatelessWidget with $CreateMerchantView {
   CreateMerchantView({
@@ -48,7 +49,16 @@ class CreateMerchantView extends StatelessWidget with $CreateMerchantView {
                     keyboardType: TextInputType.name,
                     controller: nameController,
                   ),
-                  verticalSpaceLarge,
+                  verticalSpaceSmall,
+                  TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Merchant email',
+                        labelStyle: ktsFormText,
+                        border: defaultFormBorder),
+                    keyboardType: TextInputType.name,
+                    controller: emailController,
+                  ),
+                  verticalSpaceMedium,
                   GestureDetector(
                     onTap: model.saveMerchantData,
                     child: Container(

@@ -68,6 +68,7 @@ class ExpenseService {
                 amount
                 description
                 expenseDate
+                merchantId
               }
             }
           '''),
@@ -364,7 +365,8 @@ class ExpenseService {
           amount: data['amount'],
           expenseDate: data['expenseDate'],
           merchantId: data['merchantId'],
-          // merchantName: data['merchant']['name'] ?? 'Unknown Merchant',
+          merchantName:
+              data['merchant'] != null ? data['merchant']['name'] : null,
           expenseCategoryName: data['expenseCategory']['name'],
           expenseCategoryId: data['expenseCategoryId'],
           recurring: data['recurring']);
@@ -593,8 +595,8 @@ class Expenses {
   final String expenseDate;
   final String expenseCategoryId;
   final String expenseCategoryName;
-  String? merchantId;
-  String? merchantName;
+  final String? merchantId;
+  final String? merchantName;
   bool? recurring;
 
   Expenses(

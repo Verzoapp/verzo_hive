@@ -78,7 +78,7 @@ class AddInvoicesViewModel extends FormViewModel with Initialisable {
   void calculateSubtotal() {
     subtotal = selectedItems.fold(0.00, (sum, item) {
       if (item.type == 'P') {
-        return sum + (item.price * (item.quantity ?? 1));
+        return sum + (item.price * (item.quantity));
       } else {
         return sum + item.price;
       }

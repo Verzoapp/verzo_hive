@@ -62,7 +62,7 @@ class BusinessProfileCreationView extends StatelessWidget
                 verticalSpaceSmall,
                 TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'Phone Number (optional)',
+                      labelText: 'Phone Number',
                       labelStyle: ktsFormText,
                       border: defaultFormBorder),
                   controller: businessMobileController,

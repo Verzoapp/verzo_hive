@@ -18,6 +18,7 @@ class InvoiceService {
 //Customers
   final MutationOptions _createCustomerMutation;
   final QueryOptions _getCustomerByIdQuery;
+  final MutationOptions _updateCustomerMutation;
   final MutationOptions _archiveCustomerMutation;
   final QueryOptions _getCustomerByBusinessMobileQuery;
 
@@ -44,11 +45,15 @@ class InvoiceService {
             dueDate
             dateOfIssue
             customerId
+            overdue
             subtotal
             discount
             VAT
             totalAmount
             createdAt
+            invoiceDetails{
+
+            }
             customer{
               name
             }
@@ -63,6 +68,7 @@ class InvoiceService {
             invoicesByBusiness{
             id
             customerId
+            overdue
             subtotal
             discount
             VAT
@@ -70,6 +76,24 @@ class InvoiceService {
             dueDate
             totalAmount
             createdAt
+            invoiceDetails {
+             id
+            type
+            index
+        productInvoiceDetail {
+                product {
+                 productName
+                 price
+                quantityInStock
+          }
+        }
+        serviceInvoiceDetail {
+          service {
+            name
+            price
+          }
+        }
+      }
             customer{
               name
             }
@@ -121,11 +145,22 @@ class InvoiceService {
             name
             email
             mobile
+            address
             businessId
             }
             }
           }
         '''),
+        ),
+        _updateCustomerMutation = MutationOptions(
+          document: gql('''
+            mutation UpdateCustomer(\$customerId: String!, \$input: UpdateCustomer) {
+              updateCustomer(customerId: \$customerId, input: \$input) {
+                id
+                name
+              }
+            }
+          '''),
         ),
         _archiveCustomerMutation = MutationOptions(
           document: gql('''
@@ -236,14 +271,19 @@ class InvoiceService {
 
     final Invoices invoiceById = invoiceByIdData.map((data) {
       return Invoices(
-          id: data['id'],
-          customerId: data['customerId'],
-          dateOfIssue: data['dateOfIssue'],
-          dueDate: data['dueDate'],
-          discount: data['discount'],
-          VAT: data['VAT'],
-          createdAt: data['createdAt'],
-          customerName: data['customer']['name']);
+        id: data['id'],
+        customerId: data['customerId'],
+        dateOfIssue: data['dateOfIssue'],
+        dueDate: data['dueDate'],
+        discount: data['discount'],
+        VAT: data['VAT'],
+        createdAt: data['createdAt'],
+        customerName: data['customer']['name'],
+        subtotal: data['subtotal'],
+        totalAmount: data['totalAmount'],
+        overdue: data['overdue'],
+        // itemdetails: data['invoiceDetails']
+      );
     });
 
     return invoiceById;
@@ -291,6 +331,46 @@ class InvoiceService {
             .data?['getInvoiceByBusinessMobile']['cursorId'] ??
         '';
 
+    // final List<Invoices> invoices = invoicesData.map((data) {
+    //   final invoiceDetails = (data['invoiceDetails'] as List).map((detail) {
+    //     if (detail['type'] == 'ProductInvoiceDetail') {
+    //       final productDetail = detail['product'] as Map<String, dynamic>;
+    //       return InvoiceDetail(
+    //         id: detail['id'],
+    //         type: detail['type'],
+    //         index: detail['index'],
+    //         productName: productDetail['productName'],
+    //         price: productDetail['price'],
+    //         quantityInStock: productDetail['quantityInStock'],
+    //       );
+    //     } else if (detail['type'] == 'ServiceInvoiceDetail') {
+    //       final serviceDetail = detail['service'] as Map<String, dynamic>;
+    //       return InvoiceDetail(
+    //         id: detail['id'],
+    //         type: detail['type'],
+    //         index: detail['index'],
+    //         serviceName: serviceDetail['name'],
+    //         price: serviceDetail['price'],
+    //       );
+    //     }
+    //     return null;
+    //   }).toList();
+
+    //   return Invoices(
+    //     id: data['id'],
+    //     dueDate: data['dueDate'],
+    //     dateOfIssue: data['dateOfIssue'],
+    //     customerId: data['customerId'],
+    //     discount: data['discount'],
+    //     subtotal: data['subtotal'],
+    //     VAT: data['VAT'],
+    //     customerName: data['customer']['name'],
+    //     totalAmount: data['totalAmount'],
+    //     createdAt: data['createdAt'],
+    //     invoiceDetails: invoiceDetails, // Assign invoiceDetails list
+    //   );
+    // }).toList();
+
     final List<Invoices> invoices = invoicesData.map((data) {
       return Invoices(
         id: data['id'],
@@ -303,6 +383,7 @@ class InvoiceService {
         customerName: data['customer']['name'],
         totalAmount: data['totalAmount'],
         createdAt: data['createdAt'],
+        overdue: data['overdue'],
       );
     }).toList();
 
@@ -455,6 +536,74 @@ class InvoiceService {
     return customerById;
   }
 
+  Future<CustomerUpdateResult> updateCustomers({
+    required String customerId,
+    String? name,
+    String? address,
+    String? mobile,
+    String? email,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) {
+      return CustomerUpdateResult.error(
+        error: GraphQLInvoiceError(
+          message: "Access token not found",
+        ),
+      );
+    }
+// Use the token to create an authlink
+    final authLink = AuthLink(
+      getToken: () => 'Bearer $token',
+    );
+
+    // Create a new GraphQLClient with the authlink
+    final newClient = GraphQLClient(
+      cache: GraphQLCache(),
+      link: authLink.concat(HttpLink('https://api.verzo.app/graphql')),
+    );
+
+    final MutationOptions options = MutationOptions(
+      document: _updateCustomerMutation.document,
+      variables: {
+        'customerId': customerId,
+        'input': {
+          'name': name,
+          'email': email,
+          'mobile': mobile,
+          'address': address,
+        },
+      },
+    );
+
+    final QueryResult result = await newClient.mutate(options);
+
+    if (result.hasException) {
+      return CustomerUpdateResult.error(
+        error: GraphQLInvoiceError(
+          message: result.exception?.graphqlErrors.first.message.toString(),
+        ),
+      );
+    }
+
+    if (result.data == null || result.data!['updateCustomer'] == null) {
+      return CustomerUpdateResult.error(
+        error: GraphQLInvoiceError(
+          message: "Error parsing response data",
+        ),
+      );
+    }
+
+    var resultexpense_id = result.data?['updateCustomer']['id'];
+    var result_name = result.data?['updateCustomer']['name'];
+
+    var customer = CustomerUpdateSuccessResult(
+        result_id: resultexpense_id, result_name: result_name);
+
+    return CustomerUpdateResult(customer: customer);
+  }
+
   Future<bool> archiveCustomer({required String customerId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
@@ -522,12 +671,25 @@ class InvoiceService {
 
     final QueryResult customerByBusinessResult = await newClient.query(options);
 
-    if (customerByBusinessResult.hasException) {
-      throw GraphQLInvoiceError(
-        message: customerByBusinessResult.exception?.graphqlErrors.first.message
-            .toString(),
-      );
-    }
+    // if (customerByBusinessResult.hasException) {
+    //   // Handle the case when there is no data (no customers found)
+    //   if (customerByBusinessResult
+    //           .exception?.graphqlErrors.first.extensions?['code'] ==
+    //       'FORBIDDEN') {
+    //     return []; // Return an empty list to indicate no customers found
+    //   }
+    //   throw GraphQLInvoiceError(
+    //     message:
+    //         customerByBusinessResult.exception?.graphqlErrors.first.message,
+    //   );
+    // }
+
+    // if (customerByBusinessResult.hasException) {
+    //   throw GraphQLInvoiceError(
+    //     message: customerByBusinessResult.exception?.graphqlErrors.first.message
+    //         .toString(),
+    //   );
+    // }
 
     final List customersData = customerByBusinessResult
             .data?['getCustomerByBusinessMobile']['customerByBusiness'] ??
@@ -539,17 +701,38 @@ class InvoiceService {
 
     final List<Customers> customers = customersData.map((data) {
       return Customers(
-        id: data['id'],
-        name: data['name'],
-        email: data['email'],
-        mobile: data['mobile'],
-        // invoiceCreatedAt: data['invoices']['createdAt'] ?? '',
-        // invoiceTotalAmount: data['invoices']['totalAmount']);
-      );
+          id: data['id'],
+          name: data['name'],
+          email: data['email'],
+          mobile: data['mobile'],
+          address: data['address']
+          // invoiceCreatedAt: data['invoices']['createdAt'] ?? '',
+          // invoiceTotalAmount: data['invoices']['totalAmount']);
+          );
     }).toList();
 
     return customers;
   }
+}
+
+class CustomerUpdateResult {
+  late final CustomerUpdateSuccessResult? customer;
+  late final GraphQLInvoiceError? error;
+
+  CustomerUpdateResult({this.customer}) : error = null;
+  CustomerUpdateResult.error({this.error}) : customer = null;
+
+  bool get hasError => error != null;
+}
+
+class CustomerUpdateSuccessResult {
+  CustomerUpdateSuccessResult({
+    required this.result_id,
+    required this.result_name,
+  });
+
+  late final String result_id;
+  late final String result_name;
 }
 
 class Customers {
@@ -557,6 +740,7 @@ class Customers {
   final String name;
   final String email;
   final String mobile;
+  final String? address;
   num? invoiceTotalAmount;
   String? invoiceCreatedAt;
 
@@ -565,6 +749,7 @@ class Customers {
       required this.name,
       required this.email,
       required this.mobile,
+      this.address,
       this.invoiceCreatedAt,
       this.invoiceTotalAmount});
 }
@@ -625,27 +810,39 @@ class GraphQLInvoiceError {
 class Invoices {
   final String id;
   final String customerName;
-  final num? subtotal;
-  final num? totalAmount;
+  final num subtotal;
+  final num totalAmount;
   final num? discount;
   final num VAT;
   final String createdAt;
   final String dueDate;
   final String dateOfIssue;
   final String customerId;
+  final bool overdue;
+  // final List<InvoiceDetail> invoiceDetails;
 
   Invoices({
     required this.id,
     required this.customerName,
-    this.subtotal,
-    this.totalAmount,
+    required this.subtotal,
+    required this.totalAmount,
     this.discount,
     required this.VAT,
     required this.createdAt,
     required this.dueDate,
     required this.dateOfIssue,
     required this.customerId,
+    required this.overdue,
+    // required this.invoiceDetails
   });
+}
+
+class InvoiceDetail {
+  final String id;
+  final String type;
+  final num index;
+
+  InvoiceDetail({required this.id, required this.type, required this.index});
 }
 
 class ItemDetail {

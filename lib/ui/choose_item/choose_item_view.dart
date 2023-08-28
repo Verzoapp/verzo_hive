@@ -25,7 +25,7 @@ class _ChooseItemViewState extends State<ChooseItemView> {
       viewModelBuilder: () => ChooseItemViewModel(),
       onModelReady: (model) async {
         // model.getProductOrServiceByBusiness;
-        model.addNewItem;
+        // model.addNewItem;
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(

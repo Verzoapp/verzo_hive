@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 const String NameValueKey = 'name';
+const String EmailValueKey = 'email';
 
 final Map<String, TextEditingController>
     _CreateMerchantViewTextEditingControllers = {};
@@ -19,12 +20,16 @@ final Map<String, FocusNode> _CreateMerchantViewFocusNodes = {};
 final Map<String, String? Function(String?)?>
     _CreateMerchantViewTextValidations = {
   NameValueKey: null,
+  EmailValueKey: null,
 };
 
 mixin $CreateMerchantView on StatelessWidget {
   TextEditingController get nameController =>
       _getFormTextEditingController(NameValueKey);
+  TextEditingController get emailController =>
+      _getFormTextEditingController(EmailValueKey);
   FocusNode get nameFocusNode => _getFormFocusNode(NameValueKey);
+  FocusNode get emailFocusNode => _getFormFocusNode(EmailValueKey);
 
   TextEditingController _getFormTextEditingController(String key,
       {String? initialValue}) {
@@ -48,6 +53,7 @@ mixin $CreateMerchantView on StatelessWidget {
   /// with the latest textController values
   void syncFormWithViewModel(FormViewModel model) {
     nameController.addListener(() => _updateFormData(model));
+    emailController.addListener(() => _updateFormData(model));
   }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
@@ -56,6 +62,7 @@ mixin $CreateMerchantView on StatelessWidget {
       'This feature was deprecated after 3.1.0.')
   void listenToFormUpdated(FormViewModel model) {
     nameController.addListener(() => _updateFormData(model));
+    emailController.addListener(() => _updateFormData(model));
   }
 
   final bool _autoTextFieldValidation = true;
@@ -70,6 +77,7 @@ mixin $CreateMerchantView on StatelessWidget {
       model.formValueMap
         ..addAll({
           NameValueKey: nameController.text,
+          EmailValueKey: emailController.text,
         }),
     );
     if (_autoTextFieldValidation || forceValidate) {
@@ -81,6 +89,7 @@ mixin $CreateMerchantView on StatelessWidget {
   void _updateValidationData(FormViewModel model) =>
       model.setValidationMessages({
         NameValueKey: _getValidationMessage(NameValueKey),
+        EmailValueKey: _getValidationMessage(EmailValueKey),
       });
 
   /// Returns the validation message for the given key
@@ -112,19 +121,29 @@ extension ValueProperties on FormViewModel {
   bool get isFormValid =>
       this.fieldsValidationMessages.values.every((element) => element == null);
   String? get nameValue => this.formValueMap[NameValueKey] as String?;
+  String? get emailValue => this.formValueMap[EmailValueKey] as String?;
 
   bool get hasName =>
       this.formValueMap.containsKey(NameValueKey) &&
       (nameValue?.isNotEmpty ?? false);
+  bool get hasEmail =>
+      this.formValueMap.containsKey(EmailValueKey) &&
+      (emailValue?.isNotEmpty ?? false);
 
   bool get hasNameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey]?.isNotEmpty ?? false;
+  bool get hasEmailValidationMessage =>
+      this.fieldsValidationMessages[EmailValueKey]?.isNotEmpty ?? false;
 
   String? get nameValidationMessage =>
       this.fieldsValidationMessages[NameValueKey];
+  String? get emailValidationMessage =>
+      this.fieldsValidationMessages[EmailValueKey];
 }
 
 extension Methods on FormViewModel {
   setNameValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[NameValueKey] = validationMessage;
+  setEmailValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[EmailValueKey] = validationMessage;
 }

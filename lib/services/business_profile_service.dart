@@ -42,7 +42,7 @@ class BusinessCreationService {
   Future<BusinessCreationResult> createBusinessProfile(
       {required String businessName,
       required String businessEmail,
-      String? businessMobile,
+      required String businessMobile,
       required String businessCategoryId}) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
@@ -93,11 +93,6 @@ class BusinessCreationService {
     var result_businessEmail = result.data?['createBusiness']['businessEmail'];
     var result_businessMobile =
         result.data?['createBusiness']['businessMobile'];
-
-    // prefs.setString('id', resultbusiness_id ?? "");
-    // prefs.setString('businessName', result_businessName ?? "");
-    // prefs.setString('businessEmail', result_businessEmail ?? "");
-    // prefs.setString('businessMobile', result_businessMobile ?? "");
 
     var business = BusinessCreationSuccessResult(
         resultbusiness_id: resultbusiness_id,
@@ -159,13 +154,13 @@ class BusinessCreationSuccessResult {
     required this.resultbusiness_id,
     required this.result_businessName,
     required this.result_businessEmail,
-    this.result_businessMobile,
+    required this.result_businessMobile,
   });
 
   late final String resultbusiness_id;
   late final String result_businessName;
   late final String result_businessEmail;
-  late final String? result_businessMobile;
+  late final String result_businessMobile;
 }
 
 class GraphQLBusinessError {
